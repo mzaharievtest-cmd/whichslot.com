@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { SLOTS } from "../app/data/slots";
 
-import { useState } from "react";
-
 export default function Wheel({ onSlotSelected }) {
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
