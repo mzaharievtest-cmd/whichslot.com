@@ -17,13 +17,15 @@ export default function CasinosPage() {
           WhichSlot · Casinos
         </p>
         <h1 className="text-3xl md:text-4xl font-bold text-white">
-          Casinos where you can play the slots
+          Casinos where you can play
         </h1>
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
           For now, WhichSlot works with{" "}
           <span className="font-semibold">BitStarz</span>, a crypto-friendly
-          casino with thousands of slots. We may add more partners in the
-          future. Play responsibly and always check the terms in your country.
+          online casino with a large selection of slots. Availability and bonus
+          offers depend on your location, so always check that online gambling
+          is legal in your country and review the latest terms on the casino
+          website before playing.
         </p>
       </header>
 
@@ -34,7 +36,7 @@ export default function CasinosPage() {
             key={casino.id}
             className="group relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 md:p-6 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* Recommended badge (only one casino for now) */}
+            {/* Recommended badge */}
             <div className="absolute -top-3 left-5 rounded-full bg-emerald-500/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_0_18px_rgba(16,185,129,0.7)]">
               Recommended
             </div>
@@ -138,12 +140,13 @@ export default function CasinosPage() {
         ))}
       </section>
 
-      {/* Disclaimer */}
+      {/* Global disclaimer */}
       <p className="text-[11px] text-gray-500 max-w-3xl">
         WhichSlot.com is not a casino and does not handle real-money gambling.
         We may receive a commission if you sign up or play at a partner casino
-        through our links. Offers and availability can change. Please make sure
-        online gambling is legal in your country and always play responsibly.
+        through our links. Casino availability, bonuses and offers can change at
+        any time and may differ by country. Always make sure online gambling is
+        legal in your jurisdiction and play responsibly.
       </p>
     </div>
   );
