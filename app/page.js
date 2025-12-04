@@ -1,47 +1,49 @@
-export default function Home() {
+// app/wheel/page.js
+import Wheel from "../components/Wheel";
+
+export default function WheelPage() {
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] flex items-center justify-center px-4 py-16">
-      <div className="w-full max-w-4xl text-center space-y-8">
-        <div>
-          <p className="inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 px-3 py-1 text-xs font-medium text-gray-300 mb-5">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            Can&apos;t decide what to play?
+    <div className="max-w-6xl mx-auto px-4 py-12 md:py-16">
+      <div className="grid grid-cols-1 md:grid-cols-[minmax(0,2fr)_minmax(0,1.3fr)] gap-10 md:gap-14 items-center">
+        {/* Left: hero text + wheel */}
+        <div className="space-y-8">
+          <header className="space-y-3">
+            <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
+              WhichSlot · Wheel
+            </p>
+            <h1 className="text-3xl md:text-4xl font-bold text-white">
+              Spin the slot wheel
+            </h1>
+            <p className="text-sm md:text-base text-gray-300 max-w-xl">
+              Can&apos;t decide what to play? Let WhichSlot pick something for you.
+              Every spin selects a random slot from our library — simple and fun.
+            </p>
+          </header>
+
+          {/* Actual wheel */}
+          <Wheel />
+
+          <p className="mt-2 text-[11px] text-gray-500">
+            Press <span className="font-semibold text-gray-300">Spin the wheel</span> to get a suggestion.
           </p>
+        </div>
 
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">
-            Which slot should you play?
-          </h1>
-
-          <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
-            WhichSlot is a simple decision spinner for slot players. Hit spin
-            and we&apos;ll pick a random slot for you – then jump straight to a
-            casino where you can play it.
+        {/* Right: How it works card */}
+        <aside className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 md:p-6 space-y-4 shadow-[0_18px_45px_rgba(0,0,0,0.75)]">
+          <h2 className="text-lg font-semibold text-white">How to use WhichSlot</h2>
+          <ol className="space-y-2 text-sm text-gray-300 list-decimal list-inside">
+            <li>
+              Press <span className="font-semibold">Spin the wheel</span>.
+            </li>
+            <li>Wait for the wheel to stop on a random slot.</li>
+            <li>Check the quick info and see if it looks interesting.</li>
+            <li>If you want another idea, just spin again.</li>
+          </ol>
+          <p className="pt-2 text-[11px] text-gray-500">
+            Soon we&apos;ll also show where selected slots are available to play,
+            adapted to your region.
           </p>
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-4">
-          <a
-            href="/wheel"
-            className="inline-flex items-center justify-center rounded-xl bg-neonPurple px-7 py-3 text-sm sm:text-base font-semibold text-white shadow-[0_0_30px_rgba(162,89,255,0.85)] hover:brightness-110 active:scale-95 transition"
-          >
-            Start spinning
-          </a>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-3 text-left text-xs sm:text-sm text-gray-300 max-w-3xl mx-auto">
-          <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-            <p className="font-semibold mb-1">1. Spin</p>
-            <p>Hit the button and we pick a random slot for you.</p>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-            <p className="font-semibold mb-1">2. Decide</p>
-            <p>See the slot name, provider and quick tags.</p>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-            <p className="font-semibold mb-1">3. Play</p>
-            <p>Click &quot;Play now&quot; and continue at the casino site.</p>
-          </div>
-        </div>
+        </aside>
       </div>
     </div>
   );
