@@ -42,7 +42,8 @@ export default function Legal() {
       </p>
 
       <p className="text-gray-400 text-sm mt-10">
-        If you have any questions about this disclosure, please contact us.
+        This disclosure may be updated periodically to reflect changes in regulations
+        or our business practices.
       </p>
     </div>
   );
