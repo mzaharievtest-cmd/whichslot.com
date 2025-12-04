@@ -29,9 +29,9 @@ export default function WheelPage() {
         </div>
       </section>
 
-      {/* How it works strip – centered and aligned with wheel */}
+      {/* How it works strip – same width as wheel, centered */}
       <section className="w-full flex justify-center">
-        <div className="w-full max-w-3xl rounded-2xl border border-white/10 bg-white/5/40 bg-gradient-to-r from-white/8 to-white/0 backdrop-blur-xl px-4 md:px-6 py-4 flex flex-col md:flex-row md:items-center gap-3 shadow-[0_18px_45px_rgba(0,0,0,0.75)]">
+        <div className="w-full max-w-md md:max-w-lg rounded-2xl border border-white/10 bg-white/5/40 bg-gradient-to-r from-white/8 to-white/0 backdrop-blur-xl px-4 md:px-6 py-4 flex flex-col md:flex-row md:items-center gap-3 shadow-[0_18px_45px_rgba(0,0,0,0.75)]">
           <h2 className="text-sm md:text-base font-semibold text-white md:w-40">
             How to use WhichSlot
           </h2>
