@@ -8,7 +8,7 @@ export default function Navbar() {
         </a>
 
         <div className="flex items-center gap-6 text-sm text-gray-200">
-          <a href="/wheel" className="hover:text-white transition">
+          <a href="/" className="hover:text-white transition">
             Wheel
           </a>
           <a href="/slots" className="hover:text-white transition">
