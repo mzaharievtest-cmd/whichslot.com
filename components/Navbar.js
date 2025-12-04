@@ -1,12 +1,23 @@
 export default function Navbar() {
   return (
-    <nav className="w-full flex justify-between items-center px-6 py-4 bg-black/30 backdrop-blur-lg">
-      <a href="/" className="text-xl font-bold">WhichSlot</a>
+    <nav className="w-full sticky top-0 z-30 border-b border-white/10 bg-black/40 backdrop-blur-xl">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        <a href="/" className="text-lg font-semibold tracking-tight">
+          <span className="text-white">Which</span>
+          <span className="text-neonPurple">Slot</span>
+        </a>
 
-      <div className="flex gap-6">
-        <a href="/wheel">Wheel</a>
-        <a href="/slots">Slots</a>
-        <a href="/casinos">Casinos</a>
+        <div className="flex items-center gap-6 text-sm text-gray-200">
+          <a href="/wheel" className="hover:text-white transition">
+            Wheel
+          </a>
+          <a href="/slots" className="hover:text-white transition">
+            Slots
+          </a>
+          <a href="/casinos" className="hover:text-white transition">
+            Casinos
+          </a>
+        </div>
       </div>
     </nav>
   );
