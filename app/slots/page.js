@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SLOTS } from "../../data/slots.js";
+import { SLOTS } from "../data/slots.js";
 
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
