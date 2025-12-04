@@ -18,17 +18,21 @@ export default function WheelPage() {
         </p>
       </header>
 
-      {/* Wheel in the center */}
+      {/* Wheel with subtle glow behind */}
       <section className="w-full flex justify-center mb-8 md:mb-10">
-        <div className="w-full max-w-md md:max-w-lg">
-          <Wheel />
+        <div className="relative flex justify-center">
+          {/* soft radial glow */}
+          <div className="pointer-events-none absolute -top-10 h-72 w-72 md:h-96 md:w-96 rounded-full bg-purple-500/25 blur-3xl" />
+          <div className="relative w-full max-w-md md:max-w-lg">
+            <Wheel />
+          </div>
         </div>
       </section>
 
-      {/* How it works strip */}
-      <section className="w-full max-w-3xl">
-        <div className="rounded-2xl border border-white/10 bg-white/5/40 bg-gradient-to-r from-white/5 to-white/0 backdrop-blur-xl px-4 md:px-6 py-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-          <h2 className="text-sm font-semibold text-white md:text-base">
+      {/* How it works strip – centered and aligned with wheel */}
+      <section className="w-full flex justify-center">
+        <div className="w-full max-w-3xl rounded-2xl border border-white/10 bg-white/5/40 bg-gradient-to-r from-white/8 to-white/0 backdrop-blur-xl px-4 md:px-6 py-4 flex flex-col md:flex-row md:items-center gap-3 shadow-[0_18px_45px_rgba(0,0,0,0.75)]">
+          <h2 className="text-sm md:text-base font-semibold text-white md:w-40">
             How to use WhichSlot
           </h2>
           <ol className="flex-1 grid gap-2 text-[11px] md:text-xs text-gray-300 md:grid-cols-4">
@@ -50,10 +54,6 @@ export default function WheelPage() {
             </li>
           </ol>
         </div>
-        <p className="mt-3 text-[11px] text-gray-500 text-center">
-          Soon we&apos;ll also show where selected slots are available to play,
-          adapted to your region.
-        </p>
       </section>
     </main>
   );
