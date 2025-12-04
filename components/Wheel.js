@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SLOTS } from "../data/slots";
+import { SLOTS } from "../../data/slots.js";
 
 export default function Wheel() {
   const [rotation, setRotation] = useState(0);
