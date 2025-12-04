@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SLOTS } from "../data/slots";
+import { SLOTS } from "../app/data/slots";
 
 export default function Wheel({ onSlotSelected }) {
   const [angle, setAngle] = useState(0);
