@@ -13,8 +13,8 @@ export default function SlotsPage() {
   }, []);
 
   const filteredSlots = useMemo(() => {
+    const term = search.trim().toLowerCase();
     return SLOTS.filter((slot) => {
-      const term = search.trim().toLowerCase();
       const matchesSearch =
         !term ||
         slot.name.toLowerCase().includes(term) ||
@@ -43,15 +43,15 @@ export default function SlotsPage() {
           All slots in the wheel
         </h1>
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
-          Browse all slots that can appear on the wheel. Use search or filter by
-          provider, then click <span className="font-semibold">Play now</span>{" "}
-          to open the slot at BitStarz.
+          Browse all slots that can appear in the wheel. Use search or filter by
+          provider to explore the list. When you find a game you like, press{" "}
+          <span className="font-semibold">Play now</span> to open it on a
+          supported site.
         </p>
       </header>
 
-      {/* Search + count + provider filter */}
+      {/* Search + info row */}
       <section className="space-y-3">
-        {/* Search bar */}
         <div>
           <input
             type="text"
@@ -62,7 +62,6 @@ export default function SlotsPage() {
           />
         </div>
 
-        {/* Count + provider filter row */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="text-[11px] text-gray-400">
             {filteredSlots.length} of {SLOTS.length} slots
@@ -82,7 +81,6 @@ export default function SlotsPage() {
                   </option>
                 ))}
               </select>
-              {/* Fake dropdown arrow */}
               <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[10px] text-gray-400">
                 ▼
               </span>
@@ -91,7 +89,7 @@ export default function SlotsPage() {
         </div>
       </section>
 
-      {/* Grid of slots */}
+      {/* Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {filteredSlots.map((slot) => (
           <article
@@ -126,7 +124,7 @@ export default function SlotsPage() {
                 onClick={() => handlePlay(slot)}
                 className="flex-1 inline-flex items-center justify-center rounded-lg bg-emerald-500 px-3 py-2 text-xs md:text-sm font-semibold text-white shadow-[0_0_20px_rgba(16,185,129,0.8)] group-hover:brightness-110 active:scale-95 transition"
               >
-                Play now at BitStarz
+                Play now
               </button>
               <button
                 onClick={() =>
@@ -141,10 +139,9 @@ export default function SlotsPage() {
         ))}
       </section>
 
-      {/* Tiny disclaimer */}
       <p className="text-[11px] text-gray-500 mt-4">
-        &quot;Play now&quot; opens BitStarz in a new tab. We may earn a commission if
-        you sign up or play. Please gamble responsibly.
+        Make sure online gaming is legal in your country and always play
+        responsibly.
       </p>
     </div>
   );
