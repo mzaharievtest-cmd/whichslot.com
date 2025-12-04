@@ -1,66 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-// For now this is hard-coded. Later we can load from /data/slots.json.
-const SLOTS = [
-  {
-    id: 1,
-    name: "Gates of Olympus",
-    provider: "Pragmatic Play",
-    tags: ["High volatility", "Bonus Buy"],
-    affiliateUrl: "#", // TODO: replace with real affiliate link
-  },
-  {
-    id: 2,
-    name: "Sweet Bonanza",
-    provider: "Pragmatic Play",
-    tags: ["Tumbles", "Free Spins"],
-    affiliateUrl: "#",
-  },
-  {
-    id: 3,
-    name: "Book of Dead",
-    provider: "Play’n GO",
-    tags: ["Classic", "High volatility"],
-    affiliateUrl: "#",
-  },
-  {
-    id: 4,
-    name: "Big Bass Bonanza",
-    provider: "Pragmatic Play",
-    tags: ["Fishing theme", "Free Spins"],
-    affiliateUrl: "#",
-  },
-  {
-    id: 5,
-    name: "Reactoonz",
-    provider: "Play’n GO",
-    tags: ["Cluster pays", "Medium/High"],
-    affiliateUrl: "#",
-  },
-  {
-    id: 6,
-    name: "Money Train 4",
-    provider: "Relax Gaming",
-    tags: ["Very high volatility", "Bonus Buy"],
-    affiliateUrl: "#",
-  },
-  {
-    id: 7,
-    name: "Wanted Dead or a Wild",
-    provider: "Hacksaw Gaming",
-    tags: ["Super high volatility", "Bonus Buy"],
-    affiliateUrl: "#",
-  },
-  {
-    id: 8,
-    name: "Sugar Rush",
-    provider: "Pragmatic Play",
-    tags: ["Multipliers", "Grid slot"],
-    affiliateUrl: "#",
-  },
-];
+import { SLOTS } from "../data/slots";
 
 export default function Wheel() {
   const [rotation, setRotation] = useState(0);
@@ -68,15 +9,13 @@ export default function Wheel() {
   const [result, setResult] = useState(null);
 
   const handleSpin = () => {
-    if (isSpinning) return;
+    if (isSpinning || SLOTS.length === 0) return;
 
     setIsSpinning(true);
     setResult(null);
 
     const slice = 360 / SLOTS.length;
     const targetIndex = Math.floor(Math.random() * SLOTS.length);
-
-    // angle so that chosen slice ends up at the top (pointer)
     const chosenAngle = slice * targetIndex + slice / 2;
     const spins = 5;
     const targetRotation = spins * 360 + chosenAngle;
@@ -90,8 +29,10 @@ export default function Wheel() {
   };
 
   const handlePlayNow = () => {
-    if (!result || !result.affiliateUrl || result.affiliateUrl === "#") return;
-    window.open(result.affiliateUrl, "_blank", "noopener,noreferrer");
+    if (!result) return;
+    const url =
+      result.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -117,7 +58,7 @@ export default function Wheel() {
             }}
           />
 
-          {/* tick marks for each slice */}
+          {/* tick marks */}
           {SLOTS.map((slot, index) => {
             const slice = 360 / SLOTS.length;
             const angle = slice * index;
@@ -202,10 +143,9 @@ export default function Wheel() {
             <div className="mt-4 flex flex-col sm:flex-row gap-3">
               <button
                 onClick={handlePlayNow}
-                disabled={!result.affiliateUrl || result.affiliateUrl === "#"}
-                className="inline-flex flex-1 items-center justify-center rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_25px_rgba(16,185,129,0.8)] hover:brightness-110 active:scale-95 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                className="inline-flex flex-1 items-center justify-center rounded-lg bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_25px_rgba(16,185,129,0.8)] hover:brightness-110 active:scale-95 transition"
               >
-                Play now
+                Play now at BitStarz
               </button>
 
               <button
@@ -218,8 +158,8 @@ export default function Wheel() {
             </div>
 
             <p className="mt-3 text-[11px] text-gray-400">
-              &quot;Play now&quot; will open a partner casino in a new tab. We may
-              earn a commission when you sign up or play.
+              &quot;Play now&quot; opens BitStarz in a new tab. We may earn a commission
+              when you sign up or play.
             </p>
           </div>
         ) : (
