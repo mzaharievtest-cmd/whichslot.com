@@ -1,21 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { SLOTS } from "../app/data/slots";
 
 export default function Wheel({ onSlotSelected }) {
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
+  const spinAudioRef = useRef(null);
+
+  const TOTAL_SEGMENTS = SLOTS.length || 200; // normally 200
 
   const handleSpin = () => {
     if (isSpinning) return;
 
     setIsSpinning(true);
 
+    // play sound (if loaded)
+    if (spinAudioRef.current) {
+      spinAudioRef.current.currentTime = 0;
+      spinAudioRef.current.play().catch(() => {});
+    }
+
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
 
-    const extraTurns = 3 + Math.floor(Math.random() * 3);
+    const extraTurns = 3 + Math.floor(Math.random() * 3); // 3–5 extra turns
     const randomOffset = Math.floor(Math.random() * 360);
     const nextAngle = angle + extraTurns * 360 + randomOffset;
     setAngle(nextAngle);
@@ -48,34 +57,61 @@ export default function Wheel({ onSlotSelected }) {
 
   return (
     <div className="flex flex-col items-center gap-4">
+      {/* hidden audio element for spin sound */}
+      <audio
+        ref={spinAudioRef}
+        src="/sounds/spin.mp3"
+        preload="auto"
+        className="hidden"
+      />
+
       {/* Wheel clickable area */}
       <div
         className="relative h-80 w-80 md:h-96 md:w-96 cursor-pointer select-none"
         onClick={handleSpin}
       >
-        {/* pointer/chevron - points down INTO the wheel */}
+        {/* pointer/chevron - points down into the wheel */}
         <div className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-b-[16px] border-l-transparent border-r-transparent border-b-white/80 drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]" />
 
-        {/* spinning disc with neon conic gradient */}
+        {/* spinning ring (gradient + 200 segments) */}
         <div
-          className="absolute inset-0 rounded-full bg-[conic-gradient(from_220deg_at_50%_50%,#22d3ee,#6366f1,#a855f7,#ec4899,#f97316,#22c55e,#22d3ee)] p-[10px] shadow-[0_18px_45px_rgba(0,0,0,0.9)] transition-transform duration-[1500ms] ease-out"
+          className={`absolute inset-0 rounded-full p-[10px] shadow-[0_18px_45px_rgba(0,0,0,0.9)] transition-transform duration-[1500ms] ease-out ${
+            isSpinning ? "brightness-110" : ""
+          }`}
           style={{ transform: `rotate(${angle}deg)` }}
         >
-          <div className="h-full w-full rounded-full bg-black/80 flex items-center justify-center">
-            {/* inner ring */}
-            <div className="relative h-[82%] w-[82%] rounded-full bg-gradient-to-br from-white/12 to-white/0 flex items-center justify-center">
-              {/* center disc */}
-              <div className="h-[72%] w-[72%] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">
-                  WhichSlot
-                </p>
-                <p className="text-xs md:text-sm font-semibold text-white line-clamp-2">
-                  {centerLabel}
-                </p>
-                <p className="mt-1 text-[10px] text-gray-400">{centerSub}</p>
-              </div>
+          {/* outer gradient ring */}
+          <div className="relative h-full w-full rounded-full bg-[conic-gradient(from_220deg_at_50%_50%,#22d3ee,#6366f1,#a855f7,#ec4899,#f97316,#22c55e,#22d3ee)]">
+            {/* inner dark circle to create ring */}
+            <div className="absolute inset-[14px] rounded-full bg-black/85" />
+
+            {/* tick marks for 200 slots */}
+            <div className="absolute inset-[8px] rounded-full">
+              {Array.from({ length: TOTAL_SEGMENTS }).map((_, i) => {
+                const rotation = (360 / TOTAL_SEGMENTS) * i;
+                return (
+                  <div
+                    key={i}
+                    className="absolute inset-0"
+                    style={{ transform: `rotate(${rotation}deg)` }}
+                  >
+                    <div className="absolute left-1/2 -translate-x-1/2 top-[4px] h-[10px] w-[1px] bg-white/40" />
+                  </div>
+                );
+              })}
             </div>
           </div>
+        </div>
+
+        {/* static center disc (text stays upright) */}
+        <div className="absolute inset-[36px] md:inset-[44px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">
+            WhichSlot
+          </p>
+          <p className="text-xs md:text-sm font-semibold text-white line-clamp-2">
+            {centerLabel}
+          </p>
+          <p className="mt-1 text-[10px] text-gray-400">{centerSub}</p>
         </div>
       </div>
 
