@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { SLOTS } from "../app/data/slots";
 
+import { useState } from "react";
+
 export default function Wheel({ onSlotSelected }) {
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -13,16 +15,13 @@ export default function Wheel({ onSlotSelected }) {
 
     setIsSpinning(true);
 
-    // pick a random slot
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
 
-    // random spin between 3 and 5 full turns
     const extraTurns = 3 + Math.floor(Math.random() * 3);
     const randomOffset = Math.floor(Math.random() * 360);
     const nextAngle = angle + extraTurns * 360 + randomOffset;
     setAngle(nextAngle);
 
-    // fake spin duration to match CSS transition (e.g. 1500ms)
     setTimeout(() => {
       setIsSpinning(false);
       setSelectedSlot(nextSlot);
@@ -53,22 +52,22 @@ export default function Wheel({ onSlotSelected }) {
     <div className="flex flex-col items-center gap-4">
       {/* Wheel clickable area */}
       <div
-        className="relative h-72 w-72 md:h-80 md:w-80 cursor-pointer select-none"
+        className="relative h-80 w-80 md:h-96 md:w-96 cursor-pointer select-none"
         onClick={handleSpin}
       >
-        {/* pointer/chevron – pointing down INTO the wheel */}
+        {/* pointer/chevron - points down INTO the wheel */}
         <div className="pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[10px] border-r-[10px] border-b-[16px] border-l-transparent border-r-transparent border-b-white/80 drop-shadow-[0_4px_12px_rgba(0,0,0,0.7)]" />
 
-        {/* spinning disc */}
+        {/* spinning disc with neon conic gradient */}
         <div
-          className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#22d3ee] via-[#8b5cf6] to-[#f97316] p-[10px] shadow-[0_18px_45px_rgba(0,0,0,0.9)] transition-transform duration-[1500ms] ease-out"
+          className="absolute inset-0 rounded-full bg-[conic-gradient(from_220deg_at_50%_50%,#22d3ee,#6366f1,#a855f7,#ec4899,#f97316,#22c55e,#22d3ee)] p-[10px] shadow-[0_18px_45px_rgba(0,0,0,0.9)] transition-transform duration-[1500ms] ease-out"
           style={{ transform: `rotate(${angle}deg)` }}
         >
           <div className="h-full w-full rounded-full bg-black/80 flex items-center justify-center">
             {/* inner ring */}
-            <div className="relative h-[82%] w-[82%] rounded-full bg-gradient-to-br from-white/10 to-white/0 flex items-center justify-center">
+            <div className="relative h-[82%] w-[82%] rounded-full bg-gradient-to-br from-white/12 to-white/0 flex items-center justify-center">
               {/* center disc */}
-              <div className="h-[72%] w-[72%] rounded-full bg-black/90 flex flex-col items-center justify-center text-center px-4">
+              <div className="h-[72%] w-[72%] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
                 <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 mb-1">
                   WhichSlot
                 </p>
