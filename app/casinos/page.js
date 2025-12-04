@@ -11,41 +11,34 @@ export default function CasinosPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12 space-y-8">
-      {/* Header */}
       <header className="space-y-3">
         <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
           WhichSlot · Casinos
         </p>
         <h1 className="text-3xl md:text-4xl font-bold text-white">
-          Casinos where you can play
+          Where you can play slots
         </h1>
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
-          For now, WhichSlot works with{" "}
-          <span className="font-semibold">BitStarz</span>, a crypto-friendly
-          online casino with a large selection of slots. Availability and bonus
-          offers depend on your location, so always check that online gambling
-          is legal in your country and review the latest terms on the casino
-          website before playing.
+          Here you&apos;ll find gaming sites where selected slots from our list
+          are available. Availability and offers may vary depending on your
+          country and local regulations.
         </p>
       </header>
 
-      {/* Casino cards */}
       <section className="grid grid-cols-1 gap-5">
         {casinos.map((casino) => (
           <article
             key={casino.id}
             className="group relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 md:p-6 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* Recommended badge */}
             <div className="absolute -top-3 left-5 rounded-full bg-emerald-500/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_0_18px_rgba(16,185,129,0.7)]">
               Recommended
             </div>
 
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
-              {/* Left: main info */}
               <div className="space-y-3 md:space-y-4 flex-1">
                 <div>
-                  <h2 className="text-xl md:text-2xl font-semibold text-white flex items-center gap-2">
+                  <h2 className="text-xl md:text-2xl font-semibold text-white">
                     {casino.name}
                   </h2>
                   {casino.tagline && (
@@ -55,7 +48,6 @@ export default function CasinosPage() {
                   )}
                 </div>
 
-                {/* Welcome offer */}
                 {casino.welcomeOffer && (
                   <div className="rounded-xl bg-emerald-500/10 border border-emerald-400/40 px-3 py-2.5 text-xs md:text-sm text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.4)]">
                     <span className="font-semibold text-emerald-300">
@@ -65,7 +57,6 @@ export default function CasinosPage() {
                   </div>
                 )}
 
-                {/* Meta info row */}
                 <div className="flex flex-wrap gap-2 text-[11px] text-gray-300">
                   {casino.rating && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 border border-white/10">
@@ -89,7 +80,6 @@ export default function CasinosPage() {
                   )}
                 </div>
 
-                {/* Highlights */}
                 {casino.highlights && casino.highlights.length > 0 && (
                   <ul className="mt-3 space-y-1.5 text-xs text-gray-300">
                     {casino.highlights.map((item, idx) => (
@@ -103,7 +93,6 @@ export default function CasinosPage() {
                   </ul>
                 )}
 
-                {/* Notes */}
                 {casino.notes && casino.notes.length > 0 && (
                   <div className="mt-3 text-[11px] text-gray-500">
                     {casino.notes.map((note, idx) => (
@@ -115,13 +104,12 @@ export default function CasinosPage() {
                 )}
               </div>
 
-              {/* Right: CTA */}
               <div className="flex flex-col items-stretch md:items-end gap-3 min-w-[200px]">
                 <button
                   onClick={() => handlePlay(casino)}
                   className="inline-flex items-center justify-center w-full md:w-auto rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_24px_rgba(16,185,129,0.85)] hover:brightness-110 active:scale-95 transition"
                 >
-                  Play now at {casino.name}
+                  Play now
                 </button>
 
                 {casino.websiteUrl && (
@@ -131,7 +119,7 @@ export default function CasinosPage() {
                     rel="noopener noreferrer"
                     className="text-[11px] text-gray-400 hover:text-gray-200 underline-offset-2 hover:underline"
                   >
-                    Visit {casino.name} website
+                    Visit website
                   </a>
                 )}
               </div>
@@ -140,13 +128,11 @@ export default function CasinosPage() {
         ))}
       </section>
 
-      {/* Global disclaimer */}
       <p className="text-[11px] text-gray-500 max-w-3xl">
-        WhichSlot.com is not a casino and does not handle real-money gambling.
-        We may receive a commission if you sign up or play at a partner casino
-        through our links. Casino availability, bonuses and offers can change at
-        any time and may differ by country. Always make sure online gambling is
-        legal in your jurisdiction and play responsibly.
+        WhichSlot.com is not a casino and does not handle real-money gaming.
+        Site availability, bonuses and offers can change at any time and may
+        differ by country. Always make sure online gaming is legal in your
+        jurisdiction and play responsibly.
       </p>
     </div>
   );
