@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
 
 export default function Wheel({ onSlotSelected }) {
@@ -8,6 +8,10 @@ export default function Wheel({ onSlotSelected }) {
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
+
+  // slot, ki se prikazuje med spinanjem (hitro se menja)
+  const [spinningSlot, setSpinningSlot] = useState(null);
+  const shuffleIntervalRef = useRef(null);
 
   const TOTAL_SEGMENTS = SLOTS.length || 200;
 
@@ -27,48 +31,72 @@ export default function Wheel({ onSlotSelected }) {
     if (isSpinning) return;
 
     setIsSpinning(true);
+    setShowModal(false);
+    setSelectedSlot(null);
     playSpinSound();
 
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
-    
-    // Always spin at least 2 full turns (720°)
-    const baseTurns = 720; 
-    
-    // Random additional offset to make each spin unique
+
+    // vsaj 2 polna kroga + random
+    const baseTurns = 720;
     const randomOffset = Math.floor(Math.random() * 360);
-    
-    // Total rotation
     const nextAngle = angle + baseTurns + randomOffset;
-    
     setAngle(nextAngle);
-    
+
+    // spin traja 3 sekunde (da se ujema z zvokom)
     setTimeout(() => {
       setIsSpinning(false);
       setSelectedSlot(nextSlot);
       setShowModal(true);
-      if (onSlotSelected) onSlotSelected(nextSlot);
+      setSpinningSlot(null);
       playWinSound();
+      if (onSlotSelected) onSlotSelected(nextSlot);
     }, 3000);
   };
 
   const handlePlay = () => {
     if (!selectedSlot) return;
     const url =
-      selectedSlot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
+      selectedSlot.affiliate?.default || "https://bzstarz.com/boe5tub8a"; // po potrebi popravi link
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
+  // center text – uporablja spinningSlot med spinom
   const centerLabel = (() => {
-    if (isSpinning) return "Spinning…";
+    if (isSpinning && spinningSlot) return spinningSlot.name;
     if (selectedSlot) return selectedSlot.name;
     return "Random slot";
   })();
 
   const centerSub = (() => {
-    if (isSpinning) return "Tap to spin again";
+    if (isSpinning && spinningSlot) return spinningSlot.provider || "Spinning…";
+    if (isSpinning) return "Spinning…";
     if (selectedSlot) return selectedSlot.provider || "Selected slot";
     return "Tap to spin";
   })();
+
+  // efekt: med spinom vsakih ~80 ms zamenjamo random slot
+  useEffect(() => {
+    if (isSpinning) {
+      shuffleIntervalRef.current = setInterval(() => {
+        const randomSlot =
+          SLOTS[Math.floor(Math.random() * SLOTS.length)];
+        setSpinningSlot(randomSlot);
+      }, 80); // hitrost menjavanja imen (manj = hitreje)
+    } else {
+      if (shuffleIntervalRef.current) {
+        clearInterval(shuffleIntervalRef.current);
+        shuffleIntervalRef.current = null;
+      }
+    }
+
+    // cleanup, če se komponenta unmounta
+    return () => {
+      if (shuffleIntervalRef.current) {
+        clearInterval(shuffleIntervalRef.current);
+      }
+    };
+  }, [isSpinning]);
 
   const closeModalAndMaybeSpin = (spinAgain = false) => {
     setShowModal(false);
