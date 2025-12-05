@@ -1,43 +1,30 @@
 export default function Navbar() {
   return (
-    <nav className="w-full sticky top-0 z-30 border-b border-white/5 bg-black/60 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.8)]">
+    <nav className="w-full sticky top-0 z-30 border-b border-white/5 bg-black/60 backdrop-blur-xl shadow-[0_10px_40px_rgba(0,0,0,0.7)]">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        {/* Logo + brand */}
+
+        {/* LEFT SIDE — Logo + Brand */}
         <a href="/" className="flex items-center gap-2">
-          {/* krožni gradient logo-badge (lahko kasneje zamenjaš z <img src="/logo.png" />) */}
-          <div className="h-8 w-8 rounded-full bg-[conic-gradient(from_220deg,#22d3ee,#6366f1,#a855f7,#ec4899,#f97316,#22c55e,#22d3ee)] shadow-[0_0_16px_rgba(168,85,247,0.8)] flex items-center justify-center">
-            <span className="text-[9px] font-semibold tracking-[0.18em] uppercase text-white/90">
-              WS
-            </span>
-          </div>
+          {/* Actual uploaded logo */}
+          <img
+            src="/logo.png"
+            alt="WhichSlot logo"
+            className="h-9 w-9 rounded-full shadow-[0_0_20px_rgba(168,85,247,0.85)] ring-1 ring-white/10"
+          />
 
           <span className="text-lg font-semibold tracking-tight">
             <span className="text-white">Which</span>
-            <span className="text-neonPurple">Slot</span>
+            <span className="text-violet-400">Slot</span>
           </span>
         </a>
 
-        {/* Nav links */}
-        <div className="flex items-center gap-6 text-sm text-gray-200">
-          <a
-            href="/"
-            className="relative hover:text-white transition"
-          >
-            Wheel
-          </a>
-          <a
-            href="/slots"
-            className="relative hover:text-white transition"
-          >
-            Slots
-          </a>
-          <a
-            href="/casinos"
-            className="relative hover:text-white transition"
-          >
-            Casinos
-          </a>
+        {/* RIGHT SIDE — Links */}
+        <div className="flex items-center gap-6 text-sm text-gray-300">
+          <a href="/" className="hover:text-white transition">Wheel</a>
+          <a href="/slots" className="hover:text-white transition">Slots</a>
+          <a href="/casinos" className="hover:text-white transition">Casinos</a>
         </div>
+
       </div>
     </nav>
   );
