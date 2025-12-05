@@ -1,3 +1,4 @@
+// components/Wheel.js
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -9,7 +10,7 @@ export default function Wheel({ onSlotSelected }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  // slot, ki se prikazuje med spinanjem (hitro se menja)
+  // slot, ki se prikazuje med spinanjem (shuffle efekt)
   const [spinningSlot, setSpinningSlot] = useState(null);
   const shuffleIntervalRef = useRef(null);
 
@@ -33,6 +34,7 @@ export default function Wheel({ onSlotSelected }) {
     setIsSpinning(true);
     setShowModal(false);
     setSelectedSlot(null);
+
     playSpinSound();
 
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
@@ -43,7 +45,7 @@ export default function Wheel({ onSlotSelected }) {
     const nextAngle = angle + baseTurns + randomOffset;
     setAngle(nextAngle);
 
-    // spin traja 3 sekunde (da se ujema z zvokom)
+    // spin traja ~3 s (da se ujema z zvokom)
     setTimeout(() => {
       setIsSpinning(false);
       setSelectedSlot(nextSlot);
@@ -57,32 +59,32 @@ export default function Wheel({ onSlotSelected }) {
   const handlePlay = () => {
     if (!selectedSlot) return;
     const url =
-      selectedSlot.affiliate?.default || "https://bzstarz.com/boe5tub8a"; // po potrebi popravi link
+      selectedSlot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // center text – uporablja spinningSlot med spinom
+  // center text – med spinom kaže spinningSlot, sicer izbranega ali default
   const centerLabel = (() => {
     if (isSpinning && spinningSlot) return spinningSlot.name;
     if (selectedSlot) return selectedSlot.name;
-    return "Random slot";
-  })();
-
-  const centerSub = (() => {
-    if (isSpinning && spinningSlot) return spinningSlot.provider || "Spinning…";
-    if (isSpinning) return "Spinning…";
-    if (selectedSlot) return selectedSlot.provider || "Selected slot";
     return "Tap to spin";
   })();
 
-  // efekt: med spinom vsakih ~80 ms zamenjamo random slot
+  const centerSub = (() => {
+    if (isSpinning && spinningSlot) return spinningSlot.provider || "Shuffling slots…";
+    if (isSpinning) return "Shuffling slots…";
+    if (selectedSlot) return selectedSlot.provider || "Selected slot";
+    return "Let WhichSlot decide";
+  })();
+
+  // med spinom hitro menjaj naključne slote v centru (shuffle efekt)
   useEffect(() => {
     if (isSpinning) {
       shuffleIntervalRef.current = setInterval(() => {
         const randomSlot =
           SLOTS[Math.floor(Math.random() * SLOTS.length)];
         setSpinningSlot(randomSlot);
-      }, 80); // hitrost menjavanja imen (manj = hitreje)
+      }, 80); // hitrost menjave (ms)
     } else {
       if (shuffleIntervalRef.current) {
         clearInterval(shuffleIntervalRef.current);
@@ -90,7 +92,6 @@ export default function Wheel({ onSlotSelected }) {
       }
     }
 
-    // cleanup, če se komponenta unmounta
     return () => {
       if (shuffleIntervalRef.current) {
         clearInterval(shuffleIntervalRef.current);
@@ -111,7 +112,7 @@ export default function Wheel({ onSlotSelected }) {
       <div className="flex flex-col items-center gap-5">
         {/* Wheel */}
         <div
-          className={`relative h-80 w-80 md:h-96 md:w-96 cursor-pointer select-none transition-transform duration-300 ${
+          className={`relative h-80 w-80 md:h-[460px] md:w-[460px] cursor-pointer select-none transition-transform duration-300 ${
             isSpinning ? "scale-105" : "scale-100"
           }`}
           onClick={handleSpin}
@@ -130,7 +131,7 @@ export default function Wheel({ onSlotSelected }) {
               {/* inner dark circle */}
               <div className="absolute inset-[14px] rounded-full bg-black/90" />
 
-              {/* tick marks */}
+              {/* tick marks (200 segmentov) */}
               <div className="absolute inset-[8px] rounded-full">
                 {Array.from({ length: TOTAL_SEGMENTS }).map((_, i) => {
                   const rotation = (360 / TOTAL_SEGMENTS) * i;
@@ -148,8 +149,8 @@ export default function Wheel({ onSlotSelected }) {
             </div>
           </div>
 
-          {/* center disc (static) */}
-          <div className="absolute inset-[40px] md:inset-[46px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
+          {/* center disc */}
+          <div className="absolute inset-[40px] md:inset-[52px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
             <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1">
               WhichSlot
             </p>
@@ -211,8 +212,8 @@ export default function Wheel({ onSlotSelected }) {
             )}
 
             <p className="text-[11px] text-gray-400 mb-4">
-              You can open this slot at a supported casino, or spin again if
-              you&apos;d like another suggestion.
+              Open this slot at a supported casino, or spin again if you&apos;d
+              like another suggestion.
             </p>
 
             <div className="flex items-center gap-2">
@@ -224,7 +225,7 @@ export default function Wheel({ onSlotSelected }) {
                 }}
                 className="flex-1 rounded-lg bg-emerald-500 px-3 py-2 text-xs font-semibold text-white shadow-[0_0_22px_rgba(16,185,129,0.9)] hover:brightness-110 active:scale-95 transition"
               >
-                Play now
+                Play now at BitStarz
               </button>
               <button
                 type="button"
