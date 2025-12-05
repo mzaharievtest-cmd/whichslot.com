@@ -1,219 +1,219 @@
-// components/Wheel.js
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { SLOTS } from "../app/data/slots";
+import { useState, useEffect, useRef } from "react";
+import { SLOTS } from "@/app/data/slots";
 
-export default function Wheel({ onSlotSelected }) {
+export default function Wheel() {
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-
-  // za shuffle imen med spinom
-  const [spinningSlot, setSpinningSlot] = useState(null);
-  const shuffleIntervalRef = useRef(null);
-
-  const TOTAL_SEGMENTS = SLOTS.length || 200;
+  const [previewSlot, setPreviewSlot] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+  const tickerRef = useRef(null);
 
   const playSpinSound = () => {
     const audio = new Audio("/spin.mp3");
-    audio.volume = 0.9;
+    audio.volume = 0.6;
     audio.play().catch(() => {});
   };
 
   const playWinSound = () => {
     const audio = new Audio("/win.wav");
-    audio.volume = 0.9;
+    audio.volume = 0.8;
     audio.play().catch(() => {});
   };
 
+  const getRandomSlot = () =>
+    SLOTS[Math.floor(Math.random() * SLOTS.length)];
+
   const handleSpin = () => {
-    if (isSpinning) return;
+    if (isSpinning || SLOTS.length === 0) return;
 
     setIsSpinning(true);
-    setShowModal(false);
-    setSelectedSlot(null);
+    setShowResult(false);
+
+    const targetSlot = getRandomSlot();
+    setPreviewSlot(targetSlot);
 
     playSpinSound();
 
-    const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
-
-    // vsaj 2 polna kroga + random
-    const baseTurns = 720;
+    const extraTurns = 3; // 3 polni obrati
     const randomOffset = Math.floor(Math.random() * 360);
-    const nextAngle = angle + baseTurns + randomOffset;
-    setAngle(nextAngle);
+    setAngle((prev) => prev + extraTurns * 360 + randomOffset);
 
-    // ~3s, da se ujema z zvokom
-    setTimeout(() => {
+    // hitro menjavanje imen med spinom (feeling slot machine)
+    tickerRef.current = window.setInterval(() => {
+      setPreviewSlot(getRandomSlot());
+    }, 80);
+
+    window.setTimeout(() => {
+      if (tickerRef.current) {
+        clearInterval(tickerRef.current);
+        tickerRef.current = null;
+      }
+      setSelectedSlot(targetSlot);
+      setPreviewSlot(targetSlot);
       setIsSpinning(false);
-      setSelectedSlot(nextSlot);
-      setShowModal(true);
-      setSpinningSlot(null);
       playWinSound();
-      if (onSlotSelected) onSlotSelected(nextSlot);
-    }, 3000);
+      setShowResult(true);
+    }, 1700);
   };
 
+  useEffect(() => {
+    return () => {
+      if (tickerRef.current) {
+        clearInterval(tickerRef.current);
+      }
+    };
+  }, []);
+
   const handlePlay = () => {
-    if (!selectedSlot) return;
+    const slot = selectedSlot || previewSlot;
+    if (!slot) return;
+
     const url =
-      selectedSlot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
+      slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // center tekst
-  const centerLabel = (() => {
-    if (isSpinning && spinningSlot) return spinningSlot.name;
-    if (selectedSlot) return selectedSlot.name;
-    return "Tap to spin";
-  })();
-
-  const centerSub = (() => {
-    if (isSpinning && spinningSlot) return spinningSlot.provider || "Shuffling slots…";
-    if (isSpinning) return "Shuffling slots…";
-    if (selectedSlot) return selectedSlot.provider || "Selected slot";
-    return "Let WhichSlot decide";
-  })();
-
-  // shuffle efekt imen med spinom
-  useEffect(() => {
-    if (isSpinning) {
-      shuffleIntervalRef.current = setInterval(() => {
-        const randomSlot =
-          SLOTS[Math.floor(Math.random() * SLOTS.length)];
-        setSpinningSlot(randomSlot);
-      }, 70); // hitro menjavanje
-    } else {
-      if (shuffleIntervalRef.current) {
-        clearInterval(shuffleIntervalRef.current);
-        shuffleIntervalRef.current = null;
-      }
-    }
-
-    return () => {
-      if (shuffleIntervalRef.current) {
-        clearInterval(shuffleIntervalRef.current);
-      }
-    };
-  }, [isSpinning]);
-
-  const closeModalAndMaybeSpin = (spinAgain = false) => {
-    setShowModal(false);
-    if (spinAgain) {
-      setTimeout(() => handleSpin(), 180);
-    }
-  };
+  const displaySlot = previewSlot || selectedSlot;
 
   return (
-    <>
-      {/* wheel + CTA */}
-      <div className="flex flex-col items-center gap-5">
-        {/* Wheel wrapper */}
+    <div className="flex flex-col items-center gap-6">
+
+      {/* WHEEL */}
+      <div
+        className="relative h-[320px] w-[320px] md:h-[380px] md:w-[380px] cursor-pointer select-none"
+        onClick={handleSpin}
+      >
+        {/* ambient glow */}
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_0%,rgba(94,234,212,0.25),transparent_55%),radial-gradient(circle_at_70%_100%,rgba(244,114,182,0.25),transparent_55%)] blur-xl" />
+
+        {/* pointer */}
+        <div className="pointer-events-none absolute -top-2 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[11px] border-r-[11px] border-b-[17px] border-l-transparent border-r-transparent border-b-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]" />
+
+        {/* spinning disc */}
         <div
-          className={`relative h-72 w-72 sm:h-80 sm:w-80 md:h-[420px] md:w-[420px] cursor-pointer select-none transition-transform duration-300 ${
-            isSpinning ? "scale-105" : "scale-100"
-          }`}
-          onClick={handleSpin}
+          className="absolute inset-0 rounded-full bg-[conic-gradient(from_220deg_at_50%_50%,#22d3ee,#6366f1,#a855f7,#ec4899,#f97316,#22c55e,#22d3ee)] p-[12px] shadow-[0_20px_60px_rgba(0,0,0,0.85)] transition-transform duration-[1600ms] ease-out"
+          style={{ transform: `rotate(${angle}deg)` }}
         >
-          {/* zunanja neon aura */}
-          <div className="pointer-events-none absolute -inset-4 rounded-full bg-[radial-gradient(circle_at_30%_0%,rgba(244,114,182,0.5),transparent_55%),radial-gradient(circle_at_75%_100%,rgba(56,189,248,0.5),transparent_55%)] opacity-60 blur-2xl" />
+          <div className="h-full w-full rounded-full bg-black/90 flex items-center justify-center">
+            {/* inner glow ring */}
+            <div className="relative h-[86%] w-[86%] rounded-full bg-[radial-gradient(circle_at_50%_0%,rgba(148,163,184,0.45),transparent_62%)] flex items-center justify-center">
+              <div className="absolute inset-[20%] rounded-full border border-white/5" />
 
-          {/* pointer / chevron */}
-          <div
-            className={`pointer-events-none absolute -top-3 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[12px] border-r-[12px] border-b-[18px] border-l-transparent border-r-transparent border-b-white drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)] ${
-              isSpinning ? "animate-pointerWiggle" : ""
-            }`}
-          />
-
-          {/* rotating ring */}
-          <div
-            className={`absolute inset-0 rounded-full p-[10px] shadow-[0_22px_55px_rgba(0,0,0,0.95)] transition-transform duration-[3000ms] ease-out ${
-              isSpinning ? "brightness-110" : ""
-            }`}
-            style={{ transform: `rotate(${angle}deg)` }}
-          >
-            <div className="relative h-full w-full rounded-full bg-[conic-gradient(from_210deg_at_50%_50%,#22c55e,#22d3ee,#6366f1,#a855f7,#ec4899,#f97316,#22c55e)]">
-              {/* inner black disc */}
-              <div className="absolute inset-[16px] rounded-full bg-black/95" />
-
-              {/* tick marks */}
-              <div className="absolute inset-[10px] rounded-full">
-                {Array.from({ length: TOTAL_SEGMENTS }).map((_, i) => {
-                  const rotation = (360 / TOTAL_SEGMENTS) * i;
-                  return (
-                    <div
-                      key={i}
-                      className="absolute inset-0"
-                      style={{ transform: `rotate(${rotation}deg)` }}
-                    >
-                      <div className="absolute left-1/2 top-[3px] h-[10px] w-[1px] -translate-x-1/2 bg-white/35" />
-                    </div>
-                  );
-                })}
+              {/* center disc */}
+              <div className="relative h-[68%] w-[68%] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
+                <p className="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-1">
+                  WhichSlot
+                </p>
+                <p className="text-sm font-semibold text-white line-clamp-2">
+                  {isSpinning
+                    ? "Spinning…"
+                    : displaySlot?.name || "Tap to spin"}
+                </p>
+                <p className="mt-1 text-[11px] text-gray-400">
+                  {isSpinning
+                    ? "Finding a slot for you"
+                    : displaySlot?.provider || "Let WhichSlot decide"}
+                </p>
               </div>
             </div>
           </div>
-
-          {/* center disc */}
-          <div className="absolute inset-[42px] sm:inset-[46px] md:inset-[56px] rounded-full bg-[radial-gradient(circle_at_30%_0%,rgba(148,163,253,0.6),transparent_55%),radial-gradient(circle_at_70%_100%,rgba(236,72,153,0.5),transparent_55%)] opacity-80 blur-[1px]" />
-          <div className="absolute inset-[50px] sm:inset-[54px] md:inset-[64px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
-            <p className="text-[10px] uppercase tracking-[0.32em] text-gray-500 mb-1">
-              WhichSlot
-            </p>
-            <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
-              {centerLabel}
-            </p>
-            <p className="mt-1 text-[10px] text-gray-400">{centerSub}</p>
-          </div>
         </div>
-
-        {/* Spin button */}
-        <button
-          type="button"
-          onClick={handleSpin}
-          disabled={isSpinning}
-          className={`rounded-full bg-gradient-to-r from-[#a855f7] via-[#ec4899] to-[#f97316] px-10 py-2.5 text-sm font-semibold text-white shadow-[0_0_32px_rgba(236,72,153,0.9)] transition hover:brightness-110 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed ${
-            !isSpinning && selectedSlot ? "animate-ctaPulse" : ""
-          }`}
-        >
-          {isSpinning ? "Spinning…" : "Spin the wheel"}
-        </button>
       </div>
 
-      {/* RESULT MODAL */}
-      {selectedSlot && showModal && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="relative w-full max-w-md scale-100 rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
+      {/* MAIN SPIN BUTTON */}
+      <button
+        type="button"
+        onClick={handleSpin}
+        disabled={isSpinning}
+        className="rounded-full bg-gradient-to-r from-fuchsia-500 to-violet-500 px-10 py-3 text-sm font-semibold text-white shadow-[0_0_30px_rgba(217,70,239,0.6)] hover:brightness-110 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed transition"
+      >
+        {isSpinning ? "Spinning…" : "Spin the wheel"}
+      </button>
+
+      {/* COMPACT RESULT CARD POD WHEEL */}
+      {displaySlot && (
+        <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl px-4 py-3 shadow-[0_18px_45px_rgba(0,0,0,0.8)] text-left text-sm text-gray-200">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-gray-400 mb-1">
+            Selected slot
+          </p>
+
+          <p className="text-base font-semibold text-white">
+            {displaySlot.name}
+          </p>
+
+          {displaySlot.provider && (
+            <p className="text-xs text-gray-400 mb-2">
+              {displaySlot.provider}
+            </p>
+          )}
+
+          {/* mini play now chip */}
+          <button
+            type="button"
+            onClick={handlePlay}
+            className="inline-flex items-center rounded-md bg-emerald-500/90 hover:bg-emerald-500 px-3 py-1.5 text-[11px] font-semibold text-white shadow-md active:scale-95 transition"
+          >
+            Play now
+          </button>
+
+          {displaySlot.tags?.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-1.5">
+              {displaySlot.tags.slice(0, 5).map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-white/15 bg-black/40 px-2 py-1 text-[10px] text-gray-200"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-3 flex gap-2">
             <button
               type="button"
-              onClick={() => setShowModal(false)}
-              className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
+              onClick={handlePlay}
+              className="flex-1 rounded-lg bg-emerald-500/80 hover:bg-emerald-500 px-3 py-2 text-xs font-semibold text-white shadow-[0_0_20px_rgba(16,185,129,0.7)] active:scale-95 transition"
             >
-              ✕
+              Play now in new tab
             </button>
+            <button
+              type="button"
+              onClick={handleSpin}
+              className="rounded-lg border border-white/20 px-3 py-2 text-[11px] text-gray-200 hover:bg-white/5 active:scale-95 transition"
+              disabled={isSpinning}
+            >
+              Spin again
+            </button>
+          </div>
+        </div>
+      )}
 
-            <p className="text-[11px] uppercase tracking-[0.28em] text-emerald-300 mb-2 flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
-              Slot selected
+      {/* RESULT MODAL */}
+      {showResult && selectedSlot && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-sm rounded-3xl border border-emerald-400/50 bg-[#020617]/95 px-5 py-6 shadow-[0_30px_80px_rgba(0,0,0,0.9)]">
+            <p className="text-[11px] uppercase tracking-[0.3em] text-emerald-300 mb-2">
+              Your slot
             </p>
-
-            <h2 className="text-xl font-bold text-white leading-tight mb-1">
+            <h2 className="text-xl font-semibold text-white mb-1">
               {selectedSlot.name}
             </h2>
             {selectedSlot.provider && (
-              <p className="text-xs text-gray-300 mb-3">
-                by {selectedSlot.provider}
+              <p className="text-xs text-gray-400 mb-3">
+                {selectedSlot.provider}
               </p>
             )}
 
-            {selectedSlot.tags && selectedSlot.tags.length > 0 && (
+            {selectedSlot.tags?.length > 0 && (
               <div className="mb-4 flex flex-wrap gap-1.5">
-                {selectedSlot.tags.slice(0, 5).map((tag) => (
+                {selectedSlot.tags.slice(0, 6).map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full border border-white/15 bg-black/60 px-2 py-1 text-[10px] text-gray-100"
+                    className="rounded-full border border-white/15 bg-white/5 px-2 py-1 text-[10px] text-gray-200"
                   >
                     {tag}
                   </span>
@@ -221,33 +221,35 @@ export default function Wheel({ onSlotSelected }) {
               </div>
             )}
 
-            <p className="text-[11px] text-gray-300 mb-4">
-              Ready to try this game? Open it at a supported casino, or spin
-              again if you&apos;d like another suggestion.
-            </p>
-
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  handlePlay();
-                  setShowModal(false);
-                }}
-                className="flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-400 px-3 py-2 text-xs font-semibold text-white shadow-[0_0_26px_rgba(16,185,129,0.95)] hover:brightness-110 active:scale-95 transition"
+                onClick={handlePlay}
+                className="w-full rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_35px_rgba(16,185,129,0.9)] active:scale-95 transition"
               >
-                Play now at BitStarz
+                Play now
               </button>
               <button
                 type="button"
-                onClick={() => closeModalAndMaybeSpin(true)}
-                className="rounded-lg border border-white/25 px-3 py-2 text-[11px] text-gray-200 hover:bg-white/10 active:scale-95 transition"
+                onClick={() => {
+                  setShowResult(false);
+                  handleSpin();
+                }}
+                className="w-full rounded-xl border border-white/20 bg-white/5 px-4 py-2.5 text-xs font-semibold text-gray-100 hover:bg-white/10 active:scale-95 transition"
               >
                 Spin again
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowResult(false)}
+                className="mt-1 w-full text-[11px] text-gray-400 hover:text-gray-200 transition"
+              >
+                Close
               </button>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
