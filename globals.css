@@ -43,3 +43,28 @@ body {
 .chip {
   @apply px-3 py-1 rounded-full text-xs bg-white/5 border border-white/10 text-gray-300 backdrop-blur-lg;
 }
+
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #e5e7eb; /* text-slate-200 */
+  background-color: #020617; /* slate-950 / near black */
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(251, 113, 133, 0.14), transparent 55%),
+    radial-gradient(circle at 50% 100%, rgba(45, 212, 191, 0.16), transparent 55%);
+  background-attachment: fixed;
+  background-size: 140% 140%;
+  animation: whichslot-bg-move 38s ease-in-out infinite alternate;
+}
+
+/* nežna animacija “živega” ozadja */
+@keyframes whichslot-bg-move {
+  0% {
+    background-position: 0% 0%, 100% 0%, 50% 100%;
+  }
+  100% {
+    background-position: 15% 20%, 85% 10%, 55% 90%;
+  }
+}
