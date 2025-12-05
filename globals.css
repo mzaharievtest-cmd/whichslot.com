@@ -68,3 +68,30 @@ body {
     background-position: 15% 20%, 85% 10%, 55% 90%;
   }
 }
+.nav-link {
+  position: relative;
+  color: rgb(200 200 200 / 0.8);
+  transition: all 0.25s ease;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+/* Neon underline */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, #8b5cf6, #d946ef);
+  border-radius: 9999px;
+  transition: width 0.25s ease-out;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
