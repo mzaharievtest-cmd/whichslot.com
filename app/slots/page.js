@@ -39,17 +39,19 @@ export default function SlotsPage() {
         <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
           WhichSlot · Slots
         </p>
+
         <h1 className="text-3xl md:text-4xl font-bold text-white">
           All slots in the wheel
         </h1>
+
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
-          Browse all slots that can appear in the wheel. Search or filter
-          by provider. When you find a game you like, press{" "}
+          Browse all slots that can appear in the wheel. Use search or filter by
+          provider to explore the list. When you find a game you like, press{" "}
           <span className="font-semibold">Play now</span>.
         </p>
       </header>
 
-      {/* Search + filter */}
+      {/* Search + Filters */}
       <section className="space-y-3">
         <input
           type="text"
@@ -79,6 +81,7 @@ export default function SlotsPage() {
                   </option>
                 ))}
               </select>
+
               <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[10px] text-gray-400">
                 ▼
               </span>
@@ -92,12 +95,10 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition flex flex-col justify-between"
+            className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col justify-between shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
             <div>
-              <p className="text-[10px] uppercase tracking-[0.24em] text-gray-500 mb-1">
-                #{slot.id.toString().padStart(3, "0")}
-              </p>
+              {/* REMOVED ID NUMBER */}
 
               <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
                 {slot.name}
@@ -105,7 +106,7 @@ export default function SlotsPage() {
 
               <p className="mt-1 text-xs text-gray-300">{slot.provider}</p>
 
-              {slot.tags?.length > 0 && (
+              {slot.tags && slot.tags.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {slot.tags.slice(0, 4).map((tag) => (
                     <span
@@ -119,11 +120,14 @@ export default function SlotsPage() {
               )}
             </div>
 
-            {/* CTA row */}
-            <div className="mt-4 flex items-center">
+            <div className="mt-4 flex items-center gap-2">
               <button
                 onClick={() => handlePlay(slot)}
-                className="w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-400 px-4 py-2.5 text-xs md:text-sm font-semibold text-white shadow-[0_0_26px_rgba(16,185,129,0.95)] hover:brightness-110 active:scale-95 transition"
+                className="flex-1 inline-flex items-center justify-center rounded-lg 
+                           bg-gradient-to-r from-emerald-500 to-cyan-400 
+                           px-3 py-2 text-xs md:text-sm font-semibold text-white
+                           shadow-[0_0_20px_rgba(16,185,129,0.8)]
+                           group-hover:brightness-110 active:scale-95 transition"
               >
                 Play now
               </button>
