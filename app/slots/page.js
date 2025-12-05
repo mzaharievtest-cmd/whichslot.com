@@ -14,7 +14,6 @@ export default function SlotsPage() {
 
   const filteredSlots = useMemo(() => {
     const term = search.trim().toLowerCase();
-
     return SLOTS.filter((slot) => {
       const matchesSearch =
         !term ||
@@ -34,47 +33,44 @@ export default function SlotsPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-14 space-y-10">
-      {/* HEADER */}
+    <div className="max-w-6xl mx-auto px-4 py-12 space-y-8">
       <header className="space-y-3">
         <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
           WhichSlot · Slots
         </p>
-
-        <h1 className="section-title">All slots in the wheel</h1>
-
+        <h1 className="text-3xl md:text-4xl font-bold text-white">
+          All slots in the wheel
+        </h1>
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
-          Browse all slots that can appear in the wheel. Use search or filter by
-          provider to explore the list. When you find a game you like, press{" "}
-          <strong>Play now</strong> to open it at a supported site.
+          Browse all slots that can appear in the wheel. Search or filter
+          by provider. When you find a game you like, press{" "}
+          <span className="font-semibold">Play now</span>.
         </p>
       </header>
 
-      {/* SEARCH + FILTERS */}
-      <section className="space-y-4">
-        {/* Search input */}
+      {/* SEARCH */}
+      <section className="space-y-3">
         <input
           type="text"
           placeholder="Search by slot or provider..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-neonPurple/60 backdrop-blur"
+          className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
         />
 
-        {/* Filters row */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <p className="text-[11px] text-gray-400">
+          <div className="text-[11px] text-gray-400">
             {filteredSlots.length} of {SLOTS.length} slots
-          </p>
+          </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 md:gap-3">
             <span className="text-xs text-gray-400">Provider</span>
 
             <div className="relative inline-flex">
               <select
                 value={providerFilter}
                 onChange={(e) => setProviderFilter(e.target.value)}
-                className="appearance-none rounded-xl border border-white/10 bg-white/5 px-3 pr-8 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neonPurple/60 backdrop-blur"
+                className="appearance-none rounded-xl border border-white/10 bg-white/5 px-3 pr-8 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
               >
                 {providers.map((p) => (
                   <option key={p} value={p}>
@@ -92,31 +88,29 @@ export default function SlotsPage() {
       </section>
 
       {/* GRID */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="card group flex flex-col justify-between rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] hover:border-neonPurple/60 transition"
+            className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition flex flex-col justify-between"
           >
-            {/* Slot info */}
             <div>
               <p className="text-[10px] uppercase tracking-[0.24em] text-gray-500 mb-1">
                 #{slot.id.toString().padStart(3, "0")}
               </p>
 
-              <h2 className="text-base md:text-lg font-semibold text-white leading-tight line-clamp-2">
+              <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
                 {slot.name}
               </h2>
 
               <p className="mt-1 text-xs text-gray-300">{slot.provider}</p>
 
-              {/* Tags */}
-              {slot.tags && slot.tags.length > 0 && (
+              {slot.tags?.length > 0 && (
                 <div className="mt-3 flex flex-wrap gap-1.5">
                   {slot.tags.slice(0, 4).map((tag) => (
                     <span
                       key={tag}
-                      className="chip text-[10px] border-white/10 bg-black/40"
+                      className="rounded-full bg-dark px-2 py-1 text-[10px] text-gray-200 border border-white/10"
                     >
                       {tag}
                     </span>
@@ -125,31 +119,20 @@ export default function SlotsPage() {
               )}
             </div>
 
-            {/* Buttons */}
-            <div className="mt-5 flex items-center gap-2">
+            <div className="mt-4 flex items-center gap-2">
               <button
                 onClick={() => handlePlay(slot)}
-                className="btn-primary flex-1 text-xs md:text-sm"
+                className="flex-1 inline-flex items-center justify-center rounded-lg bg-emerald-500 px-3 py-2 text-xs md:text-sm font-semibold text-white shadow-[0_0_20px_rgba(16,185,129,0.8)] group-hover:brightness-110 active:scale-95 transition"
               >
                 Play now
-              </button>
-
-              <button
-                onClick={() =>
-                  window.scrollTo({ top: 0, behavior: "smooth" })
-                }
-                className="btn-secondary text-[11px] hidden sm:inline-flex"
-              >
-                Spin instead
               </button>
             </div>
           </article>
         ))}
       </section>
 
-      <p className="text-[11px] text-gray-500">
-        Make sure online gaming is legal in your country. Always play
-        responsibly.
+      <p className="text-[11px] text-gray-500 mt-4">
+        Make sure online gaming is legal in your country and always play responsibly.
       </p>
     </div>
   );
