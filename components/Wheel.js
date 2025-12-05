@@ -12,13 +12,13 @@ export default function Wheel({ onSlotSelected }) {
   const TOTAL_SEGMENTS = SLOTS.length || 200;
 
   const playSpinSound = () => {
-    const audio = new Audio("/public/spin.mp3");
+    const audio = new Audio("/spin.mp3");
     audio.volume = 0.9;
     audio.play().catch(() => {});
   };
 
   const playWinSound = () => {
-    const audio = new Audio("/public/win.wav");
+    const audio = new Audio("/win.wav");
     audio.volume = 0.9;
     audio.play().catch(() => {});
   };
