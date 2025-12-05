@@ -30,12 +30,18 @@ export default function Wheel({ onSlotSelected }) {
     playSpinSound();
 
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
-
-    const extraTurns = 3 + Math.floor(Math.random() * 3); // 3–5 turns
+    
+    // Always spin at least 2 full turns (720°)
+    const baseTurns = 720; 
+    
+    // Random additional offset to make each spin unique
     const randomOffset = Math.floor(Math.random() * 360);
-    const nextAngle = angle + extraTurns * 360 + randomOffset;
+    
+    // Total rotation
+    const nextAngle = angle + baseTurns + randomOffset;
+    
     setAngle(nextAngle);
-
+    
     setTimeout(() => {
       setIsSpinning(false);
       setSelectedSlot(nextSlot);
