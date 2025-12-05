@@ -1,9 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="mt-16 w-full border-t border-white/10 bg-black/60 backdrop-blur-xl">
-      {/* gradient “neon” linija na vrhu footra */}
-      <div className="h-0.5 w-full bg-gradient-to-r from-emerald-400 via-fuchsia-500 to-sky-400 opacity-70" />
-
+    <footer className="mt-16 w-full border-top border-white/10 bg-[#020617]/95 border-t border-white/10">
       <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs text-gray-400 md:flex-row md:items-center md:justify-between">
         <p>© 2025 WhichSlot.com — 18+ Play responsibly.</p>
 
