@@ -11,14 +11,14 @@ export default function WheelPage() {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-          Don&apos;t know which slot to play?
+          Don't know which slot to play?
         </h1>
 
         <p className="text-gray-300 max-w-2xl mx-auto leading-relaxed">
-          Tap the wheel or press <span className="font-semibold text-white">Spin the wheel</span> and we&apos;ll pick a random game
-          from our curated list of popular online slots.
-          If you like the result, press <span className="font-semibold text-white">Play now</span>. If not, just{" "}
-          <span className="font-semibold text-white">spin again</span>.
+          Tap the wheel or press <span className="font-semibold text-white">Spin the wheel</span> and we'll pick a random game from
+          our curated list of popular online slots.  
+          If you like the result, press <span className="font-semibold text-white">Play now</span>.  
+          If not, just <span className="font-semibold text-white">spin again</span>.
         </p>
 
         {/* CHIPS */}
@@ -32,8 +32,9 @@ export default function WheelPage() {
       {/* WHEEL */}
       <Wheel />
 
-      {/* INFO CARDS */}
+      {/* LOWER INFO CARDS */}
       <div className="flex flex-col md:flex-row gap-4 mt-14 px-4 max-w-3xl w-full">
+        
         <div className="flex-1 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 shadow-lg">
           <h3 className="font-semibold text-white mb-1">Fair by design</h3>
           <p className="text-gray-300 text-sm leading-relaxed">
@@ -44,9 +45,10 @@ export default function WheelPage() {
         <div className="flex-1 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 shadow-lg">
           <h3 className="font-semibold text-white mb-1">Play instantly</h3>
           <p className="text-gray-300 text-sm leading-relaxed">
-            Click <span className="font-semibold text-white">Play now</span> to open the selected game in a new tab while WhichSlot stays ready for your next spin.
+            Click <span className="font-semibold text-white">Play now</span> to open the selected game in a new tab while WhichSlot stays ready for the next spin.
           </p>
         </div>
+
       </div>
     </main>
   );
