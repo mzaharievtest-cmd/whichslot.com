@@ -1,18 +1,26 @@
-export const metadata = {
-  title: "WhichSlot.com – Spin. Discover. Play.",
-  description: "Spin the slot wheel and find your next favorite casino game."
-};
+// app/layout.js
 
 import "../globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { Plus_Jakarta_Sans } from "next/font/google";
+
+export const metadata = {
+  title: "WhichSlot.com – Spin. Discover. Play.",
+  description: "Spin the slot wheel and find your next favorite casino game.",
+};
+
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className={jakarta.className}>
         <Navbar />
-        <main className="min-h-screen">{children}</main>
+        <main className="min-h-screen bg-[#050816]">{children}</main>
         <Footer />
       </body>
     </html>
