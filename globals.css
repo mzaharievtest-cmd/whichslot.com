@@ -2,72 +2,76 @@
 @tailwind components;
 @tailwind utilities;
 
+/* -----------------------------------------------------------
+   GLOBAL BODY (casino-grade background + subtle glow motion)
+----------------------------------------------------------- */
 body {
-  background:
-    radial-gradient(circle at top, #111827 0, #020617 45%, #000 100%);
-  color: #ffffff;
+  margin: 0;
+  min-height: 100vh;
+  color: #e5e7eb; /* slate-200 */
+
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter",
     sans-serif;
+
+  background-color: #020617; /* deep navy / slate-950 */
+
+  /* Multi-radial glows — soft, casino-style */
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
+    radial-gradient(circle at 100% 0%, rgba(251, 113, 133, 0.14), transparent 55%),
+    radial-gradient(circle at 50% 100%, rgba(45, 212, 191, 0.16), transparent 55%);
+
+  background-attachment: fixed;
+  background-size: 140% 140%;
+
+  /* soft ambient movement */
+  animation: whichslot-bg-move 38s ease-in-out infinite alternate;
 }
 
+/* Background movement animation */
+@keyframes whichslot-bg-move {
+  0%   { background-position: 0% 0%, 100% 0%, 50% 100%; }
+  100% { background-position: 15% 20%, 85% 10%, 55% 90%; }
+}
+
+
+/* -----------------------------------------------------------
+   ANIMATIONS (pointer wiggle, CTA pulse, modal pop)
+----------------------------------------------------------- */
 @keyframes pointerWiggle {
   0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
-  25% { transform: translateX(-50%) translateY(-1px) rotate(-4deg); }
-  50% { transform: translateX(-50%) translateY(0) rotate(3deg); }
-  75% { transform: translateX(-50%) translateY(-1px) rotate(-2deg); }
+  25%      { transform: translateX(-50%) translateY(-1px) rotate(-4deg); }
+  50%      { transform: translateX(-50%) translateY(0) rotate(3deg); }
+  75%      { transform: translateX(-50%) translateY(-1px) rotate(-2deg); }
 }
 
 @keyframes ctaPulse {
   0%, 100% { transform: scale(1); box-shadow: 0 0 32px rgba(236,72,153,0.9); }
-  50% { transform: scale(1.05); box-shadow: 0 0 42px rgba(236,72,153,1); }
+  50%      { transform: scale(1.05); box-shadow: 0 0 42px rgba(236,72,153,1); }
 }
 
 @keyframes modalPop {
-  0% { transform: scale(0.85) translateY(14px); opacity: 0; }
-  60% { transform: scale(1.03) translateY(0); opacity: 1; }
+  0%   { transform: scale(0.85) translateY(14px); opacity: 0; }
+  60%  { transform: scale(1.03) translateY(0); opacity: 1; }
   100% { transform: scale(1) translateY(0); opacity: 1; }
 }
 
-.animate-pointerWiggle {
-  animation: pointerWiggle 0.9s ease-in-out infinite;
-}
+.animate-pointerWiggle { animation: pointerWiggle 0.9s ease-in-out infinite; }
+.animate-ctaPulse      { animation: ctaPulse 1.6s ease-in-out infinite; }
+.animate-modalPop      { animation: modalPop 220ms ease-out forwards; }
 
-.animate-ctaPulse {
-  animation: ctaPulse 1.6s ease-in-out infinite;
-}
 
-.animate-modalPop {
-  animation: modalPop 220ms ease-out forwards;
-}
-
+/* -----------------------------------------------------------
+   CHIP STYLE (used for feature pills)
+----------------------------------------------------------- */
 .chip {
   @apply px-3 py-1 rounded-full text-xs bg-white/5 border border-white/10 text-gray-300 backdrop-blur-lg;
 }
 
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  color: #e5e7eb; /* text-slate-200 */
-  background-color: #020617; /* slate-950 / near black */
-  background-image:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
-    radial-gradient(circle at 100% 0%, rgba(251, 113, 133, 0.14), transparent 55%),
-    radial-gradient(circle at 50% 100%, rgba(45, 212, 191, 0.16), transparent 55%);
-  background-attachment: fixed;
-  background-size: 140% 140%;
-  animation: whichslot-bg-move 38s ease-in-out infinite alternate;
-}
-
-/* nežna animacija “živega” ozadja */
-@keyframes whichslot-bg-move {
-  0% {
-    background-position: 0% 0%, 100% 0%, 50% 100%;
-  }
-  100% {
-    background-position: 15% 20%, 85% 10%, 55% 90%;
-  }
-}
+/* -----------------------------------------------------------
+   NAVIGATION LINKS — Neon Underline
+----------------------------------------------------------- */
 .nav-link {
   position: relative;
   color: rgb(200 200 200 / 0.8);
@@ -78,7 +82,6 @@ body {
   color: white;
 }
 
-/* Neon underline */
 .nav-link::after {
   content: "";
   position: absolute;
