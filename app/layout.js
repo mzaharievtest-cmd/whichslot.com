@@ -6,8 +6,19 @@ import Footer from "../components/Footer";
 import { Plus_Jakarta_Sans } from "next/font/google";
 
 export const metadata = {
-  title: "WhichSlot.com – Spin. Discover. Play.",
-  description: "Spin the slot wheel and find your next favorite casino game.",
+  title: "WhichSlot – Spin. Discover. Play.",
+  description: "Spin the slot wheel and discover your next favorite casino game.",
+
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+
+  manifest: "/site.webmanifest",
 };
 
 const jakarta = Plus_Jakarta_Sans({
