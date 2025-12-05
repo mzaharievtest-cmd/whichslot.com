@@ -3,13 +3,12 @@
 @tailwind utilities;
 
 /* -----------------------------------------------------------
-   ROOT + BODY (casino background)
+   ROOT + BODY (Aurora gradient + particles)
 ----------------------------------------------------------- */
 
-/* html ozadje, da margin-collapse ne pokaže čudne barve */
 html {
   min-height: 100%;
-  background-color: #020617; /* deep navy */
+  background-color: #020617; /* deep navy fallback */
 }
 
 body {
@@ -20,32 +19,62 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter",
     sans-serif;
 
-  background-color: #020617; /* deep navy / slate-950 */
+  /* Aurora-style neon gradient */
+  background:
+    radial-gradient(circle at 20% 20%, rgba(99,102,241,0.35), transparent 60%),
+    radial-gradient(circle at 80% 30%, rgba(236,72,153,0.35), transparent 60%),
+    linear-gradient(180deg, #020617 0%, #020617 100%);
 
-  /* DVA zgornja glowa – nič več svetlega pasu spodaj */
-  background-image:
-    radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
-    radial-gradient(circle at 100% 0%, rgba(251, 113, 133, 0.14), transparent 55%);
+  background-size: 200% 200%;
+  animation: auroraMove 16s ease-in-out infinite alternate;
 
-  background-attachment: fixed;
-  background-size: 140% 140%;
-
-  /* soft ambient movement */
-  animation: whichslot-bg-move 38s ease-in-out infinite alternate;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* Background movement animation – samo za 2 glowa */
-@keyframes whichslot-bg-move {
+/* Floating particle overlay (subtle casino vibe) */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.11) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 5px 5px, 7px 7px;
+  opacity: 0.18;
+  animation: particleFloat 22s linear infinite;
+}
+
+/* -----------------------------------------------------------
+   BACKGROUND ANIMATIONS
+----------------------------------------------------------- */
+
+@keyframes auroraMove {
   0% {
-    background-position: 0% 0%, 100% 0%;
+    background-position: 0% 0%, 100% 0%, 50% 100%;
+  }
+  50% {
+    background-position: 80% 20%, 20% 40%, 50% 100%;
   }
   100% {
-    background-position: 15% 20%, 85% 10%;
+    background-position: 0% 0%, 100% 0%, 50% 100%;
+  }
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0px);
+  }
+  100% {
+    transform: translateY(-30px);
   }
 }
 
 /* -----------------------------------------------------------
-   ANIMATIONS (pointer wiggle, CTA pulse, modal pop)
+   COMPONENT ANIMATIONS (pointer, CTA, modal)
 ----------------------------------------------------------- */
 
 @keyframes pointerWiggle {
@@ -72,20 +101,30 @@ body {
   100% { transform: scale(1)     translateY(0);   opacity: 1; }
 }
 
-.animate-pointerWiggle { animation: pointerWiggle 0.9s ease-in-out infinite; }
-.animate-ctaPulse      { animation: ctaPulse 1.6s ease-in-out infinite; }
-.animate-modalPop      { animation: modalPop 220ms ease-out forwards; }
+.animate-pointerWiggle {
+  animation: pointerWiggle 0.9s ease-in-out infinite;
+}
+
+.animate-ctaPulse {
+  animation: ctaPulse 1.6s ease-in-out infinite;
+}
+
+.animate-modalPop {
+  animation: modalPop 220ms ease-out forwards;
+}
 
 /* -----------------------------------------------------------
-   CHIP STYLE (used for feature pills)
+   CHIP STYLE (feature pills)
 ----------------------------------------------------------- */
+
 .chip {
   @apply px-3 py-1 rounded-full text-xs bg-white/5 border border-white/10 text-gray-300 backdrop-blur-lg;
 }
 
 /* -----------------------------------------------------------
-   NAVIGATION LINKS — Neon Underline
+   NAV LINKS — Neon underline
 ----------------------------------------------------------- */
+
 .nav-link {
   position: relative;
   color: rgb(200 200 200 / 0.8);
@@ -93,10 +132,9 @@ body {
 }
 
 .nav-link:hover {
-  color: white;
+  color: #ffffff;
 }
 
-/* Neon underline */
 .nav-link::after {
   content: "";
   position: absolute;
@@ -112,19 +150,4 @@ body {
 
 .nav-link:hover::after {
   width: 100%;
-}
-
-/* -----------------------------------------------------------
-   DARK BOTTOM OVERLAY (optional, za čist rob pri dnu)
------------------------------------------------------------ */
-body::after {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 180px;
-  pointer-events: none;
-  background: linear-gradient(to top, #020617 0%, transparent 100%);
-  z-index: -1;
 }
