@@ -1,5 +1,5 @@
 // app/wheel/page.js
-import Wheel from "../components/Wheel";
+import Wheel from "@/components/Wheel";
 
 export default function WheelPage() {
   return (
