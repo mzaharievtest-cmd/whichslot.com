@@ -4,6 +4,7 @@ import "../globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import Script from "next/script";
 
 export const metadata = {
   title: "WhichSlot – Spin. Discover. Play.",
@@ -29,22 +30,28 @@ const jakarta = Plus_Jakarta_Sans({
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      {/* ✅ Google Analytics */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-TRCDECQXG2"
+        strategy="afterInteractive"
+      />
+
+      <Script id="ga-init" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-TRCDECQXG2', {
+            page_path: window.location.pathname,
+          });
+        `}
+      </Script>
+
       <body className={jakarta.className}>
         <Navbar />
         <main className="min-h-screen bg-[#050816]">{children}</main>
         <Footer />
       </body>
-
-    <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TRCDECQXG2"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-  
-    gtag('config', 'G-TRCDECQXG2');
-  </script>
-    
     </html>
   );
 }
