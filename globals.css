@@ -39,3 +39,7 @@ body {
 .animate-modalPop {
   animation: modalPop 220ms ease-out forwards;
 }
+
+.chip {
+  @apply px-3 py-1 rounded-full text-xs bg-white/5 border border-white/10 text-gray-300 backdrop-blur-lg;
+}
