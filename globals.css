@@ -3,8 +3,15 @@
 @tailwind utilities;
 
 /* -----------------------------------------------------------
-   GLOBAL BODY (casino-grade background + subtle glow motion)
+   ROOT + BODY (casino background)
 ----------------------------------------------------------- */
+
+/* html ozadje, da margin-collapse ne pokaže čudne barve */
+html {
+  min-height: 100%;
+  background-color: #020617; /* deep navy */
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -40,6 +47,7 @@ body {
 /* -----------------------------------------------------------
    ANIMATIONS (pointer wiggle, CTA pulse, modal pop)
 ----------------------------------------------------------- */
+
 @keyframes pointerWiggle {
   0%, 100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
   25%      { transform: translateX(-50%) translateY(-1px) rotate(-4deg); }
@@ -107,9 +115,7 @@ body {
 }
 
 /* -----------------------------------------------------------
-   DARK BOTTOM OVERLAY
-   Ensures the very bottom is always clean & dark,
-   even if gradients shift.
+   DARK BOTTOM OVERLAY (optional, za čist rob pri dnu)
 ----------------------------------------------------------- */
 body::after {
   content: "";
