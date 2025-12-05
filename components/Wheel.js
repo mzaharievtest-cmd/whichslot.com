@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
 
 export default function Wheel({ onSlotSelected }) {
@@ -9,21 +9,25 @@ export default function Wheel({ onSlotSelected }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const spinAudioRef = useRef(null);
-  const winAudioRef = useRef(null);
-
   const TOTAL_SEGMENTS = SLOTS.length || 200;
+
+  const playSpinSound = () => {
+    const audio = new Audio("/public/spin.mp3");
+    audio.volume = 0.9;
+    audio.play().catch(() => {});
+  };
+
+  const playWinSound = () => {
+    const audio = new Audio("/public/win.wav");
+    audio.volume = 0.9;
+    audio.play().catch(() => {});
+  };
 
   const handleSpin = () => {
     if (isSpinning) return;
 
     setIsSpinning(true);
-
-    // spin sound
-    if (spinAudioRef.current) {
-      spinAudioRef.current.currentTime = 0;
-      spinAudioRef.current.play().catch(() => {});
-    }
+    playSpinSound();
 
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
 
@@ -37,6 +41,7 @@ export default function Wheel({ onSlotSelected }) {
       setSelectedSlot(nextSlot);
       setShowModal(true);
       if (onSlotSelected) onSlotSelected(nextSlot);
+      playWinSound();
     }, 1600);
   };
 
@@ -59,38 +64,15 @@ export default function Wheel({ onSlotSelected }) {
     return "Tap to spin";
   })();
 
-  // play win / result sound when we show the modal
-  useEffect(() => {
-    if (showModal && winAudioRef.current) {
-      winAudioRef.current.currentTime = 0;
-      winAudioRef.current.play().catch(() => {});
-    }
-  }, [showModal]);
-
   const closeModalAndMaybeSpin = (spinAgain = false) => {
     setShowModal(false);
     if (spinAgain) {
-      // small delay so closing animation feels natural
       setTimeout(() => handleSpin(), 150);
     }
   };
 
   return (
     <>
-      {/* sounds */}
-      <audio
-        ref={spinAudioRef}
-        src="/public/spin.mp3"
-        preload="auto"
-        className="hidden"
-      />
-      <audio
-        ref={winAudioRef}
-        src="/public/win.wav"
-        preload="auto"
-        className="hidden"
-      />
-
       {/* wheel + CTA */}
       <div className="flex flex-col items-center gap-5">
         {/* Wheel */}
@@ -195,7 +177,7 @@ export default function Wheel({ onSlotSelected }) {
             )}
 
             <p className="text-[11px] text-gray-400 mb-4">
-              You can open this slot at our partner casino, or spin again if
+              You can open this slot at a supported casino, or spin again if
               you&apos;d like another suggestion.
             </p>
 
