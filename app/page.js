@@ -1,9 +1,6 @@
-import Wheel from "@/components/Wheel";
+// app/page.js
+import { redirect } from "next/navigation";
 
-export default function WheelPage() {
-  return (
-    <main className="flex flex-col items-center justify-center pt-20 pb-32">
-      <Wheel />
-    </main>
-  );
+export default function Home() {
+  redirect("/wheel");
 }
