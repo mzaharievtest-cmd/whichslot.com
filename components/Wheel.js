@@ -80,13 +80,13 @@ export default function Wheel({ onSlotSelected }) {
       {/* sounds */}
       <audio
         ref={spinAudioRef}
-        src="/sounds/spin.mp3"
+        src="/public/spin.mp3"
         preload="auto"
         className="hidden"
       />
       <audio
         ref={winAudioRef}
-        src="/sounds/win.mp3"
+        src="/public/win.mp3"
         preload="auto"
         className="hidden"
       />
