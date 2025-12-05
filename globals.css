@@ -214,3 +214,16 @@ body::before {
 .link-clean {
   @apply text-gray-300 hover:text-white transition;
 }
+
+/* -----------------------------------------------------------
+   GLOBAL BUTTON STYLE — used across entire site
+----------------------------------------------------------- */
+.btn-primary {
+  @apply rounded-full font-semibold text-white shadow-[0_0_32px_rgba(236,72,153,0.8)]
+         bg-gradient-to-r from-[#a855f7] via-[#ec4899] to-[#f97316]
+         px-8 py-2.5 text-sm transition active:scale-95 hover:brightness-110;
+}
+
+.btn-primary:disabled {
+  @apply opacity-60 cursor-not-allowed;
+}
