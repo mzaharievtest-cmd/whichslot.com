@@ -1,9 +1,8 @@
 export default function Navbar() {
   return (
-    <nav className="w-full sticky top-0 z-30 border-b border-white/10 bg-black/30 backdrop-blur-xl">
-      <div className="mx-auto max-w-5xl h-14 flex items-center justify-center gap-10">
-
-        {/* Logo */}
+    <nav className="sticky top-0 z-40 border-b border-white/10 bg-black/10 backdrop-blur-xl">
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-center gap-12 px-4">
+        {/* Logo – centriran, malo večji, z nežnim glowom */}
         <a href="/" className="flex items-center">
           <img
             src="/logo.png"
@@ -12,13 +11,18 @@ export default function Navbar() {
           />
         </a>
 
-        {/* Navigation links */}
-        <div className="flex items-center gap-8 text-sm font-medium">
-          <a href="/" className="nav-link">Wheel</a>
-          <a href="/slots" className="nav-link">Slots</a>
-          <a href="/casinos" className="nav-link">Casinos</a>
+        {/* Navigacija – z več razmika */}
+        <div className="flex items-center gap-10 text-sm font-medium">
+          <a href="/" className="nav-link">
+            Wheel
+          </a>
+          <a href="/slots" className="nav-link">
+            Slots
+          </a>
+          <a href="/casinos" className="nav-link">
+            Casinos
+          </a>
         </div>
-
       </div>
     </nav>
   );
