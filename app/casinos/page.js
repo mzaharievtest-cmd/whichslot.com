@@ -21,8 +21,9 @@ export default function CasinosPage() {
         </h1>
 
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
-          These gaming sites support many of the slots featured on our wheel.
-          Availability depends on your region and local regulations.
+          Browse supported gaming sites where slots from our wheel are
+          available. Availability depends on your country and local
+          regulations.
         </p>
       </header>
 
@@ -32,63 +33,100 @@ export default function CasinosPage() {
             key={casino.id}
             className="group relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-5 md:p-6 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
+            {/* Badge */}
             <div className="absolute -top-3 left-5 rounded-full bg-emerald-500/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_0_18px_rgba(16,185,129,0.7)]">
               Recommended
             </div>
 
-            <div className="flex flex-col md:flex-row gap-5 md:justify-between">
-              <div className="flex-1 space-y-3">
-                <h2 className="text-xl md:text-2xl font-semibold text-white">
-                  {casino.name}
-                </h2>
+            <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+              <div className="space-y-3 md:space-y-4 flex-1">
+                <div>
+                  <h2 className="text-xl md:text-2xl font-semibold text-white">
+                    {casino.name}
+                  </h2>
 
-                {casino.tagline && (
-                  <p className="text-sm text-gray-300">{casino.tagline}</p>
-                )}
+                  {casino.tagline && (
+                    <p className="mt-1 text-sm text-gray-300">
+                      {casino.tagline}
+                    </p>
+                  )}
+                </div>
 
                 {casino.welcomeOffer && (
-                  <div className="rounded-xl bg-emerald-500/10 border border-emerald-400/40 px-3 py-2.5 text-sm text-emerald-100">
+                  <div className="rounded-xl bg-emerald-500/10 border border-emerald-400/40 px-3 py-2.5 text-xs md:text-sm text-emerald-100 shadow-[0_0_18px_rgba(16,185,129,0.4)]">
                     <span className="font-semibold text-emerald-300">
-                      Welcome offer:{" "}
+                      Welcome offer:&nbsp;
                     </span>
                     {casino.welcomeOffer}
                   </div>
                 )}
 
+                {/* Chips */}
                 <div className="flex flex-wrap gap-2 text-[11px] text-gray-300">
                   {casino.rating && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 border border-white/10">
-                      ⭐ {casino.rating}/5
+                      ⭐ <span className="font-semibold">{casino.rating}</span>
+                      <span className="text-gray-400">/ 5</span>
                     </span>
                   )}
 
                   {casino.licence && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 border border-white/10">
-                      🛡 Licence: {casino.licence}
+                      🛡 <span className="font-semibold">Licence:</span>
+                      {casino.licence}
+                    </span>
+                  )}
+
+                  {casino.currencies?.length > 0 && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 border border-white/10">
+                      💱 <span className="font-semibold">Currencies:</span>
+                      {casino.currencies.slice(0, 4).join(", ")}
+                      {casino.currencies.length > 4 ? " +" : ""}
                     </span>
                   )}
                 </div>
 
+                {/* Highlights */}
                 {casino.highlights?.length > 0 && (
-                  <ul className="text-xs text-gray-300 space-y-1">
-                    {casino.highlights.map((h, idx) => (
+                  <ul className="mt-3 space-y-1.5 text-xs text-gray-300">
+                    {casino.highlights.map((item, idx) => (
                       <li key={idx} className="flex gap-2">
-                        <span className="text-emerald-300">•</span>
-                        {h}
+                        <span className="mt-[3px] text-[10px] text-emerald-400">
+                          •
+                        </span>
+                        {item}
                       </li>
                     ))}
                   </ul>
                 )}
+
+                {/* Notes */}
+                {casino.notes?.length > 0 && (
+                  <div className="mt-3 text-[11px] text-gray-500">
+                    {casino.notes.map((note, idx) => (
+                      <p key={idx} className={idx ? "mt-1" : ""}>
+                        {note}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* BUTTON ONLY — "Visit website" removed */}
-              <div className="min-w-[200px] flex flex-col gap-3">
+              {/* CTA – updated to SAME style as wheel & slots */}
+              <div className="flex flex-col items-stretch md:items-end gap-3 min-w-[200px]">
+
                 <button
                   onClick={() => handlePlay(casino)}
-                  className="rounded-xl bg-emerald-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_0_24px_rgba(16,185,129,0.85)] hover:brightness-110 active:scale-95 transition"
+                  className="w-full md:w-auto inline-flex items-center justify-center rounded-xl 
+                             bg-gradient-to-r from-emerald-500 to-cyan-400 
+                             px-4 py-2.5 text-sm font-semibold text-white
+                             shadow-[0_0_26px_rgba(16,185,129,0.95)]
+                             hover:brightness-110 active:scale-95 transition"
                 >
                   Play now
                 </button>
+
+                {/* Removed “Visit website” as requested */}
               </div>
             </div>
           </article>
@@ -96,7 +134,8 @@ export default function CasinosPage() {
       </section>
 
       <p className="text-[11px] text-gray-500 max-w-3xl">
-        WhichSlot.com is not a casino. Bonuses and availability change based on your region. Always play responsibly.
+        WhichSlot.com is not a casino and does not handle real-money gaming.
+        Availability and offers may vary by country. Always play responsibly.
       </p>
     </div>
   );
