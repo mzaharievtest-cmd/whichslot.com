@@ -42,7 +42,7 @@ export default function Wheel({ onSlotSelected }) {
       setShowModal(true);
       if (onSlotSelected) onSlotSelected(nextSlot);
       playWinSound();
-    }, 1600);
+    }, 3000);
   };
 
   const handlePlay = () => {
