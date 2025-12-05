@@ -87,7 +87,7 @@ export default function Wheel({ onSlotSelected }) {
 
           {/* rotating ring */}
           <div
-            className={`absolute inset-0 rounded-full p-[10px] shadow-[0_22px_55px_rgba(0,0,0,0.9)] transition-transform duration-[1500ms] ease-out ${
+            className={`absolute inset-0 rounded-full p-[10px] shadow-[0_22px_55px_rgba(0,0,0,0.9)] transition-transform duration-[3000ms] ease-out ${
               isSpinning ? "brightness-110" : ""
             }`}
             style={{ transform: `rotate(${angle}deg)` }}
