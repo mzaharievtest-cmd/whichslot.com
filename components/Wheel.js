@@ -86,7 +86,7 @@ export default function Wheel({ onSlotSelected }) {
       />
       <audio
         ref={winAudioRef}
-        src="/public/win.mp3"
+        src="/public/win.wav"
         preload="auto"
         className="hidden"
       />
