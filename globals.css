@@ -98,3 +98,16 @@ body {
 .nav-link:hover::after {
   width: 100%;
 }
+
+/* Dark bottom overlay so gradient edges never show */
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 220px;
+  pointer-events: none;
+  background: linear-gradient(to top, #020617 0%, transparent 100%);
+  z-index: -1;
+}
