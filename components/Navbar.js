@@ -2,10 +2,10 @@
 
 export default function Navbar() {
   return (
-    <nav className="w-full sticky top-0 z-30 border-b border-white/10 bg-black/30 backdrop-blur-xl">
+    <nav className="w-full sticky top-0 z-30 border-b border-white/10 bg-[#020617]/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
 
-        {/* LOGO ONLY — with soft glow */}
+        {/* LOGO ONLY, soft glow */}
         <a href="/" className="flex items-center">
           <img
             src="/logo.png"
@@ -14,13 +14,12 @@ export default function Navbar() {
           />
         </a>
 
-        {/* NAV LINKS WITH NEON HOVER */}
+        {/* NAV LINKS – Neon underline hover */}
         <div className="flex items-center gap-8 text-sm">
           <a href="/" className="nav-link">Wheel</a>
           <a href="/slots" className="nav-link">Slots</a>
           <a href="/casinos" className="nav-link">Casinos</a>
         </div>
-
       </div>
     </nav>
   );
