@@ -34,6 +34,7 @@ export default function SlotsPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 space-y-8">
+      {/* Header */}
       <header className="space-y-3">
         <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
           WhichSlot · Slots
@@ -48,7 +49,7 @@ export default function SlotsPage() {
         </p>
       </header>
 
-      {/* SEARCH */}
+      {/* Search + filter */}
       <section className="space-y-3">
         <input
           type="text"
@@ -78,7 +79,6 @@ export default function SlotsPage() {
                   </option>
                 ))}
               </select>
-
               <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[10px] text-gray-400">
                 ▼
               </span>
@@ -87,7 +87,7 @@ export default function SlotsPage() {
         </div>
       </section>
 
-      {/* GRID */}
+      {/* Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {filteredSlots.map((slot) => (
           <article
@@ -119,10 +119,11 @@ export default function SlotsPage() {
               )}
             </div>
 
-            <div className="mt-4 flex items-center gap-2">
+            {/* CTA row */}
+            <div className="mt-4 flex items-center">
               <button
                 onClick={() => handlePlay(slot)}
-                className="flex-1 inline-flex items-center justify-center rounded-lg bg-emerald-500 px-3 py-2 text-xs md:text-sm font-semibold text-white shadow-[0_0_20px_rgba(16,185,129,0.8)] group-hover:brightness-110 active:scale-95 transition"
+                className="w-full inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-400 px-4 py-2.5 text-xs md:text-sm font-semibold text-white shadow-[0_0_26px_rgba(16,185,129,0.95)] hover:brightness-110 active:scale-95 transition"
               >
                 Play now
               </button>
@@ -132,7 +133,8 @@ export default function SlotsPage() {
       </section>
 
       <p className="text-[11px] text-gray-500 mt-4">
-        Make sure online gaming is legal in your country and always play responsibly.
+        Make sure online gaming is legal in your country and always play
+        responsibly.
       </p>
     </div>
   );
