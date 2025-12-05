@@ -31,6 +31,14 @@ export default function Wheel({ onSlotSelected }) {
   const handleSpin = () => {
     if (isSpinning) return;
 
+    // 🔹 GA EVENT: wheel spin started
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "spin", {
+        event_category: "wheel",
+        event_label: "Wheel spin triggered",
+      });
+    }
+
     setIsSpinning(true);
     setShowModal(false);
     setSelectedSlot(null);
@@ -52,12 +60,34 @@ export default function Wheel({ onSlotSelected }) {
       setShowModal(true);
       setSpinningSlot(null);
       playWinSound();
+
+      // 🔹 GA EVENT: slot selected after spin
+      if (typeof window !== "undefined" && window.gtag) {
+        window.gtag("event", "slot_selected", {
+          event_category: "wheel",
+          event_label: nextSlot.name,
+          slot_name: nextSlot.name,
+          provider: nextSlot.provider || "Unknown",
+        });
+      }
+
       if (onSlotSelected) onSlotSelected(nextSlot);
     }, 3000);
   };
 
   const handlePlay = () => {
     if (!selectedSlot) return;
+
+    // 🔹 GA EVENT: Play now click
+    if (typeof window !== "undefined" && window.gtag) {
+      window.gtag("event", "play_now_click", {
+        event_category: "engagement",
+        event_label: selectedSlot.name,
+        slot_name: selectedSlot.name,
+        provider: selectedSlot.provider || "Unknown",
+      });
+    }
+
     const url =
       selectedSlot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
