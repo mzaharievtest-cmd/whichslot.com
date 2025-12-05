@@ -15,15 +15,13 @@ export default function CasinosPage() {
         <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
           WhichSlot · Casinos
         </p>
-
         <h1 className="text-3xl md:text-4xl font-bold text-white">
           Where you can play slots
         </h1>
-
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
-          Browse supported gaming sites where slots from our wheel are
-          available. Availability depends on your country and local
-          regulations.
+          Here you&apos;ll find gaming sites where selected slots from our list
+          are available. Availability and offers may vary depending on your
+          country and local regulations.
         </p>
       </header>
 
@@ -39,12 +37,12 @@ export default function CasinosPage() {
             </div>
 
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-5">
+              {/* Left content */}
               <div className="space-y-3 md:space-y-4 flex-1">
                 <div>
                   <h2 className="text-xl md:text-2xl font-semibold text-white">
                     {casino.name}
                   </h2>
-
                   {casino.tagline && (
                     <p className="mt-1 text-sm text-gray-300">
                       {casino.tagline}
@@ -61,7 +59,6 @@ export default function CasinosPage() {
                   </div>
                 )}
 
-                {/* Chips */}
                 <div className="flex flex-wrap gap-2 text-[11px] text-gray-300">
                   {casino.rating && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 border border-white/10">
@@ -69,42 +66,39 @@ export default function CasinosPage() {
                       <span className="text-gray-400">/ 5</span>
                     </span>
                   )}
-
                   {casino.licence && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 border border-white/10">
-                      🛡 <span className="font-semibold">Licence:</span>
+                      🛡 <span className="font-semibold">Licence:</span>{" "}
                       {casino.licence}
                     </span>
                   )}
-
-                  {casino.currencies?.length > 0 && (
+                  {casino.currencies && casino.currencies.length > 0 && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-white/5 px-2 py-1 border border-white/10">
-                      💱 <span className="font-semibold">Currencies:</span>
+                      💱{" "}
+                      <span className="font-semibold">Currencies:</span>{" "}
                       {casino.currencies.slice(0, 4).join(", ")}
                       {casino.currencies.length > 4 ? " +" : ""}
                     </span>
                   )}
                 </div>
 
-                {/* Highlights */}
-                {casino.highlights?.length > 0 && (
+                {casino.highlights && casino.highlights.length > 0 && (
                   <ul className="mt-3 space-y-1.5 text-xs text-gray-300">
                     {casino.highlights.map((item, idx) => (
                       <li key={idx} className="flex gap-2">
                         <span className="mt-[3px] text-[10px] text-emerald-400">
                           •
                         </span>
-                        {item}
+                        <span>{item}</span>
                       </li>
                     ))}
                   </ul>
                 )}
 
-                {/* Notes */}
-                {casino.notes?.length > 0 && (
+                {casino.notes && casino.notes.length > 0 && (
                   <div className="mt-3 text-[11px] text-gray-500">
                     {casino.notes.map((note, idx) => (
-                      <p key={idx} className={idx ? "mt-1" : ""}>
+                      <p key={idx} className={idx > 0 ? "mt-1" : ""}>
                         {note}
                       </p>
                     ))}
@@ -112,21 +106,14 @@ export default function CasinosPage() {
                 )}
               </div>
 
-              {/* CTA – updated to SAME style as wheel & slots */}
+              {/* Right side CTA */}
               <div className="flex flex-col items-stretch md:items-end gap-3 min-w-[200px]">
-
                 <button
                   onClick={() => handlePlay(casino)}
-                  className="w-full md:w-auto inline-flex items-center justify-center rounded-xl 
-                             bg-gradient-to-r from-emerald-500 to-cyan-400 
-                             px-4 py-2.5 text-sm font-semibold text-white
-                             shadow-[0_0_26px_rgba(16,185,129,0.95)]
-                             hover:brightness-110 active:scale-95 transition"
+                  className="btn-primary w-full md:w-auto"
                 >
                   Play now
                 </button>
-
-                {/* Removed “Visit website” as requested */}
               </div>
             </div>
           </article>
@@ -135,7 +122,9 @@ export default function CasinosPage() {
 
       <p className="text-[11px] text-gray-500 max-w-3xl">
         WhichSlot.com is not a casino and does not handle real-money gaming.
-        Availability and offers may vary by country. Always play responsibly.
+        Site availability, bonuses and offers can change at any time and may
+        differ by country. Always make sure online gaming is legal in your
+        jurisdiction and play responsibly.
       </p>
     </div>
   );
