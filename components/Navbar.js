@@ -10,7 +10,7 @@ export default function Navbar() {
           <img
             src="/logo.png"
             alt="WhichSlot logo"
-            className="h-8 w-8 rounded-full shadow-[0_0_14px_rgba(168,85,247,0.45)] ring-1 ring-white/10"
+            className="h-12 w-12 rounded-full shadow-[0_0_14px_rgba(168,85,247,0.45)] ring-1 ring-white/10"
           />
         </a>
 
