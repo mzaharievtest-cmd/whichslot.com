@@ -205,7 +205,7 @@ export default function Wheel({ onSlotSelected }) {
           onClick={handleSpin}
           disabled={isSpinning}
           className={`rounded-full bg-gradient-to-r from-[#a855f7] via-[#ec4899] to-[#f97316] px-10 py-2.5 text-sm font-semibold text-white shadow-[0_0_32px_rgba(236,72,153,0.9)] transition hover:brightness-110 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed ${
-            !isSpinning && selectedSlot ? "animate-ctaPulse" : ""
+            !isSpinning ? "animate-ctaPulse" : ""
           }`}
         >
           {isSpinning ? "Spinning…" : "Spin the wheel"}
