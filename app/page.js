@@ -1,11 +1,9 @@
-// app/page.js
+import Wheel from "@/components/Wheel";
 
-// Re-use the wheel page as the homepage
-export { default } from "./wheel/page";
-
-// (Optional) homepage metadata
-export const metadata = {
-  title: "WhichSlot — Spin the slot wheel",
-  description:
-    "Can’t decide which slot to play? Spin the WhichSlot wheel and get a random slot suggestion from our curated list.",
-};
+export default function WheelPage() {
+  return (
+    <main className="flex flex-col items-center justify-center pt-20 pb-32">
+      <Wheel />
+    </main>
+  );
+}
