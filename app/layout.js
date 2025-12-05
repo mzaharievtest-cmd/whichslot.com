@@ -34,6 +34,17 @@ export default function RootLayout({ children }) {
         <main className="min-h-screen bg-[#050816]">{children}</main>
         <Footer />
       </body>
+
+    <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TRCDECQXG2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-TRCDECQXG2');
+  </script>
+    
     </html>
   );
 }
