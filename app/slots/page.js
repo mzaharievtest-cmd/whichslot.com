@@ -102,74 +102,54 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="group relative rounded-2xl border border-white/10 bg-black/40 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/70 hover:shadow-[0_26px_70px_rgba(0,0,0,0.95)] transition-transform hover:-translate-y-1"
           >
-            {/* Full-card background image */}
-            {slot.image && (
-              <div className="absolute inset-0">
+            {/* Background image čez cel box */}
+            {slot.image ? (
+              <>
                 <Image
                   src={slot.image}
                   alt={slot.name}
                   fill
-                  sizes="(max-width:768px) 100vw, 33vw"
-                  className="object-cover opacity-40 scale-110 blur-[1px]"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                  className="object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-300"
                 />
+                {/* Dark overlay za več kontrasta */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/55 to-black/75 group-hover:from-black/35 group-hover:via-black/45 group-hover:to-black/70 transition-colors duration-300" />
+              </>
+            ) : (
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center">
+                <span className="text-3xl font-bold text-white drop-shadow-lg">
+                  {getInitials(slot.name)}
+                </span>
               </div>
             )}
-            {/* Gradient overlay za tekst */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-black/90" />
 
-            {/* Content */}
-            <div className="relative p-4 flex flex-col justify-between h-full">
-              {/* TOP: icon + info */}
-              <div className="flex gap-3">
-                {/* Thumbnail ikona */}
-                <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/80 via-pink-500/80 to-amber-400/80 flex items-center justify-center border border-white/20 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
-                  {slot.image ? (
-                    <Image
-                      src={slot.image}
-                      alt={slot.name}
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <span className="text-[11px] font-semibold text-white">
-                      {getInitials(slot.name)}
-                    </span>
-                  )}
-                </div>
+            {/* Content overlay */}
+            <div className="relative z-10 h-full flex flex-col justify-between p-4">
+              <div>
+                <h2 className="text-base md:text-lg font-semibold text-white drop-shadow-md line-clamp-2">
+                  {slot.name}
+                </h2>
+                <p className="mt-1 text-xs text-gray-200/90 drop-shadow">
+                  {slot.provider}
+                </p>
 
-                <div className="flex-1">
-                  <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2 drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
-                    {slot.name}
-                  </h2>
-
-                  {/* Provider – skrij če je "Unknown" ali prazen */}
-                  {slot.provider &&
-                    slot.provider !== "Unknown" && (
-                      <p className="mt-1 text-xs text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
-                        {slot.provider}
-                      </p>
-                    )}
-
-                  {slot.tags && slot.tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {slot.tags.slice(0, 4).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-100 border border-white/10 backdrop-blur-sm"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                {slot.tags && slot.tags.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {slot.tags.slice(0, 4).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-gray-100 border border-white/15 backdrop-blur-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
-              {/* BOTTOM: gumb */}
-              <div className="mt-4 flex items-center gap-2">
+              <div className="mt-4 flex justify-center">
                 <button
                   onClick={() => handlePlay(slot)}
                   className="btn-primary w-full text-xs md:text-sm justify-center"
