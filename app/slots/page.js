@@ -98,80 +98,82 @@ export default function SlotsPage() {
       </section>
 
       {/* Grid */}
-          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-      {filteredSlots.map((slot) => (
-        <article
-          key={slot.id}
-          className="relative group rounded-2xl border border-white/8 bg-[#050814] overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
-        >
-          {/* BACKGROUND IMAGE čez cel box */}
-          {slot.image && (
-            <div className="absolute inset-0 rounded-2xl overflow-hidden">
-              <Image
-                src={slot.image}
-                alt={slot.name}
-                fill
-                sizes="(min-width: 1024px) 33vw, 100vw"
-                className="object-cover scale-110 blur-md opacity-40 group-hover:opacity-55 transition"
-              />
-              {/* Dark overlay da je tekst vedno čitljiv */}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/75 to-black/90" />
-            </div>
-          )}
-    
-          {/* CONTENT – vedno zgoraj (nad backgroundom) */}
-          <div className="relative z-10 p-4 flex flex-col justify-between">
-            <div className="flex gap-3">
-              {/* Thumbnail icon */}
-              <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
-                {slot.image ? (
-                  <Image
-                    src={slot.image}
-                    alt={slot.name}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="text-[11px] font-semibold text-white">
-                    {getInitials(slot.name)}
-                  </span>
-                )}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        {filteredSlots.map((slot) => (
+          <article
+            key={slot.id}
+            className="relative group rounded-2xl border border-white/8 bg-[#050814] overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/70 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+          >
+            {/* BACKGROUND IMAGE čez cel box */}
+            {slot.image && (
+              <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                <Image
+                  src={slot.image}
+                  alt={slot.name}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, 100vw"
+                  className="object-cover scale-110 group-hover:scale-125 blur-sm opacity-60 group-hover:opacity-80 transition-transform transition-opacity duration-300"
+                />
+                {/* Vignette + dark overlay da je tekst vedno čitljiv */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/65 to-black/90" />
               </div>
-    
-              <div className="flex-1">
-                <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
-                  {slot.name}
-                </h2>
-                <p className="mt-1 text-xs text-gray-300">{slot.provider}</p>
-    
-                {slot.tags && slot.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {slot.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-200 border border-white/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+            )}
+
+            {/* CONTENT – vedno zgoraj (nad backgroundom) */}
+            <div className="relative z-10 p-4 flex flex-col justify-between">
+              <div className="flex gap-3">
+                {/* Thumbnail icon */}
+                <div className="relative h-14 w-14 rounded-2xl overflow-hidden bg-gradient-to-br from-purple-500/70 via-pink-500/70 to-amber-400/70 flex items-center justify-center border border-white/30 shadow-[0_0_18px_rgba(0,0,0,0.9)] group-hover:shadow-[0_0_26px_rgba(0,0,0,1)]">
+                  {slot.image ? (
+                    <Image
+                      src={slot.image}
+                      alt={slot.name}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-[11px] font-semibold text-white">
+                      {getInitials(slot.name)}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2 drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
+                    {slot.name}
+                  </h2>
+                  <p className="mt-1 text-xs text-gray-200/90">
+                    {slot.provider}
+                  </p>
+
+                  {slot.tags && slot.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {slot.tags.slice(0, 4).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-black/65 px-2 py-1 text-[10px] text-gray-100 border border-white/15 backdrop-blur-sm"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-4 flex items-center gap-2">
+                <button
+                  onClick={() => handlePlay(slot)}
+                  className="btn-primary w-full text-xs md:text-sm justify-center"
+                >
+                  Play now
+                </button>
               </div>
             </div>
-    
-            <div className="mt-4 flex items-center gap-2">
-              <button
-                onClick={() => handlePlay(slot)}
-                className="btn-primary w-full text-xs md:text-sm justify-center"
-              >
-                Play now
-              </button>
-            </div>
-          </div>
-        </article>
-      ))}
-    </section>
+          </article>
+        ))}
+      </section>
 
       <p className="text-[11px] text-gray-500 mt-4">
         Make sure online gaming is legal in your country and always play
