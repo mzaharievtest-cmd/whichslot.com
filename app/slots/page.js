@@ -29,10 +29,19 @@ export default function SlotsPage() {
         <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
           WhichSlot · Slots
         </p>
-        <h1 className="text-3xl md:text-4xl font-bold text-white">
-          All slots in the wheel
-        </h1>
-      </header>
+        <header className="space-y-3">
+          <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
+            WhichSlot · Slots
+          </p>
+        
+          <h1 className="text-3xl md:text-4xl font-bold text-white">
+            All slots in the wheel
+          </h1>
+        
+          <p className="text-sm md:text-base text-gray-300 max-w-xl leading-relaxed">
+            Explore every slot included in the wheel. Search instantly by name to find your favorite games.
+          </p>
+        </header>
 
       {/* Search + count row */}
       <section className="space-y-4">
