@@ -102,9 +102,9 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 backdrop-blur-xl shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/70 hover:shadow-[0_26px_70px_rgba(0,0,0,0.95)] transition-transform hover:-translate-y-1"
+            className="relative group rounded-3xl overflow-hidden border border-white/10 bg-black/20 backdrop-blur-xl p-0 flex flex-col justify-between h-[260px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* Background image čez cel box */}
+            {/* Background layer */}
             {slot.image ? (
               <>
                 <Image
@@ -114,8 +114,7 @@ export default function SlotsPage() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-300"
                 />
-                {/* Dark overlay za več kontrasta */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/55 to-black/75 group-hover:from-black/35 group-hover:via-black/45 group-hover:to-black/70 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/55 to-black/80 group-hover:from-black/30 group-hover:via-black/45 group-hover:to-black/70 transition-colors duration-300" />
               </>
             ) : (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center">
