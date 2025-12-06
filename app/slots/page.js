@@ -29,19 +29,15 @@ export default function SlotsPage() {
         <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
           WhichSlot · Slots
         </p>
-        <header className="space-y-3">
-          <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
-            WhichSlot · Slots
-          </p>
-        
-          <h1 className="text-3xl md:text-4xl font-bold text-white">
-            All slots in the wheel
-          </h1>
-        
-          <p className="text-sm md:text-base text-gray-300 max-w-xl leading-relaxed">
-            Explore every slot included in the wheel. Search instantly by name to find your favorite games.
-          </p>
-        </header>
+
+        <h1 className="text-3xl md:text-4xl font-bold text-white">
+          All slots in the wheel
+        </h1>
+
+        <p className="text-sm md:text-base text-gray-300 max-w-xl leading-relaxed">
+          Explore every slot included in the wheel. Search instantly by name to find your favorite games.
+        </p>
+      </header>
 
       {/* Search + count row */}
       <section className="space-y-4">
@@ -65,7 +61,6 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            // 🔥 Background image ALWAYS visible
             style={
               slot.image
                 ? {
@@ -77,13 +72,10 @@ export default function SlotsPage() {
             }
             className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 min-h-[300px] md:min-h-[340px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* Light gradient for readability */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-black/55" />
 
-            {/* Card content */}
             <div className="relative z-10 h-full p-4 flex flex-col justify-between">
               <div className="space-y-3">
-                {/* 🔹 Transparent name pill (glass) */}
                 <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/50 border border-white/25 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
                   <span className="truncate">{slot.name}</span>
                 </h2>
