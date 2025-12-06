@@ -2,23 +2,24 @@
 
 import casinos from "../data/casinos.json";
 
-// Slightly enhanced copy, still reasonable and not over-the-top
+// Refined neutral, professional, non-crypto-centric copy
 const enhancedCasinos = casinos.map((casino) => {
   if (casino.name === "BitStarz") {
     return {
       ...casino,
       tagline:
-        "Well-known casino with a clean interface and a lot of slots to choose from.",
-      welcomeOffer: casino.welcomeOffer || "100% up to €100 or 1 BTC + 180 Free Spins",
+        "A well-established online casino with a clean design, wide game variety and an overall smooth user experience.",
+      welcomeOffer:
+        casino.welcomeOffer || "100% up to €100 or 1 BTC + 180 Free Spins",
       highlights: [
-        "Good mix of online casino games, including many popular slots.",
-        "Supports both traditional currencies and several cryptocurrencies.",
-        "Straightforward signup and account setup for new players.",
-        "Interface is easy to navigate on both desktop and mobile."
+        "Large selection of popular online slots and casino games.",
+        "Supports commonly used payment methods depending on your region.",
+        "Quick and straightforward account setup for new players.",
+        "Intuitive layout that works well on both desktop and mobile."
       ],
       notes: [
-        "Bonus details and game availability can vary by country or region.",
-        "Always check the official BitStarz website for the latest terms before playing."
+        "Bonus amounts, eligibility and wagering rules can vary by location.",
+        "Game availability changes by region; always review details on the BitStarz website."
       ]
     };
   }
@@ -27,22 +28,22 @@ const enhancedCasinos = casinos.map((casino) => {
     return {
       ...casino,
       tagline:
-        "Crypto-focused casino with a broad game selection and regular on-site promotions.",
+        "A modern casino platform offering a broad range of games and frequent in-platform promotions.",
       welcomeOffer: casino.welcomeOffer || "Up to 780% welcome bonus",
       highlights: [
-        "Offers a large catalogue of online casino games and slots.",
-        "Supports many different cryptocurrency payment options.",
-        "Registration and first deposit are quick to complete.",
-        "Runs various bonuses and promotions directly on the platform."
+        "Extensive library of slots and live-casino titles.",
+        "Multiple payment methods available based on regional availability.",
+        "New players can join and start exploring games within minutes.",
+        "Runs various bonuses and platform events; details are displayed in the casino lobby."
       ],
       notes: [
-        "Bonus structure and availability depend on your location.",
-        "Always review the latest information on the official BC.Game website."
+        "Bonus structure and feature availability differ by region.",
+        "Not all games are accessible in every country; check the information shown on the BC.Game website."
       ]
     };
   }
 
-  // leave other casinos as they are
+  // Keep other casinos untouched
   return casino;
 });
 
@@ -66,10 +67,10 @@ export default function CasinosPage() {
         </h1>
 
         <p className="text-sm md:text-base text-gray-300 leading-relaxed">
-          Here you&apos;ll find a few online casinos where many of the slots
-          from WhichSlot can be played. Have a look at the bonuses, payment
-          options and general feel of each site, then choose the one that suits
-          you best.
+          A selection of online casinos where many of the slots featured on
+          WhichSlot can be played. Browse welcome offers, check available
+          payment options and explore platforms to find the one that fits you
+          best.
         </p>
       </header>
 
@@ -80,7 +81,7 @@ export default function CasinosPage() {
             key={casino.id}
             className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 p-5 md:p-6 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* hover glow */}
+            {/* Hover glow */}
             <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300">
               <div className="absolute -inset-6 bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.25),_transparent_55%),_radial-gradient(circle_at_bottom,_rgba(56,189,248,0.25),_transparent_55%)] blur-2xl" />
             </div>
@@ -95,7 +96,7 @@ export default function CasinosPage() {
             <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
               {/* LEFT SECTION */}
               <div className="flex-1 space-y-4">
-                {/* casino name + tagline */}
+                {/* Name + tagline */}
                 <div className="space-y-1">
                   <h2 className="text-xl md:text-2xl font-semibold text-white">
                     {casino.name}
@@ -105,7 +106,7 @@ export default function CasinosPage() {
                   )}
                 </div>
 
-                {/* welcome bonus */}
+                {/* Welcome bonus */}
                 {casino.welcomeOffer && (
                   <div className="rounded-2xl bg-emerald-500/10 border border-emerald-400/40 px-3 py-2.5 text-xs md:text-sm text-emerald-100 backdrop-blur-sm">
                     <span className="font-semibold text-emerald-300">
@@ -115,7 +116,7 @@ export default function CasinosPage() {
                   </div>
                 )}
 
-                {/* meta tags */}
+                {/* Meta chips */}
                 <div className="flex flex-wrap gap-2 text-[11px] text-gray-300">
                   {casino.rating && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-black/40 px-2 py-1 border border-white/10 backdrop-blur-sm">
@@ -139,11 +140,11 @@ export default function CasinosPage() {
                   )}
                 </div>
 
-                {/* highlight bullets */}
+                {/* Highlights */}
                 {casino.highlights && casino.highlights.length > 0 && (
                   <div className="space-y-1.5">
                     <p className="text-xs font-semibold text-gray-200">
-                      Why some players choose {casino.name}
+                      What stands out at {casino.name}
                     </p>
                     <ul className="space-y-1.5 text-xs text-gray-300">
                       {casino.highlights.map((item, idx) => (
@@ -158,13 +159,12 @@ export default function CasinosPage() {
                   </div>
                 )}
 
-                {/* notes */}
+                {/* Notes */}
                 {casino.notes && casino.notes.length > 0 && (
                   <div className="mt-3 text-[11px] text-gray-500">
                     {casino.notes.map((note, idx) => (
                       <p key={idx} className={idx > 0 ? "mt-1" : ""}>
-                        {note}
-                      </p>
+                        {note}</p>
                     ))}
                   </div>
                 )}
@@ -179,9 +179,10 @@ export default function CasinosPage() {
                   >
                     Play now
                   </button>
-                  {/* nicely aligned disclaimer */}
+
+                  {/* Disclaimer aligned under button */}
                   <p className="text-[10px] text-gray-500 mt-1 text-center md:text-right">
-                    18+ · Terms apply
+                    18+ · Play responsibly · Terms apply
                   </p>
                 </div>
               </div>
@@ -190,12 +191,12 @@ export default function CasinosPage() {
         ))}
       </section>
 
-      {/* global disclaimer */}
+      {/* Global disclaimer */}
       <p className="text-[11px] text-gray-500 max-w-3xl">
         WhichSlot.com does not operate or manage any casino. Bonus details, game
-        selection and payment options can change and may differ by region.
-        Always check the information on the casino&apos;s own website and play
-        responsibly.
+        availability and payment methods change frequently and may differ by
+        country. Always refer to the casino’s official website for the most
+        accurate and up-to-date information.
       </p>
     </div>
   );
