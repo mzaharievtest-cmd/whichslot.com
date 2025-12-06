@@ -3,10 +3,12 @@
 
 export const AFF = "https://bzstarz1.com/boe5tub8a";
 
-// Default fallback image (poskrbi, da obstaja: /public/common-slots/default.png)
-export const DEFAULT_IMAGE = "/common-slots/default.png";
+// ✅ Default fallback image – POSKRBI, da ta datoteka RES obstaja:
+// public/common-slots/Sweet-Bonanza-1000_339x180.png
+export const DEFAULT_IMAGE = "/common-slots/Sweet-Bonanza-1000_339x180.png";
 
 // Utility: convert slot name -> filename used in /public/common-slots
+// npr. "Lucky Panda" -> "/common-slots/Lucky-Panda_339x180.png"
 const imageFor = (name) => {
   const fileName =
     name
