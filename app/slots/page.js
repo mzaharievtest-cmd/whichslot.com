@@ -104,7 +104,7 @@ export default function SlotsPage() {
             key={slot.id}
             className="relative group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition overflow-hidden"
           >
-            {/* Background image – rahlo transparent */}
+            {/* Background image – veliko bolj vidna */}
             {slot.image && (
               <>
                 <div className="absolute inset-0">
@@ -113,12 +113,11 @@ export default function SlotsPage() {
                     alt={slot.name}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover opacity-40 group-hover:opacity-55 transition-opacity duration-300"
-                    priority={false}
+                    className="object-cover opacity-80 group-hover:opacity-90 transition-opacity duration-300"
                   />
                 </div>
-                {/* Dark gradient overlay za boljšo berljivost teksta */}
-                <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/80 to-black/50" />
+                {/* Manj temačen overlay za bolj “pop” */}
+                <div className="absolute inset-0 bg-gradient-to-br from-black/60 via-black/35 to-black/10" />
               </>
             )}
 
@@ -126,7 +125,6 @@ export default function SlotsPage() {
             <div className="relative z-10 p-4 flex flex-col justify-between h-full">
               {/* TOP: thumbnail + info */}
               <div className="flex gap-3">
-                {/* Thumbnail – vedno nekaj prikažemo */}
                 <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
                   {slot.image ? (
                     <Image
