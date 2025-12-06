@@ -613,7 +613,7 @@ module.exports = [
 {name: "Punk Rocker 2", src: "https://bc.imgix.net/game/image/dadbe8b7a7.png"},
 {name: "Ugliest Catch", src: "https://bc.imgix.net/game/image/14445_Ugliest%20Catch.png"},
 {name: "64 Presents Hold and Win", src: "https://bc.imgix.net/game/image/fa892f3b61.png"},
-{name: "Drop"em", src: "https://bc.imgix.net/game/image/13969_Drop_em.png"},
+{name: "Drop'em", src: "https://bc.imgix.net/game/image/13969_Drop_em.png"},
 {name: "Barrel Bonanza", src: "https://bc.imgix.net/game/image/ce2fbaa437.png"},
 {name: "Sound Of Steel Hold And Win", src: "https://bc.imgix.net/game/image/bca35c86bb.png"},
 {name: "Land of the Free", src: "https://bc.imgix.net/game/image/15547_Land%20of%20the%20Free.png"},
