@@ -18,7 +18,7 @@ export default function SlotsPage() {
     });
   }, [search]);
 
-  const handlePlay = (slot: (typeof SLOTS)[number]) => {
+  const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
   };
@@ -72,14 +72,14 @@ export default function SlotsPage() {
               </div>
             )}
 
-            {/* Dark gradient overlay za berljivost teksta (temnejše dno, bolj vidna slika zgoraj) */}
+            {/* Dark gradient overlay for readability */}
             <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/10 via-black/40 to-black/85" />
 
             {/* Card content */}
             <div className="relative z-10 h-full p-4 flex flex-col justify-between">
               {/* TOP: slot name + tags */}
               <div className="space-y-3">
-                {/* Slot name pill (brez thumbnaila) */}
+                {/* Slot name pill */}
                 <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/65 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
                   <span className="truncate">{slot.name}</span>
                 </h2>
