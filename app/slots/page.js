@@ -97,12 +97,22 @@ export default function SlotsPage() {
         </div>
       </section>
 
-      {/* Grid */}
+            {/* Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="relative group rounded-3xl overflow-hidden border border-white/10 bg-black/20 backdrop-blur-xl p-0 flex flex-col justify-between h-[260px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+            className="
+              relative overflow-hidden
+              group rounded-2xl border border-white/10 
+              bg-white/[0.03] backdrop-blur-xl 
+              flex flex-col justify-between
+              shadow-[0_6px_22px_rgba(0,0,0,0.45)]
+              hover:shadow-[0_10px_32px_rgba(0,0,0,0.65)]
+              transition
+              hover:border-neonPurple/40
+              min-h-[190px]
+            "
           >
             {/* Background layer */}
             {slot.image ? (
@@ -112,9 +122,10 @@ export default function SlotsPage() {
                   alt={slot.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-300"
+                  className="object-cover opacity-85 group-hover:opacity-95 transition-opacity duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/55 to-black/80 group-hover:from-black/30 group-hover:via-black/45 group-hover:to-black/70 transition-colors duration-300" />
+                {/* malo manj temen gradient, da slika bolj pride ven */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/40 to-black/75 group-hover:from-black/15 group-hover:via-black/30 group-hover:to-black/65 transition-colors duration-300" />
               </>
             ) : (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center">
