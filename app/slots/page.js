@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SLOTS, DEFAULT_IMAGE } from "../data/slots";
+import Image from "next/image";
+import { SLOTS } from "../data/slots";
 
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
@@ -29,8 +30,14 @@ export default function SlotsPage() {
 
   const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
-    if (!url) return;
     window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const parts = name.split(" ");
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
   return (
@@ -95,51 +102,79 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col justify-between shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+            className="relative group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition overflow-hidden"
           >
-            {/* TOP: image + info */}
-            <div className="flex gap-3">
-              {/* Thumbnail */}
-              <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)] flex items-center justify-center">
-                <img
-                  src={slot.image || DEFAULT_IMAGE}
-                  alt={slot.name}
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = DEFAULT_IMAGE;
-                  }}
-                />
+            {/* Background image – rahlo transparent */}
+            {slot.image && (
+              <>
+                <div className="absolute inset-0">
+                  <Image
+                    src={slot.image}
+                    alt={slot.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover opacity-40 group-hover:opacity-55 transition-opacity duration-300"
+                    priority={false}
+                  />
+                </div>
+                {/* Dark gradient overlay za boljšo berljivost teksta */}
+                <div className="absolute inset-0 bg-gradient-to-br from-black/85 via-black/80 to-black/50" />
+              </>
+            )}
+
+            {/* Content */}
+            <div className="relative z-10 p-4 flex flex-col justify-between h-full">
+              {/* TOP: thumbnail + info */}
+              <div className="flex gap-3">
+                {/* Thumbnail – vedno nekaj prikažemo */}
+                <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
+                  {slot.image ? (
+                    <Image
+                      src={slot.image}
+                      alt={slot.name}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-[11px] font-semibold text-white">
+                      {getInitials(slot.name)}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
+                    {slot.name}
+                  </h2>
+                  <p className="mt-1 text-xs text-gray-200">
+                    {slot.provider}
+                  </p>
+
+                  {slot.tags && slot.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {slot.tags.slice(0, 4).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-100 border border-white/10"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="flex-1">
-                <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
-                  {slot.name}
-                </h2>
-                <p className="mt-1 text-xs text-gray-300">{slot.provider}</p>
-
-                {slot.tags && slot.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {slot.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-black/50 px-2 py-1 text-[10px] text-gray-200 border border-white/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+              {/* BOTTOM: button */}
+              <div className="mt-4 flex items-center gap-2">
+                <button
+                  onClick={() => handlePlay(slot)}
+                  className="btn-primary w-full text-xs md:text-sm justify-center"
+                >
+                  Play now
+                </button>
               </div>
-            </div>
-
-            {/* BOTTOM: button */}
-            <div className="mt-4 flex items-center gap-2">
-              <button
-                onClick={() => handlePlay(slot)}
-                className="btn-primary w-full text-xs md:text-sm justify-center"
-              >
-                Play now
-              </button>
             </div>
           </article>
         ))}
