@@ -6,9 +6,28 @@ import { SLOTS } from "../data/slots";
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
 
+    // 1) Create a shuffled version of SLOTS once when component mounts
+  const shuffledSlots = useMemo(() => {
+    // Fisher–Yates shuffle (best + unbiased)
+    const list = [...SLOTS];
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    return list;
+  }, []);
+  
+  // 2) Apply search to the already shuffled list
   const filteredSlots = useMemo(() => {
     const term = search.trim().toLowerCase();
-    if (!term) return SLOTS;
+    if (!term) return shuffledSlots;
+  
+    return shuffledSlots.filter((slot) => {
+      const name = slot.name?.toLowerCase() || "";
+      const provider = slot.provider?.toLowerCase() || "";
+      return name.includes(term) || provider.includes(term);
+    });
+  }, [search, shuffledSlots]);
 
     return SLOTS.filter((slot) => {
       const name = slot.name?.toLowerCase() || "";
