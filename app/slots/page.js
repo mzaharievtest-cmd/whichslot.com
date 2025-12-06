@@ -57,29 +57,29 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
         <article
           key={slot.id}
-          className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 min-h-[300px] md:min-h-[340px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+          className="group relative overflow-hidden rounded-3xl border border-white/10 bg-transparent min-h-[300px] md:min-h-[340px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
         >
-          {/* Full background image — ALWAYS visible */}
+          {/* Full background image — ALWAYS visible, forced opacity 1 */}
           {slot.image && (
-            <div className="absolute inset-0 -z-10 opacity-100">
+            <div className="absolute inset-0 -z-10 [opacity:1!important]">
               <Image
                 src={slot.image}
                 alt={slot.name}
                 fill
                 sizes="(min-width:1280px) 25vw, (min-width:1024px) 33vw, 100vw"
-                className="object-cover object-top"
+                className="object-cover object-top [opacity:1!important]"
               />
             </div>
           )}
         
-          {/* Light gradient just for readability */}
-          <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/0 via-black/15 to-black/40" />
+          {/* Very light gradient only at the bottom, no hover */}
+          <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/0 via-black/10 to-black/35" />
         
           {/* Card content */}
           <div className="relative z-10 h-full p-4 flex flex-col justify-between">
             <div className="space-y-3">
-              {/* 🔹 Transparent name pill (glass) */}
-              <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/50 border border-white/25 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
+              {/* Transparent name pill (glass) */}
+              <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/45 border border-white/25 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
                 <span className="truncate">{slot.name}</span>
               </h2>
         
@@ -88,7 +88,7 @@ export default function SlotsPage() {
                   {slot.tags.slice(0, 4).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-black/40 px-2 py-1 text-[10px] text-gray-100 border border-white/10 backdrop-blur-sm"
+                      className="rounded-full bg-black/35 px-2 py-1 text-[10px] text-gray-100 border border-white/10 backdrop-blur-sm"
                     >
                       {tag}
                     </span>
