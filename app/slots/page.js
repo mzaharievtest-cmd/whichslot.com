@@ -98,66 +98,59 @@ export default function SlotsPage() {
       </section>
 
       {/* Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {filteredSlots.map((slot) => (
-          <article
-            key={slot.id}
-            className="
-              relative overflow-hidden
-              group rounded-2xl border border-white/10 
-              bg-white/[0.04] backdrop-blur-xl 
-              flex flex-col justify-between
-              shadow-[0_6px_22px_rgba(0,0,0,0.45)]
-              hover:shadow-[0_10px_32px_rgba(0,0,0,0.65)]
-              transition
-              hover:border-neonPurple/40
-            "
-          >
-            {/* Background layer */}
-            {slot.image ? (
-              <>
-                <Image
-                  src={slot.image}
-                  alt={slot.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  className="
-                    object-contain
-                    scale-[1.02]
-                    transition-opacity duration-300
-                    opacity-90 group-hover:opacity-100
-                  "
-                />
-                {/* bolj nežen gradient - slika pride bolj ven */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/25 to-black/60 group-hover:from-black/5 group-hover:via-black/20 group-hover:to-black/55 transition-colors duration-300" />
-              </>
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center">
-                <span className="text-3xl font-bold text-white drop-shadow-lg">
-                  {getInitials(slot.name)}
-                </span>
-              </div>
-            )}
-
-            {/* Content overlay */}
-            <div className="relative z-10 h-full flex flex-col justify-between p-4">
-              <div className="space-y-2">
-                <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
-                  <span className="inline-block max-w-full rounded-full bg-black/75 px-3 py-1 text-sm md:text-[15px] leading-snug truncate border border-white/10 shadow-sm">
-                    {slot.name}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+      {filteredSlots.map((slot) => (
+        <article
+          key={slot.id}
+          className="relative group rounded-2xl border border-white/8 bg-[#050814] overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+        >
+          {/* BACKGROUND IMAGE čez cel box */}
+          {slot.image && (
+            <div className="absolute inset-0 rounded-2xl overflow-hidden">
+              <Image
+                src={slot.image}
+                alt={slot.name}
+                fill
+                sizes="(min-width: 1024px) 33vw, 100vw"
+                className="object-cover scale-110 blur-md opacity-40 group-hover:opacity-55 transition"
+              />
+              {/* Dark overlay da je tekst vedno čitljiv */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/75 to-black/90" />
+            </div>
+          )}
+    
+          {/* CONTENT – vedno zgoraj (nad backgroundom) */}
+          <div className="relative z-10 p-4 flex flex-col justify-between">
+            <div className="flex gap-3">
+              {/* Thumbnail icon */}
+              <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
+                {slot.image ? (
+                  <Image
+                    src={slot.image}
+                    alt={slot.name}
+                    fill
+                    sizes="48px"
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="text-[11px] font-semibold text-white">
+                    {getInitials(slot.name)}
                   </span>
+                )}
+              </div>
+    
+              <div className="flex-1">
+                <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
+                  {slot.name}
                 </h2>
-
-                <p className="text-xs text-gray-200/90 drop-shadow-sm">
-                  {slot.provider}
-                </p>
-
+                <p className="mt-1 text-xs text-gray-300">{slot.provider}</p>
+    
                 {slot.tags && slot.tags.length > 0 && (
-                  <div className="mt-1 flex flex-wrap gap-1.5">
+                  <div className="mt-2 flex flex-wrap gap-1.5">
                     {slot.tags.slice(0, 4).map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-black/60 px-2 py-0.5 text-[10px] text-gray-100 border border-white/15 backdrop-blur-sm"
+                        className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-200 border border-white/10"
                       >
                         {tag}
                       </span>
@@ -165,19 +158,20 @@ export default function SlotsPage() {
                   </div>
                 )}
               </div>
-
-              <div className="mt-4 flex justify-center">
-                <button
-                  onClick={() => handlePlay(slot)}
-                  className="btn-primary w-full text-xs md:text-sm justify-center"
-                >
-                  Play now
-                </button>
-              </div>
             </div>
-          </article>
-        ))}
-      </section>
+    
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                onClick={() => handlePlay(slot)}
+                className="btn-primary w-full text-xs md:text-sm justify-center"
+              >
+                Play now
+              </button>
+            </div>
+          </div>
+        </article>
+      ))}
+    </section>
 
       <p className="text-[11px] text-gray-500 mt-4">
         Make sure online gaming is legal in your country and always play
