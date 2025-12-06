@@ -6,31 +6,28 @@ import { SLOTS } from "../data/slots";
 
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
-  const [providerFilter, setProviderFilter] = useState("all");
-
-  const providers = useMemo(() => {
-    const set = new Set(SLOTS.map((s) => s.provider));
-    return ["all", ...Array.from(set)];
-  }, []);
 
   const filteredSlots = useMemo(() => {
     const term = search.trim().toLowerCase();
     return SLOTS.filter((slot) => {
-      const matchesSearch =
-        !term ||
+      if (!term) return true;
+      return (
         slot.name.toLowerCase().includes(term) ||
-        slot.provider.toLowerCase().includes(term);
-
-      const matchesProvider =
-        providerFilter === "all" || slot.provider === providerFilter;
-
-      return matchesSearch && matchesProvider;
+        slot.provider?.toLowerCase().includes(term)
+      );
     });
-  }, [search, providerFilter]);
+  }, [search]);
 
   const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const parts = name.split(" ");
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
   return (
@@ -44,111 +41,87 @@ export default function SlotsPage() {
           All slots in the wheel
         </h1>
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
-          Browse all slots that can appear in the wheel. Use search or filter by
-          provider to explore the list. When you find a game you like, press{" "}
-          <span className="font-semibold">Play now</span> to open it on a
-          supported site.
+          Browse all slots that can appear in the wheel. Use search to explore
+          the list.
         </p>
       </header>
 
-      {/* Search + info row */}
+      {/* Search + count row */}
       <section className="space-y-3">
-        <div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <input
             type="text"
             placeholder="Search by slot or provider..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
+            className="w-full sm:max-w-md rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
           />
-        </div>
 
-        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <div className="text-[11px] text-gray-400">
-            {filteredSlots.length} of {SLOTS.length} slots
-          </div>
-
-          <div className="flex items-center gap-2 md:gap-3">
-            <span className="text-xs text-gray-400">Provider</span>
-            <div className="relative inline-flex">
-              <select
-                value={providerFilter}
-                onChange={(e) => setProviderFilter(e.target.value)}
-                className="appearance-none rounded-xl border border-white/10 bg-white/5 px-3 pr-8 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
-              >
-                {providers.map((p) => (
-                  <option key={p} value={p}>
-                    {p === "all" ? "All providers" : p}
-                  </option>
-                ))}
-              </select>
-              <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[10px] text-gray-400">
-                ▼
-              </span>
-            </div>
+          <div className="text-[11px] text-gray-400 sm:text-right">
+            {filteredSlots.length} out of {SLOTS.length} slots
           </div>
         </div>
       </section>
 
-      {/* Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+      {/* Grid – 2 on mobile, 4 on desktop */}
+      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl
-                       shadow-[0_18px_45px_rgba(0,0,0,0.75)]
-                       hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)]
-                       transition h-[350px] md:h-[380px]"
+            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* FULL BACKGROUND IMAGE */}
-            {slot.image && (
-              <Image
-                src={slot.image}
-                alt={slot.name}
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                priority={slot.id <= 6}
-              />
-            )}
-
-            {/* Gradient overlay */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/92 via-black/65 to-black/15" />
-
-            {/* CONTENT + BACK PILL */}
-            <div className="relative z-10 h-full flex items-end p-3">
-              <div className="w-full rounded-2xl bg-black/65 border border-white/15 backdrop-blur-md px-3.5 py-3.5">
-                <div className="space-y-2">
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-gray-300/90">
-                    {slot.provider}
-                  </p>
-                  <h2 className="text-base md:text-lg font-semibold text-white leading-snug line-clamp-2 drop-shadow-[0_0_10px_rgba(0,0,0,0.9)]">
-                    {slot.name}
-                  </h2>
-
-                  {slot.tags && slot.tags.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {slot.tags.slice(0, 3).map((tag) => (
-                        <span
-                          key={tag}
-                          className="rounded-full bg-black/70 px-2 py-1 text-[10px] text-gray-100 border border-white/15 backdrop-blur-[2px]"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
+            {/* Background image (slot art) */}
+            <div className="relative h-28 w-full overflow-hidden">
+              {slot.image ? (
+                <>
+                  <Image
+                    src={slot.image}
+                    alt={slot.name}
+                    fill
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    className="object-cover scale-110 group-hover:scale-125 transition-transform duration-500 ease-out opacity-80 group-hover:opacity-100"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
+                </>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-500/70 via-pink-500/70 to-amber-400/70">
+                  <span className="text-xs font-semibold text-white">
+                    {getInitials(slot.name)}
+                  </span>
                 </div>
+              )}
+            </div>
 
-                <div className="mt-4 flex items-center gap-2">
-                  <button
-                    onClick={() => handlePlay(slot)}
-                    className="btn-primary w-full text-xs md:text-sm justify-center"
-                  >
-                    Play now
-                  </button>
-                </div>
+            {/* Content */}
+            <div className="relative z-10 p-3 flex flex-col gap-2">
+              <div className="space-y-1">
+                <h2 className="text-xs md:text-sm font-semibold text-white line-clamp-2">
+                  {slot.name}
+                </h2>
+                {slot.provider && (
+                  <p className="text-[10px] text-gray-300">{slot.provider}</p>
+                )}
               </div>
+
+              {slot.tags && slot.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {slot.tags.slice(0, 3).map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-black/60 px-2 py-0.5 text-[9px] text-gray-200 border border-white/10"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              <button
+                onClick={() => handlePlay(slot)}
+                className="mt-1 btn-primary w-full text-[11px] justify-center py-1.5"
+              >
+                Play now
+              </button>
             </div>
           </article>
         ))}
