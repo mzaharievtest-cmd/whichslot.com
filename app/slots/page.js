@@ -1,27 +1,49 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SLOTS, DEFAULT_IMAGE } from "../data/slots";
+import Image from "next/image";
+import slugify from "slugify";
+import { SLOTS } from "../data/slots";
+
+// če želiš fallback sliko (če kdaj ne obstaja), jo lahko definiraš:
+const DEFAULT_IMAGE = "/common-slots/default.png";
+
+// funkcija, ki iz imena slota naredi pot do slike v public/common-slots
+const imageFor = (name) => {
+  if (!name) return DEFAULT_IMAGE;
+
+  const baseSlug = slugify(name, {
+    lower: false,   // ohrani velike začetnice (kot so imena datotek)
+    strict: true,   // odstrani čudne znake, pusti črke/številke
+    trim: true,
+  });
+
+  // to se mora ujemati z imenom datotek, ki si jih downloadal
+  return `/common-slots/${baseSlug}_339x180.png`;
+};
 
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
   const [providerFilter, setProviderFilter] = useState("all");
 
   const providers = useMemo(() => {
-    const set = new Set(SLOTS.map((s) => s.provider));
+    const set = new Set(SLOTS.map((s) => s.provider || "Unknown"));
     return ["all", ...Array.from(set)];
   }, []);
 
   const filteredSlots = useMemo(() => {
     const term = search.trim().toLowerCase();
     return SLOTS.filter((slot) => {
+      const name = slot.name || "";
+      const provider = slot.provider || "";
+
       const matchesSearch =
         !term ||
-        slot.name.toLowerCase().includes(term) ||
-        slot.provider.toLowerCase().includes(term);
+        name.toLowerCase().includes(term) ||
+        provider.toLowerCase().includes(term);
 
       const matchesProvider =
-        providerFilter === "all" || slot.provider === providerFilter;
+        providerFilter === "all" || provider === providerFilter;
 
       return matchesSearch && matchesProvider;
     });
@@ -29,8 +51,14 @@ export default function SlotsPage() {
 
   const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
-    if (!url) return;
     window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const parts = name.split(" ");
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
   return (
@@ -92,57 +120,68 @@ export default function SlotsPage() {
 
       {/* Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {filteredSlots.map((slot) => (
-          <article
-            key={slot.id}
-            className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col justify-between shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
-          >
-            {/* TOP: image + info */}
-            <div className="flex gap-3">
-              {/* Thumbnail */}
-              <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)] flex items-center justify-center">
-                <img
-                  src={slot.image || DEFAULT_IMAGE}
-                  alt={slot.name}
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = DEFAULT_IMAGE;
-                  }}
-                />
+        {filteredSlots.map((slot) => {
+          const imgSrc = imageFor(slot.name);
+
+          return (
+            <article
+              key={slot.id ?? slot.name}
+              className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col justify-between shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+            >
+              {/* TOP: slika + info */}
+              <div className="flex gap-3">
+                {/* Thumbnail */}
+                <div className="relative h-20 w-32 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
+                  {imgSrc ? (
+                    <Image
+                      src={imgSrc}
+                      alt={slot.name}
+                      fill
+                      sizes="128px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="text-[11px] font-semibold text-white">
+                      {getInitials(slot.name)}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
+                    {slot.name}
+                  </h2>
+                  <p className="mt-1 text-xs text-gray-300">
+                    {slot.provider || "Slot"}
+                  </p>
+
+                  {slot.tags && slot.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {slot.tags.slice(0, 4).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-black/50 px-2 py-1 text-[10px] text-gray-200 border border-white/10"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="flex-1">
-                <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
-                  {slot.name}
-                </h2>
-                <p className="mt-1 text-xs text-gray-300">{slot.provider}</p>
-
-                {slot.tags && slot.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {slot.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-black/50 px-2 py-1 text-[10px] text-gray-200 border border-white/10"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+              {/* BOTTOM: gumb */}
+              <div className="mt-4 flex items-center gap-2">
+                <button
+                  onClick={() => handlePlay(slot)}
+                  className="btn-primary w-full text-xs md:text-sm justify-center"
+                >
+                  Play now
+                </button>
               </div>
-            </div>
-
-            {/* BOTTOM: button */}
-            <div className="mt-4 flex items-center gap-2">
-              <button
-                onClick={() => handlePlay(slot)}
-                className="btn-primary w-full text-xs md:text-sm justify-center"
-              >
-                Play now
-              </button>
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </section>
 
       <p className="text-[11px] text-gray-500 mt-4">
