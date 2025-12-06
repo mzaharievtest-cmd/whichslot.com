@@ -34,7 +34,7 @@ export default function SlotsPage() {
           All slots in the wheel
         </h1>
 
-        <p className="text-sm md:text-base text-gray-300 max-w-xl leading-relaxed">
+        <p className="text-sm md:text-base text-gray-300 leading-relaxed">
           Explore every slot included in the wheel. Search instantly by name to find your favorite games.
         </p>
       </header>
