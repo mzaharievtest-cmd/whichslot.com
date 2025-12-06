@@ -97,7 +97,7 @@ export default function SlotsPage() {
         </div>
       </section>
 
-            {/* Grid */}
+      {/* Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
         {filteredSlots.map((slot) => (
           <article
@@ -105,13 +105,12 @@ export default function SlotsPage() {
             className="
               relative overflow-hidden
               group rounded-2xl border border-white/10 
-              bg-white/[0.03] backdrop-blur-xl 
+              bg-white/[0.04] backdrop-blur-xl 
               flex flex-col justify-between
               shadow-[0_6px_22px_rgba(0,0,0,0.45)]
               hover:shadow-[0_10px_32px_rgba(0,0,0,0.65)]
               transition
               hover:border-neonPurple/40
-              min-h-[190px]
             "
           >
             {/* Background layer */}
@@ -122,10 +121,15 @@ export default function SlotsPage() {
                   alt={slot.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
-                  className="object-cover opacity-85 group-hover:opacity-95 transition-opacity duration-300"
+                  className="
+                    object-contain
+                    scale-[1.02]
+                    transition-opacity duration-300
+                    opacity-90 group-hover:opacity-100
+                  "
                 />
-                {/* malo manj temen gradient, da slika bolj pride ven */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/40 to-black/75 group-hover:from-black/15 group-hover:via-black/30 group-hover:to-black/65 transition-colors duration-300" />
+                {/* bolj nežen gradient - slika pride bolj ven */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/25 to-black/60 group-hover:from-black/5 group-hover:via-black/20 group-hover:to-black/55 transition-colors duration-300" />
               </>
             ) : (
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center">
@@ -137,16 +141,19 @@ export default function SlotsPage() {
 
             {/* Content overlay */}
             <div className="relative z-10 h-full flex flex-col justify-between p-4">
-              <div>
-                <h2 className="text-base md:text-lg font-semibold text-white drop-shadow-md line-clamp-2">
-                  {slot.name}
+              <div className="space-y-2">
+                <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
+                  <span className="inline-block max-w-full rounded-full bg-black/75 px-3 py-1 text-sm md:text-[15px] leading-snug truncate border border-white/10 shadow-sm">
+                    {slot.name}
+                  </span>
                 </h2>
-                <p className="mt-1 text-xs text-gray-200/90 drop-shadow">
+
+                <p className="text-xs text-gray-200/90 drop-shadow-sm">
                   {slot.provider}
                 </p>
 
                 {slot.tags && slot.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
+                  <div className="mt-1 flex flex-wrap gap-1.5">
                     {slot.tags.slice(0, 4).map((tag) => (
                       <span
                         key={tag}
