@@ -59,26 +59,27 @@ export default function SlotsPage() {
           key={slot.id}
           className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 min-h-[300px] md:min-h-[340px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
         >
-          {/* Full background image — always visible */}
+          {/* Full background image — ALWAYS visible */}
           {slot.image && (
-            <div className="absolute inset-0 -z-10">
+            <div className="absolute inset-0 -z-10 opacity-100">
               <Image
                 src={slot.image}
                 alt={slot.name}
                 fill
-                className="object-cover object-top"
                 sizes="(min-width:1280px) 25vw, (min-width:1024px) 33vw, 100vw"
+                className="object-cover object-top"
               />
             </div>
           )}
         
-          {/* Much lighter gradient to keep text readable but image visible */}
-          <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/0 via-black/20 to-black/45" />
+          {/* Light gradient just for readability */}
+          <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/0 via-black/15 to-black/40" />
         
           {/* Card content */}
           <div className="relative z-10 h-full p-4 flex flex-col justify-between">
             <div className="space-y-3">
-              <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/45 px-4 py-1.5 text-xs md:text-sm font-semibold text-white backdrop-blur-sm">
+              {/* 🔹 Transparent name pill (glass) */}
+              <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/50 border border-white/25 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
                 <span className="truncate">{slot.name}</span>
               </h2>
         
