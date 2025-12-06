@@ -95,9 +95,10 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col shadow-[0_18px_45px_rgba(0,0,0,0.75)] 
-            hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition
-            h-[350px] md:h-[380px]"
+            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl
+                       shadow-[0_18px_45px_rgba(0,0,0,0.75)]
+                       hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)]
+                       transition h-[350px] md:h-[380px]"
           >
             {/* FULL BACKGROUND IMAGE */}
             {slot.image && (
@@ -107,44 +108,46 @@ export default function SlotsPage() {
                 fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-300"
-                priority={slot.id <= 6} // prvih nekaj naj bo hitrejših
+                priority={slot.id <= 6}
               />
             )}
 
-            {/* Gradient overlay – bolj subtle, da se slika vidi */}
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/92 via-black/65 to-black/10" />
+            {/* Gradient overlay */}
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/92 via-black/65 to-black/15" />
 
-            {/* CONTENT */}
-            <div className="relative z-10 h-full flex flex-col justify-between p-4">
-              <div className="space-y-2">
-                <p className="text-[11px] uppercase tracking-[0.18em] text-gray-300/90">
-                  {slot.provider}
-                </p>
-                <h2 className="text-base md:text-lg font-semibold text-white leading-snug line-clamp-2 drop-shadow-[0_0_10px_rgba(0,0,0,0.9)]">
-                  {slot.name}
-                </h2>
+            {/* CONTENT + BACK PILL */}
+            <div className="relative z-10 h-full flex items-end p-3">
+              <div className="w-full rounded-2xl bg-black/65 border border-white/15 backdrop-blur-md px-3.5 py-3.5">
+                <div className="space-y-2">
+                  <p className="text-[11px] uppercase tracking-[0.18em] text-gray-300/90">
+                    {slot.provider}
+                  </p>
+                  <h2 className="text-base md:text-lg font-semibold text-white leading-snug line-clamp-2 drop-shadow-[0_0_10px_rgba(0,0,0,0.9)]">
+                    {slot.name}
+                  </h2>
 
-                {slot.tags && slot.tags.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5">
-                    {slot.tags.slice(0, 3).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-black/70 px-2 py-1 text-[10px] text-gray-100 border border-white/15 backdrop-blur-[2px]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+                  {slot.tags && slot.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {slot.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-black/70 px-2 py-1 text-[10px] text-gray-100 border border-white/15 backdrop-blur-[2px]"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-              <div className="mt-4 flex items-center gap-2">
-                <button
-                  onClick={() => handlePlay(slot)}
-                  className="btn-primary w-full text-xs md:text-sm justify-center"
-                >
-                  Play now
-                </button>
+                <div className="mt-4 flex items-center gap-2">
+                  <button
+                    onClick={() => handlePlay(slot)}
+                    className="btn-primary w-full text-xs md:text-sm justify-center"
+                  >
+                    Play now
+                  </button>
+                </div>
               </div>
             </div>
           </article>
