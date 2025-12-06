@@ -200,12 +200,11 @@ export default function Wheel({ onSlotSelected }) {
             {/* ROUND SLOT IMAGE */}
             {currentSlot?.image ? (
               <div className="relative mb-2 h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border border-white/15 shadow-[0_0_22px_rgba(0,0,0,0.9)]">
-                <Image
+                <img
                   src={currentSlot.image}
                   alt={currentSlot.name}
-                  fill
-                  sizes="112px"
-                  className="object-cover"
+                  className="h-full w-full object-cover"
+                  draggable="false"
                 />
               </div>
             ) : (
