@@ -2,6 +2,10 @@
 
 import casinos from "../data/casinos.json";
 
+// Helper: remove anything in parentheses from welcome offers
+const cleanOffer = (offer) =>
+  offer ? offer.replace(/\s*\(.*?\)\s*/g, "").trim() : "";
+
 // Refined neutral, premium product copy
 const enhancedCasinos = casinos.map((casino) => {
   if (casino.name === "BitStarz") {
@@ -9,17 +13,20 @@ const enhancedCasinos = casinos.map((casino) => {
       ...casino,
       tagline:
         "A well-established online casino with a clean design and a wide selection of slots and table games.",
-      welcomeOffer: casino.welcomeOffer || "100% up to €100 or 1 BTC + 180 Free Spins",
+      // force clean offer, even if JSON still has parentheses
+      welcomeOffer: cleanOffer(
+        casino.welcomeOffer || "100% up to €100 or 1 BTC + 180 Free Spins"
+      ),
       highlights: [
         "Large selection of online slots and casino games.",
         "Supports a range of commonly used payment methods.",
         "Quick and simple account setup.",
-        "Interface designed for smooth use on desktop and mobile."
+        "Interface designed for smooth use on desktop and mobile.",
       ],
       notes: [
         "Bonus amounts and game availability can differ depending on your location.",
-        "All details should be verified on the BitStarz website before registering."
-      ]
+        "All details should be verified on the BitStarz website before registering.",
+      ],
     };
   }
 
@@ -28,21 +35,27 @@ const enhancedCasinos = casinos.map((casino) => {
       ...casino,
       tagline:
         "A modern casino platform featuring a broad game library and integrated promotional features.",
-      welcomeOffer: casino.welcomeOffer || "Up to 780% welcome bonus",
+      welcomeOffer: cleanOffer(
+        casino.welcomeOffer || "Up to 780% welcome bonus"
+      ),
       highlights: [
         "Extensive catalogue of slots and live-casino titles.",
         "Multiple payment methods depending on regional availability.",
         "Fast onboarding—new players can start exploring within minutes.",
-        "Regular bonuses and platform events displayed inside the lobby."
+        "Regular bonuses and platform events displayed inside the lobby.",
       ],
       notes: [
         "Bonus rules and game access vary by country.",
-        "Always review current information on the BC.Game website."
-      ]
+        "Always review current information on the BC.Game website.",
+      ],
     };
   }
 
-  return casino;
+  // Default for any other casinos – just clean whatever is in JSON
+  return {
+    ...casino,
+    welcomeOffer: cleanOffer(casino.welcomeOffer || ""),
+  };
 });
 
 export default function CasinosPage() {
@@ -160,8 +173,8 @@ export default function CasinosPage() {
               </div>
 
               {/* RIGHT SECTION */}
-              <div className="flex min-w-[200px] flex-col items-center md:items-end gap-1">
-                <div className="flex flex-col items-center md:items-end">
+              <div className="flex min-w-[200px] flex-col items-center gap-1">
+                <div className="flex flex-col items-center">
                   <button
                     onClick={() => handlePlay(casino)}
                     className="btn-primary w-full md:w-auto justify-center"
@@ -169,8 +182,8 @@ export default function CasinosPage() {
                     Play now
                   </button>
 
-                  {/* Disclaimer (cleaned) */}
-                  <p className="text-[10px] text-gray-500 mt-1 text-center md:text-right">
+                  {/* Always centered under button */}
+                  <p className="text-[10px] text-gray-500 mt-1 text-center">
                     18+ · Terms apply
                   </p>
                 </div>
