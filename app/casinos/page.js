@@ -2,6 +2,52 @@
 
 import casinos from "../data/casinos.json";
 
+// Upgrade copy for specific casinos (BitStarz, BC.Game)
+const enhancedCasinos = casinos.map((casino) => {
+  if (casino.name === "BitStarz") {
+    return {
+      ...casino,
+      tagline:
+        "A top-rated casino with ultra-fast payouts, huge slot variety and excellent player rewards.",
+      welcomeOffer: "100% up to €100 or 1 BTC + 180 Free Spins",
+      highlights: [
+        "Over 4,000 slots including Pragmatic Play, BGaming, Hacksaw & more.",
+        "Extremely fast payouts — especially with crypto withdrawals.",
+        "Supports both FIAT and crypto (EUR, USD, BTC, USDT, etc.).",
+        "Frequent reload bonuses, tournaments and slot tournaments.",
+        "Trusted worldwide with strong player reviews."
+      ],
+      notes: [
+        "Availability depends on your region. Bonuses and game selection may change over time.",
+        "Always confirm details on the official BitStarz website and play responsibly."
+      ]
+    };
+  }
+
+  if (casino.name === "BC.Game" || casino.name === "BC.Game") {
+    return {
+      ...casino,
+      tagline:
+        "A massive global casino with huge bonuses, VIP rewards and a huge slot library, built for crypto players.",
+      welcomeOffer: "Up to 780% welcome bonus",
+      highlights: [
+        "Enormous slot library including Pragmatic, Hacksaw & Nolimit City.",
+        "Fast crypto deposits and withdrawals across 150+ coins.",
+        "Daily bonuses, quests, lotteries and VIP rewards.",
+        "Reliable uptime and large international player base.",
+        "Modern interface with smooth gameplay on desktop & mobile."
+      ],
+      notes: [
+        "Bonus amounts and availability differ by country and region.",
+        "Always check the official BC.Game website for current promotions and play responsibly."
+      ]
+    };
+  }
+
+  // default: unchanged for any other casinos
+  return casino;
+});
+
 export default function CasinosPage() {
   const handlePlay = (casino) => {
     const url = casino.affiliateUrl || casino.websiteUrl;
@@ -22,15 +68,15 @@ export default function CasinosPage() {
         </h1>
 
         <p className="text-sm md:text-base text-gray-300 leading-relaxed">
-          Discover trusted online casinos where you can play the slots featured
-          on WhichSlot. Compare bonuses, features and payment methods, then pick
-          the one that fits you best.
+          Find trusted online casinos where you can play the slots featured on
+          WhichSlot. Compare bonuses, payout speed and game selection — then
+          start playing instantly.
         </p>
       </header>
 
       {/* Casino list */}
       <section className="grid grid-cols-1 gap-5">
-        {casinos.map((casino) => (
+        {enhancedCasinos.map((casino) => (
           <article
             key={casino.id}
             className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 p-5 md:p-6 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
@@ -101,18 +147,23 @@ export default function CasinosPage() {
                   )}
                 </div>
 
-                {/* Highlights list (benefits) */}
+                {/* Highlights list – “Why players choose …” */}
                 {casino.highlights && casino.highlights.length > 0 && (
-                  <ul className="mt-2 space-y-1.5 text-xs text-gray-300">
-                    {casino.highlights.map((item, idx) => (
-                      <li key={idx} className="flex gap-2">
-                        <span className="mt-[3px] text-[10px] text-emerald-400">
-                          •
-                        </span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mt-2 space-y-1.5">
+                    <p className="text-xs font-semibold text-gray-200">
+                      Why players choose {casino.name}
+                    </p>
+                    <ul className="mt-1 space-y-1.5 text-xs text-gray-300">
+                      {casino.highlights.map((item, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span className="mt-[3px] text-[10px] text-emerald-400">
+                            •
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 )}
 
                 {/* Notes from JSON (extra details) */}
@@ -136,7 +187,7 @@ export default function CasinosPage() {
                   Play now
                 </button>
                 <p className="text-[10px] text-gray-500 md:text-right">
-                  18+ only. New players · T&amp;Cs apply.
+                  18+ only · New players · T&amp;Cs apply.
                 </p>
               </div>
             </div>
