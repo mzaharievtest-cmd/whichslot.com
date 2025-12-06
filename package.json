@@ -8,7 +8,8 @@
     "start": "next start",
     "rename-slot-images": "node scripts/rename-slot-images.js",
     "fetch-images": "node scripts/fetch-pragmatic-images.js",
-    "download-bc-images": "node scripts/download-bc-images.js"
+    "download-bc-images": "node scripts/download-bc-images.js",
+    "generate-slots": "node scripts/generate-slots-from-bc.js"
   },
   "dependencies": {
     "next": "14.2.5",
