@@ -3,7 +3,7 @@
 
 export const AFF = "https://bzstarz1.com/boe5tub8a";
 
-// ✅ Default fallback image – POSKRBI, da ta datoteka RES obstaja:
+// Default fallback image – poskrbi, da datoteka res obstaja v:
 // public/common-slots/Sweet-Bonanza-1000_339x180.png
 export const DEFAULT_IMAGE = "/common-slots/Sweet-Bonanza-1000_339x180.png";
 
@@ -13,8 +13,9 @@ const imageFor = (name) => {
   const fileName =
     name
       .replace(/[^a-z0-9]+/gi, "-") // vse ne-alfanumerično v pomišljaj
-      .replace(/-+/g, "-") // dvojni --- v -
-      .replace(/^-|-$/g, "") + "_339x180.png";
+      .replace(/-+/g, "-")          // več pomišljajev -> en "-"
+      .replace(/^-|-$/g, "")        // odstrani "-" na začetku/koncu
+    + "_339x180.png";
 
   return `/common-slots/${fileName}`;
 };
