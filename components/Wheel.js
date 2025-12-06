@@ -12,52 +12,62 @@ function SlotPreview({ isSpinning, selectedSlot }) {
   const [displayedSlot, setDisplayedSlot] = useState(selectedSlot || null);
   const intervalRef = useRef(null);
 
+  // Preload images
   useEffect(() => {
-    // preload images once for smoother swaps
-    SLOTS.forEach((slot) => {
+    if (typeof window === "undefined") return;
+    SLOTS.forEach(slot => {
       if (!slot.image) return;
       const img = new window.Image();
       img.src = slot.image;
     });
   }, []);
 
+  // Shuffle animation during spin
   useEffect(() => {
     if (isSpinning) {
-      // start shuffling images quickly
       intervalRef.current = setInterval(() => {
         const randomSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
         setDisplayedSlot(randomSlot);
       }, 70);
     } else {
-      // stop shuffling and show selected slot
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      if (selectedSlot) setDisplayedSlot(selectedSlot);
+      if (selectedSlot) {
+        setDisplayedSlot(selectedSlot);
+      }
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [isSpinning, selectedSlot]);
 
-  const label = displayedSlot?.name || (isSpinning ? "Shuffling slots…" : "Tap to spin");
-  const sub =
-    displayedSlot?.provider ||
-    (isSpinning ? "We’ll pick a random slot for you" : "Let WhichSlot decide");
+  // TEXT RULES
+  let label = "Spin to reveal"; // default state
+  let sub = "";                // no subtext unless slot is chosen
+
+  if (isSpinning) {
+    label = "Shuffling slots…";
+  } else if (displayedSlot && selectedSlot) {
+    label = displayedSlot.name;
+    sub = displayedSlot.provider || "";
+  }
 
   return (
-    <div className="absolute inset-[50px] sm:inset-[54px] md:inset-[64px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
+    <div className="absolute inset-[50px] sm:inset-[54px] md:inset-[64px] 
+      rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
+
       <p className="text-[10px] uppercase tracking-[0.32em] text-gray-500 mb-2">
         WhichSlot
       </p>
 
+      {/* Slot image OR placeholder dot */}
       {displayedSlot?.image ? (
-        <div className="relative mb-2 h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border border-white/15 shadow-[0_0_22px_rgba(0,0,0,0.9)]">
+        <div className="relative mb-2 h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28
+          rounded-full overflow-hidden border border-white/15 
+          shadow-[0_0_22px_rgba(0,0,0,0.9)]">
           <img
             src={displayedSlot.image}
             alt={displayedSlot.name}
@@ -66,15 +76,22 @@ function SlotPreview({ isSpinning, selectedSlot }) {
           />
         </div>
       ) : (
-        <div className="mb-2 h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-gray-500">
-          Spin to reveal
+        <div className="mb-2 h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 
+          rounded-full border border-white/10 flex items-center justify-center 
+          text-[10px] text-gray-500">
+          ●
         </div>
       )}
 
+      {/* Main label */}
       <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
         {label}
       </p>
-      <p className="mt-1 text-[10px] text-gray-400">{sub}</p>
+
+      {/* Provider only after selection */}
+      {sub && (
+        <p className="mt-1 text-[10px] text-gray-400">{sub}</p>
+      )}
     </div>
   );
 }
