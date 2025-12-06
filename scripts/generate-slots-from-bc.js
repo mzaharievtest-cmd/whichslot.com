@@ -1,62 +1,57 @@
 // scripts/generate-slots-from-bc.js
+// Iz scripts/bc-slots.json generira app/data/slots.js
+// Shape: { id, name, image, affiliate }
 
 const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
 
-// paths
 const ROOT = process.cwd();
-const BC_FILE = path.join(ROOT, "public", "scripts", "bc-slots.js");
-const IMAGES_DIR = path.join(ROOT, "public", "common-slots");
-const OUT_FILE = path.join(ROOT, "app", "data", "slots.js");
+const INPUT = path.join(ROOT, "scripts", "bc-slots.json");
+const OUTPUT = path.join(ROOT, "app", "data", "slots.js");
 
-// load bc slots JSON
-const bcRaw = fs.readFileSync(BC_FILE, "utf8");
+// Tvoj affiliate link (lahko zamenjaš če bo drugačen)
+const AFF = "https://bzstarz1.com/boe5tub8a";
 
-// because bc-slots.js is NOT pure JSON, extract array using eval safely:
-const bcSlots = eval(bcRaw); // bc-slots.js exports array ONLY
+// 1) Preberi JSON
+const raw = fs.readFileSync(INPUT, "utf8");
+const bcSlots = JSON.parse(raw);
 
-console.log(`📦 Loaded ${bcSlots.length} slots from bc-slots.js`);
+console.log(`🎰 Generating SLOTS from ${bcSlots.length} BC entries...`);
 
-function findImageForName(name) {
-  // convert slot name → file slug
+// 2) Mapiraj v naš shape
+const slots = bcSlots.map((item, index) => {
+  const name = item.name?.trim();
+  if (!name) {
+    throw new Error(`Empty name at index ${index}`);
+  }
+
+  // MORDA: mora se ujemat z imeni datotek iz download skripte
   const baseSlug = slugify(name, {
-    lower: false,
-    strict: true,
+    lower: false,   // The Dog House Megaways
+    strict: true,   // pobriše čudne znake
     trim: true,
   });
 
-  const expected = `${baseSlug}_339x180.png`;
-  const fullPath = path.join(IMAGES_DIR, expected);
+  const image = `/common-slots/${baseSlug}_339x180.png`;
 
-  if (fs.existsSync(fullPath)) {
-    return `/common-slots/${expected}`;
-  }
-
-  return null; // image missing
-}
-
-const finalSlots = [];
-
-bcSlots.forEach((slot, index) => {
-  const imagePath = findImageForName(slot.name);
-
-  if (!imagePath) {
-    console.log(`⚠️  No image found for: ${slot.name}`);
-    return; // skip items without image
-  }
-
-  finalSlots.push({
+  return {
     id: index + 1,
-    name: slot.name,
-    image: imagePath,
-  });
+    name,
+    image,
+    affiliate: AFF,
+  };
 });
 
-console.log(`✅ Final slot count: ${finalSlots.length}`);
+// 3) Zgradi JS file content
+const fileContent = `// app/data/slots.js
+// Auto-generated from scripts/generate-slots-from-bc.js
+// Shape: { id, name, image, affiliate }
 
-const output = `export const SLOTS = ${JSON.stringify(finalSlots, null, 2)};\n`;
+export const AFF = "${AFF}";
 
-fs.writeFileSync(OUT_FILE, output, "utf8");
+export const SLOTS = ${JSON.stringify(slots, null, 2)};
+`;
 
-console.log(`🎉 Finished! Updated: app/data/slots.js`);
+fs.writeFileSync(OUTPUT, fileContent, "utf8");
+console.log(`✅ Written ${slots.length} slots to ${OUTPUT}`);
