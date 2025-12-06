@@ -1,5 +1,5 @@
 // scripts/download-bc-images.js
-// Prebere scripts/bc-slots.json in vse slike shrani v public/common-slots
+// Prebere scripts/bc-slots.js (JS modul z arrayem) in vse slike shrani v public/common-slots
 
 const fs = require("fs");
 const path = require("path");
@@ -7,19 +7,17 @@ const axios = require("axios");
 const slugify = require("slugify");
 
 const ROOT = process.cwd();
-const INPUT = path.join(ROOT, "scripts", "bc-slots.json");
 const OUT_DIR = path.join(ROOT, "public", "common-slots");
+
+// ⬅️ to je zdaj glavni input – JS modul, ne JSON
+const bcSlots = require("./bc-slots.js");
 
 // 1) Preveri/ustvari mapo
 if (!fs.existsSync(OUT_DIR)) {
   fs.mkdirSync(OUT_DIR, { recursive: true });
 }
 
-// 2) Preberi JSON
-const raw = fs.readFileSync(INPUT, "utf8");
-const bcSlots = JSON.parse(raw);
-
-console.log(`🎰 Najdenih slotov v JSON: ${bcSlots.length}`);
+console.log(`🎰 Najdenih slotov v JS arrayu: ${bcSlots.length}`);
 
 async function downloadAll() {
   let count = 0;
@@ -33,8 +31,8 @@ async function downloadAll() {
 
     // Ustvari lepo ime datoteke na osnovi imena slota
     const baseSlug = slugify(name, {
-      lower: false, // ohrani velike začetnice
-      strict: true, // odstrani čudne znake
+      lower: false,     // ohrani velike začetnice
+      strict: true,     // odstrani čudne znake
       trim: true,
     });
 
