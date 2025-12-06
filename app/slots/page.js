@@ -66,64 +66,76 @@ export default function SlotsPage() {
       {/* Grid – 2 on mobile, 4 on desktop */}
       <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
         {filteredSlots.map((slot) => (
-          <article
-            key={slot.id}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
-          >
-            {/* Background image (slot art) */}
-            <div className="relative h-28 w-full overflow-hidden">
+
+              <article
+          key={slot.id}
+          className="group relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col justify-between shadow-[0_18px_45px_rgba(0,0,0,0.75)] 
+                     hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition overflow-hidden"
+        >
+          {/* FULL BACKGROUND IMAGE */}
+          {slot.image && (
+            <Image
+              src={slot.image}
+              alt={slot.name}
+              fill
+              className="absolute inset-0 object-cover opacity-40 group-hover:opacity-55 transition duration-300"
+            />
+          )}
+        
+          {/* GRADIENT OVERLAY */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black/80 pointer-events-none"></div>
+        
+          {/* CONTENT */}
+          <div className="relative flex gap-3 z-10">
+            {/* Thumbnail */}
+            <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center border border-white/15 shadow-xl">
               {slot.image ? (
-                <>
-                  <Image
-                    src={slot.image}
-                    alt={slot.name}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    className="object-cover scale-110 group-hover:scale-125 transition-transform duration-500 ease-out opacity-80 group-hover:opacity-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
-                </>
+                <Image
+                  src={slot.image}
+                  alt={slot.name}
+                  fill
+                  sizes="48px"
+                  className="object-cover"
+                />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-500/70 via-pink-500/70 to-amber-400/70">
-                  <span className="text-xs font-semibold text-white">
-                    {getInitials(slot.name)}
-                  </span>
-                </div>
+                <span className="text-[11px] font-semibold text-white">
+                  {getInitials(slot.name)}
+                </span>
               )}
             </div>
-
-            {/* Content */}
-            <div className="relative z-10 p-3 flex flex-col gap-2">
-              <div className="space-y-1">
-                <h2 className="text-xs md:text-sm font-semibold text-white line-clamp-2">
-                  {slot.name}
-                </h2>
-                {slot.provider && (
-                  <p className="text-[10px] text-gray-300">{slot.provider}</p>
-                )}
-              </div>
-
+        
+            <div className="flex-1">
+              <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2">
+                {slot.name}
+              </h2>
+              <p className="mt-1 text-xs text-gray-300">{slot.provider}</p>
+        
               {slot.tags && slot.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {slot.tags.slice(0, 3).map((tag) => (
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {slot.tags.slice(0, 4).map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-black/60 px-2 py-0.5 text-[9px] text-gray-200 border border-white/10"
+                      className="rounded-full bg-black/50 px-2 py-1 text-[10px] text-gray-200 border border-white/10"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
               )}
-
-              <button
-                onClick={() => handlePlay(slot)}
-                className="mt-1 btn-primary w-full text-[11px] justify-center py-1.5"
-              >
-                Play now
-              </button>
             </div>
-          </article>
+          </div>
+        
+          {/* BUTTON */}
+          <div className="relative mt-4 flex items-center gap-2 z-10">
+            <button
+              onClick={() => handlePlay(slot)}
+              className="btn-primary w-full text-xs md:text-sm justify-center"
+            >
+              Play now
+            </button>
+          </div>
+        </article>
+          
         ))}
       </section>
 
