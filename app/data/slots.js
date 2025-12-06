@@ -67,6 +67,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["Megaways", "Fishing"],
     affiliate: { default: AFF },
+    image: "/common-slots/Big_Bass_Bonanaza_MEGAWAYS_EN_339x180_04.png",
   },
   {
     id: 9,
@@ -74,6 +75,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["Hold & Spin", "Fishing"],
     affiliate: { default: AFF },
+    image: "/common-slots/BBHaS_EN_339x180_04.png",
   },
   {
     id: 10,
@@ -89,6 +91,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["Megaways", "High volatility"],
     affiliate: { default: AFF },
+    image: "/common-slots/DOHO_Megaways™_EN_339x180.png",
   },
   {
     id: 12,
@@ -96,6 +99,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["Cluster pays", "Multipliers"],
     affiliate: { default: AFF },
+    image: "/common-slots/Fruit-Party™_339x180_01-1.png",
   },
   {
     id: 13,
@@ -103,13 +107,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["Cluster pays", "Multipliers", "Sequel"],
     affiliate: { default: AFF },
-  },
-  {
-    id: 14,
-    name: "Fruit Party 3",
-    provider: "Pragmatic Play",
-    tags: ["Cluster pays", "High volatility"],
-    affiliate: { default: AFF },
+    image: "/common-slots/Fruit_Party_2_EN_339x180.png",
   },
   {
     id: 15,
