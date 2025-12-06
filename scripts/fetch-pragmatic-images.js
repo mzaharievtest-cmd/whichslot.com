@@ -1,73 +1,47 @@
-#!/usr/bin/env node
-import fs from "fs";
-import path from "path";
 import axios from "axios";
-import { SLOTS } from "../app/data/slots.js";
+import cheerio from "cheerio";
+import fs from "fs-extra";
+import slugify from "slugify";
 
-const OUT = path.join(process.cwd(), "public/common-slots");
+const OUTPUT_DIR = "./public/common-slots";
+const PRAGMATIC_URL = "https://www.pragmaticplay.com/en/games/slots/";
 
-if (!fs.existsSync(OUT)) fs.mkdirSync(OUT, { recursive: true });
+async function run() {
+  console.log("🔍 Fetching Pragmatic slot images...");
 
-const years = ["2023", "2024", "2025"];
-const months = ["01","02","03","04","05","06","07","08","09","10","11","12"];
-const suffixes = ["", "_EN", "_NB", "_Scatter", "_WR-2"];
+  await fs.ensureDir(OUTPUT_DIR);
 
-function normalize(name) {
-  return (
-    name
-      .replace(/[^a-z0-9]+/gi, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-|-$/g, "") + "_339x180.png"
-  );
-}
+  const { data: html } = await axios.get(PRAGMATIC_URL);
+  const $ = cheerio.load(html);
 
-async function tryDownload(url) {
-  try {
-    const res = await axios.get(url, { responseType: "arraybuffer" });
-    return res.data;
-  } catch {
-    return null;
-  }
-}
+  const images = [];
 
-async function downloadSlot(slot) {
-  const fileName = normalize(slot.name);
-  const filePath = path.join(OUT, fileName);
+  $("img.game__image").each((i, el) => {
+    const url = $(el).attr("src") || $(el).attr("data-lazy-src");
+    const title = $(el).attr("alt");
 
-  if (fs.existsSync(filePath)) {
-    console.log("✔ Already exists:", fileName);
-    return fileName;
-  }
+    if (url && title) {
+      images.push({ title, url });
+    }
+  });
 
-  const slug = normalize(slot.name).replace("_339x180.png", "");
+  console.log(`📦 Found ${images.length} images.`);
 
-  for (const y of years) {
-    for (const m of months) {
-      for (const s of suffixes) {
-        const url =
-          `https://www.pragmaticplay.com/wp-content/uploads/${y}/${m}/${slug}${s}_339x180.png`;
+  for (const img of images) {
+    const cleanName = slugify(img.title, { lower: true, strict: true });
+    const filename = `${cleanName}_339x180.png`;
+    const filepath = `${OUTPUT_DIR}/${filename}`;
 
-        const data = await tryDownload(url);
-        if (data) {
-          fs.writeFileSync(filePath, data);
-          console.log("✔ Downloaded:", url);
-          return fileName;
-        }
-      }
+    try {
+      const response = await axios.get(img.url, { responseType: "arraybuffer" });
+      await fs.writeFile(filepath, response.data);
+      console.log(`✅ Saved: ${filename}`);
+    } catch (err) {
+      console.log(`❌ FAILED: ${img.url}`);
     }
   }
 
-  console.log("✖ Not found:", slot.name);
-  return null;
-}
-
-async function run() {
-  console.log("Fetching Pragmatic images…");
-  for (const slot of SLOTS) {
-    if (slot.provider !== "Pragmatic Play") continue;
-    await downloadSlot(slot);
-  }
-  console.log("Done!");
+  console.log("🎉 Done.");
 }
 
 run();
