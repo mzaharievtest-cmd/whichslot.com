@@ -1,4 +1,4 @@
-[
+module.exports = [
 {name: "The Dog House Megaways", src: "https://bc.imgix.net/game/image/3762_The%20Dog%20House%20Megaways.png"},
 {name: "Gates of Olympus Super Scatter", src: "https://bc.imgix.net/game/image/5314994f7d.png"},
 {name: "Sugar Rush 1000", src: "https://bc.imgix.net/game/image/15935_Sugar%20rush%201000.png"},
@@ -837,4 +837,4 @@
 {name: "Fruity Candy", src: "https://bc.imgix.net/game/image/14342_Fruity%20Candy.png"},
 {name: "Crazy777", src: "https://bc.imgix.net/game/image/df3ae5ff29.png"},
 {name: "Clumsy Cowboys", src: "https://bc.imgix.net/game/image/583adaabb4.png"}
-]
+];
