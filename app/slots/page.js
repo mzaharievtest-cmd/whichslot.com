@@ -6,9 +6,8 @@ import { SLOTS } from "../data/slots";
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
 
-    // 1) Create a shuffled version of SLOTS once when component mounts
+  // 1) Create a shuffled version of SLOTS once when component mounts
   const shuffledSlots = useMemo(() => {
-    // Fisher–Yates shuffle (best + unbiased)
     const list = [...SLOTS];
     for (let i = list.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -16,25 +15,18 @@ export default function SlotsPage() {
     }
     return list;
   }, []);
-  
+
   // 2) Apply search to the already shuffled list
   const filteredSlots = useMemo(() => {
     const term = search.trim().toLowerCase();
     if (!term) return shuffledSlots;
-  
+
     return shuffledSlots.filter((slot) => {
       const name = slot.name?.toLowerCase() || "";
       const provider = slot.provider?.toLowerCase() || "";
       return name.includes(term) || provider.includes(term);
     });
   }, [search, shuffledSlots]);
-
-    return SLOTS.filter((slot) => {
-      const name = slot.name?.toLowerCase() || "";
-      const provider = slot.provider?.toLowerCase() || "";
-      return name.includes(term) || provider.includes(term);
-    });
-  }, [search]);
 
   const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
@@ -54,7 +46,8 @@ export default function SlotsPage() {
         </h1>
 
         <p className="text-sm md:text-base text-gray-300 leading-relaxed">
-          Explore every slot included in the wheel. Search instantly by name to find your favorite games.
+          Explore every slot included in the wheel. Search instantly by name to
+          find your favorite games.
         </p>
       </header>
 
