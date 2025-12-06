@@ -2,18 +2,88 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Image from "next/image";
 import { SLOTS } from "../app/data/slots";
+
+/**
+ * Small, isolated component that handles the fast image shuffle.
+ * Only this re-renders ~every 70ms, not the whole wheel.
+ */
+function SlotPreview({ isSpinning, selectedSlot }) {
+  const [displayedSlot, setDisplayedSlot] = useState(selectedSlot || null);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    // preload images once for smoother swaps
+    SLOTS.forEach((slot) => {
+      if (!slot.image) return;
+      const img = new window.Image();
+      img.src = slot.image;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isSpinning) {
+      // start shuffling images quickly
+      intervalRef.current = setInterval(() => {
+        const randomSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
+        setDisplayedSlot(randomSlot);
+      }, 70);
+    } else {
+      // stop shuffling and show selected slot
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      if (selectedSlot) setDisplayedSlot(selectedSlot);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isSpinning, selectedSlot]);
+
+  const label = displayedSlot?.name || (isSpinning ? "Shuffling slots…" : "Tap to spin");
+  const sub =
+    displayedSlot?.provider ||
+    (isSpinning ? "We’ll pick a random slot for you" : "Let WhichSlot decide");
+
+  return (
+    <div className="absolute inset-[50px] sm:inset-[54px] md:inset-[64px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
+      <p className="text-[10px] uppercase tracking-[0.32em] text-gray-500 mb-2">
+        WhichSlot
+      </p>
+
+      {displayedSlot?.image ? (
+        <div className="relative mb-2 h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border border-white/15 shadow-[0_0_22px_rgba(0,0,0,0.9)]">
+          <img
+            src={displayedSlot.image}
+            alt={displayedSlot.name}
+            className="h-full w-full object-cover"
+            draggable="false"
+          />
+        </div>
+      ) : (
+        <div className="mb-2 h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-gray-500">
+          Spin to reveal
+        </div>
+      )}
+
+      <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
+        {label}
+      </p>
+      <p className="mt-1 text-[10px] text-gray-400">{sub}</p>
+    </div>
+  );
+}
 
 export default function Wheel({ onSlotSelected }) {
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-  // shuffling slot during spin
-  const [spinningSlot, setSpinningSlot] = useState(null);
-  const shuffleIntervalRef = useRef(null);
 
   const TOTAL_SEGMENTS = SLOTS.length || 200;
 
@@ -48,18 +118,17 @@ export default function Wheel({ onSlotSelected }) {
 
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
 
-    // at least 2 full turns + random offset
+    // 2 full turns + random offset
     const baseTurns = 720;
     const randomOffset = Math.floor(Math.random() * 360);
     const nextAngle = angle + baseTurns + randomOffset;
     setAngle(nextAngle);
 
-    // match ~3s spin duration
+    // ~3s to match sound
     setTimeout(() => {
       setIsSpinning(false);
       setSelectedSlot(nextSlot);
       setShowModal(true);
-      setSpinningSlot(null);
       playWinSound();
 
       // GA: slot selected
@@ -79,7 +148,7 @@ export default function Wheel({ onSlotSelected }) {
   const handlePlay = () => {
     if (!selectedSlot) return;
 
-    // GA: play now click
+    // GA: Play now click
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "play_now_click", {
         event_category: "engagement",
@@ -93,42 +162,6 @@ export default function Wheel({ onSlotSelected }) {
       selectedSlot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
   };
-
-  // Which slot is currently shown in the center (for image + labels)
-  const currentSlot = isSpinning && spinningSlot ? spinningSlot : selectedSlot;
-
-  const centerLabel = (() => {
-    if (currentSlot) return currentSlot.name;
-    if (isSpinning) return "Shuffling slots…";
-    return "Tap to spin";
-  })();
-
-  const centerSub = (() => {
-    if (currentSlot?.provider) return currentSlot.provider;
-    if (isSpinning) return "We’ll pick a random slot for you";
-    return "Let WhichSlot decide";
-  })();
-
-  // shuffle effect while spinning
-  useEffect(() => {
-    if (isSpinning) {
-      shuffleIntervalRef.current = setInterval(() => {
-        const randomSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
-        setSpinningSlot(randomSlot);
-      }, 70); // fast swap (~14 images per second)
-    } else {
-      if (shuffleIntervalRef.current) {
-        clearInterval(shuffleIntervalRef.current);
-        shuffleIntervalRef.current = null;
-      }
-    }
-
-    return () => {
-      if (shuffleIntervalRef.current) {
-        clearInterval(shuffleIntervalRef.current);
-      }
-    };
-  }, [isSpinning]);
 
   const closeModalAndMaybeSpin = (spinAgain = false) => {
     setShowModal(false);
@@ -190,36 +223,8 @@ export default function Wheel({ onSlotSelected }) {
           {/* center glow disc */}
           <div className="absolute inset-[42px] sm:inset-[46px] md:inset-[56px] rounded-full bg-[radial-gradient(circle_at_30%_0%,rgba(148,163,253,0.6),transparent_55%),radial-gradient(circle_at_70%_100%,rgba(236,72,153,0.5),transparent_55%)] opacity-80 blur-[1px]" />
 
-          {/* center content */}
-          <div className="absolute inset-[50px] sm:inset-[54px] md:inset-[64px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
-            {/* small label */}
-            <p className="text-[10px] uppercase tracking-[0.32em] text-gray-500 mb-2">
-              WhichSlot
-            </p>
-
-            {/* ROUND SLOT IMAGE */}
-            {currentSlot?.image ? (
-              <div className="relative mb-2 h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border border-white/15 shadow-[0_0_22px_rgba(0,0,0,0.9)]">
-                <img
-                  src={currentSlot.image}
-                  alt={currentSlot.name}
-                  className="h-full w-full object-cover"
-                  draggable="false"
-                />
-              </div>
-            ) : (
-              // fallback if no slot yet
-              <div className="mb-2 h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-gray-500">
-                Spin to reveal
-              </div>
-            )}
-
-            {/* name + sub text */}
-            <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
-              {centerLabel}
-            </p>
-            <p className="mt-1 text-[10px] text-gray-400">{centerSub}</p>
-          </div>
+          {/* center preview (fast, isolated) */}
+          <SlotPreview isSpinning={isSpinning} selectedSlot={selectedSlot} />
         </div>
 
         {/* Spin button */}
