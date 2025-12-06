@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
-import { SLOTS } from "../data/slots";
+import { SLOTS, DEFAULT_IMAGE } from "../data/slots";
 
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
@@ -30,14 +29,8 @@ export default function SlotsPage() {
 
   const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
+    if (!url) return;
     window.open(url, "_blank", "noopener,noreferrer");
-  };
-
-  const getInitials = (name) => {
-    if (!name) return "?";
-    const parts = name.split(" ");
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
   return (
@@ -104,23 +97,18 @@ export default function SlotsPage() {
             key={slot.id}
             className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col justify-between shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* TOP: slika + info */}
+            {/* TOP: image + info */}
             <div className="flex gap-3">
-              {/* Thumbnail – vedno nekaj prikažemo */}
-              <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 flex items-center justify-center border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
-                {slot.image ? (
-                  <Image
-                    src={slot.image}
-                    alt={slot.name}
-                    fill
-                    sizes="48px"
-                    className="object-cover"
-                  />
-                ) : (
-                  <span className="text-[11px] font-semibold text-white">
-                    {getInitials(slot.name)}
-                  </span>
-                )}
+              {/* Thumbnail */}
+              <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/60 via-pink-500/60 to-amber-400/60 border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)] flex items-center justify-center">
+                <img
+                  src={slot.image || DEFAULT_IMAGE}
+                  alt={slot.name}
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = DEFAULT_IMAGE;
+                  }}
+                />
               </div>
 
               <div className="flex-1">
@@ -144,7 +132,7 @@ export default function SlotsPage() {
               </div>
             </div>
 
-            {/* BOTTOM: gumb */}
+            {/* BOTTOM: button */}
             <div className="mt-4 flex items-center gap-2">
               <button
                 onClick={() => handlePlay(slot)}
