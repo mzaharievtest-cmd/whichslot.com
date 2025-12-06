@@ -3,15 +3,20 @@
 
 export const AFF = "https://bzstarz1.com/boe5tub8a";
 
-// helper: generate image path from slot name
-const imageFor = (name) => {
-  const fileName =
-    name
-      .replace(/[^a-z0-9]+/gi, "-") // vse ne-alfanumerično v pomišljaj
-      .replace(/-+/g, "-") // več pomišljajev v enega
-      .replace(/^-|-$/g, "") + "_339x180.png";
-
-  return `/common-slots/${fileName}`;
+// Map of slot name -> local image path in /public/common-slots
+const IMAGE_MAP = {
+  "Gates of Olympus": "/common-slots/Gates-of-Olympus_339x180.png",
+  "Sweet Bonanza": "/common-slots/Sweet-Bonanza_339x180.png",
+  "Big Bass Bonanza": "/common-slots/Big-Bass-Bonanza_339x180.png",
+  "Big Bass Splash": "/common-slots/Big-Bass-Splash_339x180.png",
+  "Buffalo King": "/common-slots/Buffalo-King_339x180.png",
+  "Club Tropicana": "/common-slots/Club-Tropicana_339x180.png",
+  "Release the Kraken": "/common-slots/Release-the-Kraken_339x180.png",
+  "Starlight Princess": "/common-slots/Starlight-Princess_339x180.png",
+  "The Dog House": "/common-slots/The-Dog-House_339x180.png",
+  "Wild West Gold": "/common-slots/Wild-West-Gold_339x180.png",
+  "Wild Wild Riches": "/common-slots/Wild-Wild-Riches_339x180.png",
+  "5 Lions Megaways": "/common-slots/5-Lions-Megaways_339x180.png",
 };
 
 export const SLOTS = [
