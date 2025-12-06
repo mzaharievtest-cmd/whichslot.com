@@ -1,47 +1,60 @@
 import axios from "axios";
-import cheerio from "cheerio";
+import { load } from "cheerio";
 import fs from "fs-extra";
 import slugify from "slugify";
 
 const OUTPUT_DIR = "./public/common-slots";
-const PRAGMATIC_URL = "https://www.pragmaticplay.com/en/games/slots/";
 
-async function run() {
-  console.log("🔍 Fetching Pragmatic slot images...");
+// Ensure dir exists
+await fs.ensureDir(OUTPUT_DIR);
 
-  await fs.ensureDir(OUTPUT_DIR);
+async function fetchImageForGame(gameName) {
+  const searchSlug = slugify(gameName, { lower: true });
+  const url = `https://www.pragmaticplay.com/en/games/${searchSlug}/`;
 
-  const { data: html } = await axios.get(PRAGMATIC_URL);
-  const $ = cheerio.load(html);
+  try {
+    console.log("Fetching:", url);
 
-  const images = [];
+    const { data } = await axios.get(url);
+    const $ = load(data);
 
-  $("img.game__image").each((i, el) => {
-    const url = $(el).attr("src") || $(el).attr("data-lazy-src");
-    const title = $(el).attr("alt");
+    // Pragmatic always stores main thumbnail in og:image meta
+    const imageUrl = $('meta[property="og:image"]').attr("content");
 
-    if (url && title) {
-      images.push({ title, url });
+    if (!imageUrl) {
+      console.log("❌ No image found for:", gameName);
+      return null;
     }
-  });
 
-  console.log(`📦 Found ${images.length} images.`);
+    const fileName =
+      slugify(gameName, { lower: false, strict: true }).replace(/-/g, " ") +
+      "_339x180.png";
 
-  for (const img of images) {
-    const cleanName = slugify(img.title, { lower: true, strict: true });
-    const filename = `${cleanName}_339x180.png`;
-    const filepath = `${OUTPUT_DIR}/${filename}`;
+    const finalPath = `${OUTPUT_DIR}/${fileName}`;
 
-    try {
-      const response = await axios.get(img.url, { responseType: "arraybuffer" });
-      await fs.writeFile(filepath, response.data);
-      console.log(`✅ Saved: ${filename}`);
-    } catch (err) {
-      console.log(`❌ FAILED: ${img.url}`);
-    }
+    const img = await axios.get(imageUrl, { responseType: "arraybuffer" });
+    await fs.writeFile(finalPath, img.data);
+    console.log("✅ Saved:", finalPath);
+
+    return finalPath;
+  } catch (err) {
+    console.log("❌ Failed:", gameName, err.message);
+    return null;
   }
-
-  console.log("🎉 Done.");
 }
 
-run();
+// Example test list (later replace with SLOTS)
+const pragmaticGames = [
+  "Gates of Olympus",
+  "Sugar Rush",
+  "Sweet Bonanza",
+  "Big Bass Bonanza",
+];
+
+console.log("🎰 Starting image scraping...");
+
+for (const name of pragmaticGames) {
+  await fetchImageForGame(name);
+}
+
+console.log("🎉 Done!");
