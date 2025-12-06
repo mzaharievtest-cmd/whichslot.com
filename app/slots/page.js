@@ -18,16 +18,9 @@ export default function SlotsPage() {
     });
   }, [search]);
 
-  const handlePlay = (slot) => {
+  const handlePlay = (slot: (typeof SLOTS)[number]) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
-  };
-
-  const getInitials = (name) => {
-    if (!name) return "?";
-    const parts = name.split(" ");
-    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-    return (parts[0][0] + parts[1][0]).toUpperCase();
   };
 
   return (
@@ -66,7 +59,7 @@ export default function SlotsPage() {
             key={slot.id}
             className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
           >
-            {/* Background image across the whole card, always from the top */}
+            {/* Full background image, anchored on top */}
             {slot.image && (
               <div className="absolute inset-0 -z-10">
                 <Image
@@ -79,33 +72,17 @@ export default function SlotsPage() {
               </div>
             )}
 
+            {/* Dark gradient overlay za berljivost teksta (temnejše dno, bolj vidna slika zgoraj) */}
+            <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/10 via-black/40 to-black/85" />
+
             {/* Card content */}
             <div className="relative z-10 h-full p-4 flex flex-col justify-between">
-              {/* TOP: icon + name pill + tags */}
+              {/* TOP: slot name + tags */}
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  {/* Small thumbnail / initials */}
-                  <div className="relative h-11 w-11 rounded-2xl overflow-hidden bg-black/70 border border-white/20 flex items-center justify-center">
-                    {slot.image ? (
-                      <Image
-                        src={slot.image}
-                        alt={slot.name}
-                        fill
-                        sizes="44px"
-                        className="object-cover object-top"
-                      />
-                    ) : (
-                      <span className="text-[11px] font-semibold text-white">
-                        {getInitials(slot.name)}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Slot name pill */}
-                  <h2 className="inline-flex max-w-[75%] items-center rounded-full bg-black/70 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg">
-                    <span className="truncate">{slot.name}</span>
-                  </h2>
-                </div>
+                {/* Slot name pill (brez thumbnaila) */}
+                <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/65 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
+                  <span className="truncate">{slot.name}</span>
+                </h2>
 
                 {/* Tags */}
                 {slot.tags && slot.tags.length > 0 && (
@@ -113,7 +90,7 @@ export default function SlotsPage() {
                     {slot.tags.slice(0, 4).map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-black/70 px-2 py-1 text-[10px] text-gray-100 border border-white/10"
+                        className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-100 border border-white/10 backdrop-blur-sm"
                       >
                         {tag}
                       </span>
