@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "rename-slot-images": "node scripts/rename-slot-images.js",
-    "fetch-images": "node scripts/fetch-pragmatic-images.js"
+    "fetch-images": "node scripts/fetch-pragmatic-images.js",
+    "download-bc-images": "node scripts/download-bc-images.js"
   },
   "dependencies": {
     "next": "14.2.5",
