@@ -1,100 +1,56 @@
 // scripts/generate-slots-from-bc.js
-// Ustvari app/data/slots.js iz scripts/bc-slots.js + public/common-slots
+// Iz scripts/bc-slots.json naredi app/data/slots.js (SLOTS z image potmi)
 
 const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
 
 const ROOT = process.cwd();
-const BC_SLOTS_PATH = path.join(ROOT, "scripts", "bc-slots.js");
-const IMG_DIR = path.join(ROOT, "public", "common-slots");
-const OUTPUT_PATH = path.join(ROOT, "app", "data", "slots.js");
+const INPUT = path.join(ROOT, "scripts", "bc-slots.json");
+const OUT = path.join(ROOT, "app", "data", "slots.js");
 
-// 1) Preberi BC game data
-/** @type {{ name: string; src: string }[]} */
-const bcSlots = require(BC_SLOTS_PATH);
+// Če imaš drugo affiliate povezavo, zamenjaj tu:
+const AFF = "https://bzstarz1.com/boe5tub8a";
 
-console.log(`🎰 Najdenih zapisov v bc-slots: ${bcSlots.length}`);
+const raw = fs.readFileSync(INPUT, "utf8");
+const bcSlots = JSON.parse(raw);
 
-// 2) Preberi slike iz public/common-slots
-if (!fs.existsSync(IMG_DIR)) {
-  console.error("❌ Mapo public/common-slots ne najdem:", IMG_DIR);
-  process.exit(1);
-}
+console.log(`🎰 Generiram SLOTS iz ${bcSlots.length} BC slotov...`);
 
-const imgFiles = fs
-  .readdirSync(IMG_DIR)
-  .filter((f) => f.toLowerCase().endsWith(".png"));
+const lines = [];
 
-console.log(`🖼  Najdenih PNG slik v common-slots: ${imgFiles.length}`);
+lines.push("// AUTO-GENERATED from scripts/generate-slots-from-bc.js");
+lines.push("// Ne urejaj ročno – spremeni bc-slots.json ali skripto.");
+lines.push("");
+lines.push(`export const AFF = ${JSON.stringify(AFF)};`);
+lines.push("");
+lines.push("export const SLOTS = [");
 
-const makeKey = (str) =>
-  slugify(str, {
-    lower: true,
-    strict: true,
+bcSlots.forEach((slot, index) => {
+  const name = slot.name;
+  if (!name) return;
+
+  // Enak pattern kot pri downloadu slik:
+  const slug = slugify(name, {
+    lower: false,  // ohrani velike začetnice
+    strict: true,  // odstranimo čudne znake
     trim: true,
   });
 
-// 3) Zgradi mapo: canonicalKey(nameIzFajla) -> imeFajla
-const imageMap = new Map();
+  const imagePath = `/common-slots/${slug}_339x180.png`;
 
-for (const file of imgFiles) {
-  const extIndex = file.lastIndexOf(".");
-  let base = extIndex === -1 ? file : file.slice(0, extIndex); // brez .png
-
-  // odstrani morebitni numeric prefix:  "3762_The%20Dog%20House%20Megaways" -> "The%20Dog%20House%20Megaways"
-  const parts = base.split("_");
-  if (parts.length > 1 && /^\d+$/.test(parts[0])) {
-    base = parts.slice(1).join("_");
-  }
-
-  // decode URL enkodiranje, če obstaja
-  let decoded = base;
-  try {
-    decoded = decodeURIComponent(base);
-  } catch {
-    // ignore
-  }
-
-  const key = makeKey(decoded);
-
-  if (!imageMap.has(key)) {
-    imageMap.set(key, file);
-  }
-}
-
-console.log(`🧩 Image map velikost: ${imageMap.size}`);
-
-// 4) Zgradi SLOTS array
-const AFF = "https://bzstarz1.com/boe5tub8a";
-
-const slots = bcSlots.map((slot, index) => {
-  const key = makeKey(slot.name);
-  const file = imageMap.get(key);
-  const imagePath = file ? `/common-slots/${file}` : null;
-
-  if (!file) {
-    console.warn(`⚠️  Brez slike za: "${slot.name}" (key: ${key})`);
-  }
-
-  return {
-    id: index + 1,
-    name: slot.name,
-    affiliate: { default: AFF },
-    image: imagePath,
-  };
+  lines.push("  {");
+  lines.push(`    id: ${index + 1},`);
+  lines.push(`    name: ${JSON.stringify(name)},`);
+  lines.push(`    provider: "BC.Game",`);
+  lines.push("    tags: [],");
+  lines.push("    affiliate: { default: AFF },");
+  lines.push(`    image: ${JSON.stringify(imagePath)},`);
+  lines.push("  },");
 });
 
-// 5) Zapiši app/data/slots.js
-const fileContent = `// app/data/slots.js
-// Auto-generated from scripts/generate-slots-from-bc.js
+lines.push("];");
+lines.push("");
 
-export const AFF = "${AFF}";
-
-export const SLOTS = ${JSON.stringify(slots, null, 2)};
-`;
-
-fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-fs.writeFileSync(OUTPUT_PATH, fileContent, "utf8");
-
-console.log(`✅ Generated ${OUTPUT_PATH}`);
+fs.writeFileSync(OUT, lines.join("\n"), "utf8");
+console.log(`✅ Zapisal ${OUT} z ${bcSlots.length} sloti.`);
