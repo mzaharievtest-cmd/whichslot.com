@@ -1,6 +1,3 @@
-// app/data/slots.js
-// 200 named slots, all mapped to BitStarz affiliate link.
-
 export const AFF = "https://bzstarz1.com/boe5tub8a";
 
 export const SLOTS = [
