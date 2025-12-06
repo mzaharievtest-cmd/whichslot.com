@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { SLOTS } from "../data/slots";
+import { SLOTS, DEFAULT_IMAGE } from "../data/slots";
 
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
@@ -97,73 +97,76 @@ export default function SlotsPage() {
         </div>
       </section>
 
-      {/* Grid */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {filteredSlots.map((slot) => (
-          <article
-            key={slot.id}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition min-h-[260px] flex flex-col"
-          >
-            {/* Background image čez cel box */}
-            {slot.image && (
-              <Image
-                src={slot.image}
-                alt={slot.name}
-                fill
-                sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover opacity-70 group-hover:opacity-90 transition-opacity duration-300"
-              />
-            )}
+      {/* Grid: 2 na mobile, 4 na desktopu */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+        {filteredSlots.map((slot) => {
+          const img = slot.image || DEFAULT_IMAGE || null;
+          const hasImage = !!img;
 
-            {/* Fallback če ni slike – velik “ghost” text */}
-            {!slot.image && (
-              <div className="absolute inset-0 flex items-center justify-center text-6xl font-black text-white/5 select-none">
-                {getInitials(slot.name)}
-              </div>
-            )}
+          return (
+            <article
+              key={slot.id}
+              className="group relative rounded-2xl border border-white/10 bg-black/70 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.85)] hover:border-neonPurple/70 hover:shadow-[0_26px_70px_rgba(0,0,0,0.95)] transition-transform duration-200 hover:-translate-y-1"
+            >
+              {/* FULL background image od VRHA do DNA */}
+              {hasImage && (
+                <Image
+                  src={img}
+                  alt={slot.name}
+                  fill
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  className="object-cover"
+                />
+              )}
 
-            {/* Dark overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/90 pointer-events-none" />
+              {/* Dark overlay, da text ostane čitljiv, image še vedno pride do izraza */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/70 to-black/95 group-hover:from-black/20 group-hover:via-black/60" />
 
-            {/* Content */}
-            <div className="relative z-10 flex flex-1 flex-col justify-between p-4 gap-4">
-              {/* TOP: title + provider + tags */}
-              <div className="space-y-3">
-                {/* Slot name v črnem prosojnem pillu */}
-                <h2 className="max-w-full">
-                  <span className="inline-block max-w-full rounded-full bg-black/70 px-3 py-1 text-sm md:text-base font-semibold text-white shadow-[0_0_12px_rgba(0,0,0,0.6)] truncate">
+              {/* Content */}
+              <div className="relative flex flex-col justify-between h-full p-3 md:p-4">
+                {/* TOP: ime + provider + tags */}
+                <div className="space-y-2">
+                  {/* Če ni slike, pokažemo initiale kot malo značko */}
+                  {!hasImage && (
+                    <div className="inline-flex items-center justify-center rounded-lg bg-white/10 px-2 py-1 text-[10px] font-semibold text-white mb-1">
+                      {getInitials(slot.name)}
+                    </div>
+                  )}
+
+                  <h2 className="text-xs sm:text-sm md:text-base font-semibold text-white line-clamp-2 drop-shadow-[0_0_8px_rgba(0,0,0,0.9)]">
                     {slot.name}
-                  </span>
-                </h2>
+                  </h2>
+                  <p className="text-[10px] sm:text-xs text-gray-200/90 drop-shadow-[0_0_6px_rgba(0,0,0,0.8)]">
+                    {slot.provider}
+                  </p>
 
-                <p className="text-xs text-gray-300">{slot.provider}</p>
+                  {slot.tags && slot.tags.length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-1">
+                      {slot.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-black/60 px-2 py-0.5 text-[9px] text-gray-100 border border-white/15"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
 
-                {slot.tags && slot.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {slot.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-100 border border-white/15"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                {/* BOTTOM: button */}
+                <div className="mt-3">
+                  <button
+                    onClick={() => handlePlay(slot)}
+                    className="btn-primary w-full text-[11px] sm:text-xs md:text-sm justify-center"
+                  >
+                    Play now
+                  </button>
+                </div>
               </div>
-
-              {/* BOTTOM: gumb */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => handlePlay(slot)}
-                  className="btn-primary w-full text-xs md:text-sm justify-center"
-                >
-                  Play now
-                </button>
-              </div>
-            </div>
-          </article>
-        ))}
+            </article>
+          );
+        })}
       </section>
 
       <p className="text-[11px] text-gray-500 mt-4">
