@@ -55,61 +55,57 @@ export default function SlotsPage() {
       {/* Grid – 4 in a row on desktop */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
         {filteredSlots.map((slot) => (
-          <article
-            key={slot.id}
-            className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
-          >
-            {/* Full background image, anchored on top */}
-            {slot.image && (
-              <div className="absolute inset-0 -z-10">
-                <Image
-                  src={slot.image}
-                  alt={slot.name}
-                  fill
-                  sizes="(min-width:1280px) 25vw, (min-width:1024px) 33vw, 100vw"
-                  className="object-cover object-top"
-                />
-              </div>
-            )}
-
-            {/* Dark gradient overlay for readability */}
-            <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/10 via-black/40 to-black/85" />
-
-            {/* Card content */}
-            <div className="relative z-10 h-full p-4 flex flex-col justify-between">
-              {/* TOP: slot name + tags */}
-              <div className="space-y-3">
-                {/* Slot name pill */}
-                <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/65 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
-                  <span className="truncate">{slot.name}</span>
-                </h2>
-
-                {/* Tags */}
-                {slot.tags && slot.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5">
-                    {slot.tags.slice(0, 4).map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-100 border border-white/10 backdrop-blur-sm"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* BOTTOM: button */}
-              <div className="mt-4">
-                <button
-                  onClick={() => handlePlay(slot)}
-                  className="btn-primary w-full text-xs md:text-sm justify-center"
-                >
-                  Play now
-                </button>
-              </div>
+        <article
+          key={slot.id}
+          className="group relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 min-h-[300px] md:min-h-[340px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+        >
+          {/* Full background image — always visible */}
+          {slot.image && (
+            <div className="absolute inset-0 -z-10">
+              <Image
+                src={slot.image}
+                alt={slot.name}
+                fill
+                className="object-cover object-top"
+                sizes="(min-width:1280px) 25vw, (min-width:1024px) 33vw, 100vw"
+              />
             </div>
-          </article>
+          )}
+        
+          {/* Much lighter gradient to keep text readable but image visible */}
+          <div className="absolute inset-0 -z-0 bg-gradient-to-b from-black/0 via-black/20 to-black/45" />
+        
+          {/* Card content */}
+          <div className="relative z-10 h-full p-4 flex flex-col justify-between">
+            <div className="space-y-3">
+              <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/45 px-4 py-1.5 text-xs md:text-sm font-semibold text-white backdrop-blur-sm">
+                <span className="truncate">{slot.name}</span>
+              </h2>
+        
+              {slot.tags && slot.tags.length > 0 && (
+                <div className="flex flex-wrap gap-1.5">
+                  {slot.tags.slice(0, 4).map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-black/40 px-2 py-1 text-[10px] text-gray-100 border border-white/10 backdrop-blur-sm"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+        
+            <div className="mt-4">
+              <button
+                onClick={() => handlePlay(slot)}
+                className="btn-primary w-full text-xs md:text-sm justify-center"
+              >
+                Play now
+              </button>
+            </div>
+          </div>
+        </article>
         ))}
       </section>
 
