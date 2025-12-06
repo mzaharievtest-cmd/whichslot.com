@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "rename-slot-images": "node scripts/rename-slot-images.js"
+    "rename-slot-images": "node scripts/rename-slot-images.js",
     "fetch-images": "node scripts/fetch-pragmatic-images.js"
   },
   "dependencies": {
