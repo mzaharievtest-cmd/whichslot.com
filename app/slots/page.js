@@ -8,21 +8,18 @@ export default function SlotsPage() {
   const [search, setSearch] = useState("");
   const [providerFilter, setProviderFilter] = useState("all");
 
-  // Providers — če providerja ni, damo "Unknown"
   const providers = useMemo(() => {
-    const set = new Set(SLOTS.map((s) => s.provider || "Unknown"));
+    const set = new Set(SLOTS.map((s) => s.provider));
     return ["all", ...Array.from(set)];
   }, []);
 
-  // Filter search + provider
   const filteredSlots = useMemo(() => {
     const term = search.trim().toLowerCase();
     return SLOTS.filter((slot) => {
-      const name = slot.name?.toLowerCase() || "";
-      const provider = slot.provider?.toLowerCase() || "";
-
       const matchesSearch =
-        !term || name.includes(term) || provider.includes(term);
+        !term ||
+        slot.name.toLowerCase().includes(term) ||
+        slot.provider.toLowerCase().includes(term);
 
       const matchesProvider =
         providerFilter === "all" || slot.provider === providerFilter;
@@ -31,13 +28,11 @@ export default function SlotsPage() {
     });
   }, [search, providerFilter]);
 
-  // Open affiliate link
   const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  // Fallback inicialke
   const getInitials = (name) => {
     if (!name) return "?";
     const parts = name.split(" ");
@@ -57,19 +52,23 @@ export default function SlotsPage() {
         </h1>
         <p className="text-sm md:text-base text-gray-300 max-w-2xl">
           Browse all slots that can appear in the wheel. Use search or filter by
-          provider to explore the list.
+          provider to explore the list. When you find a game you like, press{" "}
+          <span className="font-semibold">Play now</span> to open it on a
+          supported site.
         </p>
       </header>
 
       {/* Search + info row */}
       <section className="space-y-3">
-        <input
-          type="text"
-          placeholder="Search by slot or provider..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
-        />
+        <div>
+          <input
+            type="text"
+            placeholder="Search by slot or provider..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
+          />
+        </div>
 
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="text-[11px] text-gray-400">
@@ -100,52 +99,87 @@ export default function SlotsPage() {
 
       {/* Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-        {filteredSlots.map((slot) => {
-          const imgSrc = slot.image; // 🔥 tu uporabljamo tvojo pot
+        {filteredSlots.map((slot) => (
+          <article
+            key={slot.id}
+            className="group relative rounded-2xl border border-white/10 bg-black/40 overflow-hidden shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+          >
+            {/* Full-card background image */}
+            {slot.image && (
+              <div className="absolute inset-0">
+                <Image
+                  src={slot.image}
+                  alt={slot.name}
+                  fill
+                  sizes="(max-width:768px) 100vw, 33vw"
+                  className="object-cover opacity-40 scale-110 blur-[1px]"
+                />
+              </div>
+            )}
+            {/* Gradient overlay za tekst */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/70 to-black/90" />
 
-          return (
-            <article
-              key={slot.name}
-              className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col justify-between shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
-            >
+            {/* Content */}
+            <div className="relative p-4 flex flex-col justify-between h-full">
+              {/* TOP: icon + info */}
               <div className="flex gap-3">
-                {/* Slot image */}
-                <div className="relative h-20 w-32 rounded-xl overflow-hidden bg-black/40 border border-white/15 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
-                  {imgSrc ? (
+                {/* Thumbnail ikona */}
+                <div className="relative h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/80 via-pink-500/80 to-amber-400/80 flex items-center justify-center border border-white/20 shadow-[0_0_18px_rgba(0,0,0,0.7)]">
+                  {slot.image ? (
                     <Image
-                      src={imgSrc}
+                      src={slot.image}
                       alt={slot.name}
                       fill
-                      sizes="128px"
+                      sizes="48px"
                       className="object-cover"
                     />
                   ) : (
-                    <span className="absolute inset-0 flex items-center justify-center text-[11px] font-semibold text-white">
+                    <span className="text-[11px] font-semibold text-white">
                       {getInitials(slot.name)}
                     </span>
                   )}
                 </div>
 
                 <div className="flex-1">
-                  <h2 className="text-base md:text-lg font-semibold text-white">
+                  <h2 className="text-base md:text-lg font-semibold text-white line-clamp-2 drop-shadow-[0_2px_6px_rgba(0,0,0,0.7)]">
                     {slot.name}
                   </h2>
-                  <p className="mt-1 text-xs text-gray-300">
-                    {slot.provider || "Unknown"}
-                  </p>
+
+                  {/* Provider – skrij če je "Unknown" ali prazen */}
+                  {slot.provider &&
+                    slot.provider !== "Unknown" && (
+                      <p className="mt-1 text-xs text-gray-200 drop-shadow-[0_2px_4px_rgba(0,0,0,0.7)]">
+                        {slot.provider}
+                      </p>
+                    )}
+
+                  {slot.tags && slot.tags.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      {slot.tags.slice(0, 4).map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full bg-black/60 px-2 py-1 text-[10px] text-gray-100 border border-white/10 backdrop-blur-sm"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Button */}
-              <button
-                onClick={() => handlePlay(slot)}
-                className="btn-primary w-full mt-4 text-xs md:text-sm justify-center"
-              >
-                Play now
-              </button>
-            </article>
-          );
-        })}
+              {/* BOTTOM: gumb */}
+              <div className="mt-4 flex items-center gap-2">
+                <button
+                  onClick={() => handlePlay(slot)}
+                  className="btn-primary w-full text-xs md:text-sm justify-center"
+                >
+                  Play now
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
       </section>
 
       <p className="text-[11px] text-gray-500 mt-4">
