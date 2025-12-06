@@ -2,23 +2,23 @@
 
 import casinos from "../data/casinos.json";
 
-// Enhanced attractive but safe copy
+// Slightly enhanced copy, still reasonable and not over-the-top
 const enhancedCasinos = casinos.map((casino) => {
   if (casino.name === "BitStarz") {
     return {
       ...casino,
       tagline:
-        "A popular choice among players who enjoy modern design, smooth gameplay and flexible payments — including crypto.",
-      welcomeOffer: "100% up to €100 or 1 BTC + 180 Free Spins",
+        "Well-known casino with a clean interface and a lot of slots to choose from.",
+      welcomeOffer: casino.welcomeOffer || "100% up to €100 or 1 BTC + 180 Free Spins",
       highlights: [
-        "Wide variety of online casino games, including many well-known slots.",
-        "Supports both FIAT and cryptocurrency payments.",
-        "Simple, fast onboarding for new players.",
-        "Clean and modern user experience."
+        "Good mix of online casino games, including many popular slots.",
+        "Supports both traditional currencies and several cryptocurrencies.",
+        "Straightforward signup and account setup for new players.",
+        "Interface is easy to navigate on both desktop and mobile."
       ],
       notes: [
-        "Bonus availability and game selection may vary by region.",
-        "Always check the official BitStarz website for the latest information."
+        "Bonus details and game availability can vary by country or region.",
+        "Always check the official BitStarz website for the latest terms before playing."
       ]
     };
   }
@@ -27,21 +27,22 @@ const enhancedCasinos = casinos.map((casino) => {
     return {
       ...casino,
       tagline:
-        "A modern crypto-friendly casino with a large selection of games and easy onboarding — often chosen by players who prefer flexible digital payments.",
-      welcomeOffer: "Up to 780% welcome bonus",
+        "Crypto-focused casino with a broad game selection and regular on-site promotions.",
+      welcomeOffer: casino.welcomeOffer || "Up to 780% welcome bonus",
       highlights: [
-        "Large selection of online casino games.",
-        "Supports a wide range of cryptocurrency payment methods.",
-        "Easy to register and get started.",
-        "Frequent events and promotions available on the platform."
+        "Offers a large catalogue of online casino games and slots.",
+        "Supports many different cryptocurrency payment options.",
+        "Registration and first deposit are quick to complete.",
+        "Runs various bonuses and promotions directly on the platform."
       ],
       notes: [
-        "Bonus terms and availability may vary based on your region.",
-        "Always check the official BC.Game website for current promotions."
+        "Bonus structure and availability depend on your location.",
+        "Always review the latest information on the official BC.Game website."
       ]
     };
   }
 
+  // leave other casinos as they are
   return casino;
 });
 
@@ -65,9 +66,10 @@ export default function CasinosPage() {
         </h1>
 
         <p className="text-sm md:text-base text-gray-300 leading-relaxed">
-          Explore recommended casino sites where selected slots may be available.
-          Compare bonuses, payment methods and platform features — and start
-          playing in minutes.
+          Here you&apos;ll find a few online casinos where many of the slots
+          from WhichSlot can be played. Have a look at the bonuses, payment
+          options and general feel of each site, then choose the one that suits
+          you best.
         </p>
       </header>
 
@@ -127,25 +129,37 @@ export default function CasinosPage() {
                       🛡 <strong>Licence:</strong> {casino.licence}
                     </span>
                   )}
+
+                  {casino.currencies && casino.currencies.length > 0 && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-black/40 px-2 py-1 border border-white/10 backdrop-blur-sm">
+                      💱 <strong>Currencies:</strong>{" "}
+                      {casino.currencies.slice(0, 4).join(", ")}
+                      {casino.currencies.length > 4 ? " …" : ""}
+                    </span>
+                  )}
                 </div>
 
                 {/* highlight bullets */}
-                <div className="space-y-1.5">
-                  <p className="text-xs font-semibold text-gray-200">
-                    Why players choose {casino.name}
-                  </p>
-                  <ul className="space-y-1.5 text-xs text-gray-300">
-                    {casino.highlights?.map((item, idx) => (
-                      <li key={idx} className="flex gap-2">
-                        <span className="mt-[3px] text-[10px] text-emerald-400">•</span>
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                {casino.highlights && casino.highlights.length > 0 && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-semibold text-gray-200">
+                      Why some players choose {casino.name}
+                    </p>
+                    <ul className="space-y-1.5 text-xs text-gray-300">
+                      {casino.highlights.map((item, idx) => (
+                        <li key={idx} className="flex gap-2">
+                          <span className="mt-[3px] text-[10px] text-emerald-400">
+                            •
+                          </span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
 
                 {/* notes */}
-                {casino.notes?.length > 0 && (
+                {casino.notes && casino.notes.length > 0 && (
                   <div className="mt-3 text-[11px] text-gray-500">
                     {casino.notes.map((note, idx) => (
                       <p key={idx} className={idx > 0 ? "mt-1" : ""}>
@@ -157,16 +171,19 @@ export default function CasinosPage() {
               </div>
 
               {/* RIGHT SECTION */}
-              <div className="flex min-w-[200px] flex-col items-stretch md:items-end gap-3">
-                <button
-                  onClick={() => handlePlay(casino)}
-                  className="btn-primary w-full md:w-auto justify-center"
-                >
-                  Play now
-                </button>
-                <p className="text-[10px] text-gray-500 md:text-right">
-                  18+ · T&amp;Cs apply
-                </p>
+              <div className="flex min-w-[200px] flex-col items-center md:items-end gap-1">
+                <div className="flex flex-col items-center md:items-end">
+                  <button
+                    onClick={() => handlePlay(casino)}
+                    className="btn-primary w-full md:w-auto justify-center"
+                  >
+                    Play now
+                  </button>
+                  {/* nicely aligned disclaimer */}
+                  <p className="text-[10px] text-gray-500 mt-1 text-center md:text-right">
+                    18+ · Terms apply
+                  </p>
+                </div>
               </div>
             </div>
           </article>
@@ -175,9 +192,10 @@ export default function CasinosPage() {
 
       {/* global disclaimer */}
       <p className="text-[11px] text-gray-500 max-w-3xl">
-        WhichSlot.com does not operate or manage any casino. Bonus availability,
-        game selection and payment options may vary by region. Always check the
-        casino’s official website before playing and gamble responsibly.
+        WhichSlot.com does not operate or manage any casino. Bonus details, game
+        selection and payment options can change and may differ by region.
+        Always check the information on the casino&apos;s own website and play
+        responsibly.
       </p>
     </div>
   );
