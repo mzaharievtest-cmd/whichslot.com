@@ -27,6 +27,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["High volatility", "Multipliers", "Grid slot"],
     affiliate: { default: AFF },
+    image: "/common-slots/Sugar_Rush_EN_339x180.png",
   },
   {
     id: 4,
@@ -34,6 +35,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["High volatility", "Multipliers"],
     affiliate: { default: AFF },
+    image: "/common-slots/Sugar-Rush-1000_339x180.png",
   },
   {
     id: 5,
@@ -41,6 +43,7 @@ export const SLOTS = [
     provider: "Pragmatic Play",
     tags: ["Medium/High", "Christmas", "Tumbles"],
     affiliate: { default: AFF },
+    image: "/common-slots/Sweet-Bonanza-Xmas™_339x180.png",
   },
   {
     id: 6,
