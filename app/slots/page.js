@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import slugify from "slugify";
 import { SLOTS } from "../data/slots";
 
 // če želiš fallback sliko (če kdaj ne obstaja), jo lahko definiraš:
