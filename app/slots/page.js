@@ -95,7 +95,9 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/60 shadow-[0_18px_45px_rgba(0,0,0,0.9)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,1)] transition"
+            className="group rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 flex flex-col shadow-[0_18px_45px_rgba(0,0,0,0.75)] 
+            hover:border-neonPurple/60 hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition
+            h-[350px] md:h-[380px]"
           >
             {/* FULL BACKGROUND IMAGE */}
             {slot.image && (
