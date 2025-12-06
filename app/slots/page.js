@@ -4,21 +4,16 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { SLOTS } from "../data/slots";
 
-// če želiš fallback sliko (če kdaj ne obstaja), jo lahko definiraš:
-const DEFAULT_IMAGE = "/common-slots/default.png";
-
-// funkcija, ki iz imena slota naredi pot do slike v public/common-slots
+// preprosta "slug" funkcija, ki posnema imena datotek
 const imageFor = (name) => {
-  if (!name) return DEFAULT_IMAGE;
+  if (!name) return "";
 
-  const baseSlug = slugify(name, {
-    lower: false,   // ohrani velike začetnice (kot so imena datotek)
-    strict: true,   // odstrani čudne znake, pusti črke/številke
-    trim: true,
-  });
+  const fileName = name
+    .replace(/[^a-z0-9]+/gi, "-") // vse ne-alfanumerično v pomišljaj
+    .replace(/-+/g, "-") // več pomišljajev -> en pomišljaj
+    .replace(/^-|-$/g, ""); // odstrani pomišljaj na začetku/koncu
 
-  // to se mora ujemati z imenom datotek, ki si jih downloadal
-  return `/common-slots/${baseSlug}_339x180.png`;
+  return `/common-slots/${fileName}_339x180.png`;
 };
 
 export default function SlotsPage() {
