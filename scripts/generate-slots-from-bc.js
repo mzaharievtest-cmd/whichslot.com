@@ -1,57 +1,100 @@
 // scripts/generate-slots-from-bc.js
-// Iz scripts/bc-slots.json generira app/data/slots.js
-// Shape: { id, name, image, affiliate }
+// Ustvari app/data/slots.js iz scripts/bc-slots.js + public/common-slots
 
 const fs = require("fs");
 const path = require("path");
 const slugify = require("slugify");
 
 const ROOT = process.cwd();
-const INPUT = path.join(ROOT, "scripts", "bc-slots.json");
-const OUTPUT = path.join(ROOT, "app", "data", "slots.js");
+const BC_SLOTS_PATH = path.join(ROOT, "scripts", "bc-slots.js");
+const IMG_DIR = path.join(ROOT, "public", "common-slots");
+const OUTPUT_PATH = path.join(ROOT, "app", "data", "slots.js");
 
-// Tvoj affiliate link (lahko zamenjaš če bo drugačen)
-const AFF = "https://bzstarz1.com/boe5tub8a";
+// 1) Preberi BC game data
+/** @type {{ name: string; src: string }[]} */
+const bcSlots = require(BC_SLOTS_PATH);
 
-// 1) Preberi JSON
-const raw = fs.readFileSync(INPUT, "utf8");
-const bcSlots = JSON.parse(raw);
+console.log(`🎰 Najdenih zapisov v bc-slots: ${bcSlots.length}`);
 
-console.log(`🎰 Generating SLOTS from ${bcSlots.length} BC entries...`);
+// 2) Preberi slike iz public/common-slots
+if (!fs.existsSync(IMG_DIR)) {
+  console.error("❌ Mapo public/common-slots ne najdem:", IMG_DIR);
+  process.exit(1);
+}
 
-// 2) Mapiraj v naš shape
-const slots = bcSlots.map((item, index) => {
-  const name = item.name?.trim();
-  if (!name) {
-    throw new Error(`Empty name at index ${index}`);
-  }
+const imgFiles = fs
+  .readdirSync(IMG_DIR)
+  .filter((f) => f.toLowerCase().endsWith(".png"));
 
-  // MORDA: mora se ujemat z imeni datotek iz download skripte
-  const baseSlug = slugify(name, {
-    lower: false,   // The Dog House Megaways
-    strict: true,   // pobriše čudne znake
+console.log(`🖼  Najdenih PNG slik v common-slots: ${imgFiles.length}`);
+
+const makeKey = (str) =>
+  slugify(str, {
+    lower: true,
+    strict: true,
     trim: true,
   });
 
-  const image = `/common-slots/${baseSlug}_339x180.png`;
+// 3) Zgradi mapo: canonicalKey(nameIzFajla) -> imeFajla
+const imageMap = new Map();
+
+for (const file of imgFiles) {
+  const extIndex = file.lastIndexOf(".");
+  let base = extIndex === -1 ? file : file.slice(0, extIndex); // brez .png
+
+  // odstrani morebitni numeric prefix:  "3762_The%20Dog%20House%20Megaways" -> "The%20Dog%20House%20Megaways"
+  const parts = base.split("_");
+  if (parts.length > 1 && /^\d+$/.test(parts[0])) {
+    base = parts.slice(1).join("_");
+  }
+
+  // decode URL enkodiranje, če obstaja
+  let decoded = base;
+  try {
+    decoded = decodeURIComponent(base);
+  } catch {
+    // ignore
+  }
+
+  const key = makeKey(decoded);
+
+  if (!imageMap.has(key)) {
+    imageMap.set(key, file);
+  }
+}
+
+console.log(`🧩 Image map velikost: ${imageMap.size}`);
+
+// 4) Zgradi SLOTS array
+const AFF = "https://bzstarz1.com/boe5tub8a";
+
+const slots = bcSlots.map((slot, index) => {
+  const key = makeKey(slot.name);
+  const file = imageMap.get(key);
+  const imagePath = file ? `/common-slots/${file}` : null;
+
+  if (!file) {
+    console.warn(`⚠️  Brez slike za: "${slot.name}" (key: ${key})`);
+  }
 
   return {
     id: index + 1,
-    name,
-    image,
-    affiliate: AFF,
+    name: slot.name,
+    affiliate: { default: AFF },
+    image: imagePath,
   };
 });
 
-// 3) Zgradi JS file content
+// 5) Zapiši app/data/slots.js
 const fileContent = `// app/data/slots.js
 // Auto-generated from scripts/generate-slots-from-bc.js
-// Shape: { id, name, image, affiliate }
 
 export const AFF = "${AFF}";
 
 export const SLOTS = ${JSON.stringify(slots, null, 2)};
 `;
 
-fs.writeFileSync(OUTPUT, fileContent, "utf8");
-console.log(`✅ Written ${slots.length} slots to ${OUTPUT}`);
+fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
+fs.writeFileSync(OUTPUT_PATH, fileContent, "utf8");
+
+console.log(`✅ Generated ${OUTPUT_PATH}`);
