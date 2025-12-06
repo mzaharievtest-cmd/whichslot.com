@@ -1,7 +1,21 @@
 // app/data/slots.js
 // 200 named slots, all mapped to BitStarz affiliate link.
 
-const AFF = "https://bzstarz1.com/boe5tub8a";
+export const AFF = "https://bzstarz1.com/boe5tub8a";
+
+// Default fallback image (poskrbi, da obstaja: /public/common-slots/default.png)
+export const DEFAULT_IMAGE = "/common-slots/default.png";
+
+// Utility: convert slot name -> filename used in /public/common-slots
+const imageFor = (name) => {
+  const fileName =
+    name
+      .replace(/[^a-z0-9]+/gi, "-") // vse ne-alfanumerično v pomišljaj
+      .replace(/-+/g, "-") // dvojni --- v -
+      .replace(/^-|-$/g, "") + "_339x180.png";
+
+  return `/common-slots/${fileName}`;
+};
 
 export const SLOTS = [
   // Pragmatic Play – classics & popular
