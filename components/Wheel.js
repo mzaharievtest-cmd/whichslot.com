@@ -285,80 +285,62 @@ export default function Wheel({ onSlotSelected }) {
         </button>
       </div>
 
-      {/* RESULT MODAL */}
-      {selectedSlot && showModal && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="relative w-full max-w-sm scale-100 rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
-            <button
-              type="button"
-              onClick={() => setShowModal(false)}
-              className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
-            >
-              ✕
-            </button>
+     {/* RESULT MODAL */}
+{selectedSlot && showModal && (
+  <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+    <div className="relative w-full max-w-sm rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-6 py-7 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
 
-            {/* Slot image */}
-            {selectedSlot.image && (
-              <div className="mb-4 flex justify-center">
-                <div className="relative w-40 h-40 sm:w-44 sm:h-44 rounded-3xl overflow-hidden border border-white/15 shadow-[0_0_32px_rgba(0,0,0,0.9)]">
-                  <img
-                    src={selectedSlot.image}
-                    alt={selectedSlot.name}
-                    className="h-full w-full object-cover"
-                    draggable="false"
-                  />
-                </div>
-              </div>
-            )}
+      {/* Close */}
+      <button
+        type="button"
+        onClick={() => setShowModal(false)}
+        className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
+      >
+        ✕
+      </button>
 
-            {/* Name + provider */}
-            <h2 className="text-xl font-bold text-white leading-tight mb-1 text-center">
-              {selectedSlot.name}
-            </h2>
-
-            {selectedSlot.provider && (
-              <p className="text-xs text-gray-300 mb-3 text-center">
-                {selectedSlot.provider}
-              </p>
-            )}
-
-            {/* Tags */}
-            {selectedSlot.tags && selectedSlot.tags.length > 0 && (
-              <div className="mb-4 flex flex-wrap justify-center gap-1.5">
-                {selectedSlot.tags.slice(0, 5).map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-white/15 bg-black/60 px-2 py-1 text-[10px] text-gray-100"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  handlePlay();
-                  setShowModal(false);
-                }}
-                className="btn-primary flex-1 justify-center text-xs md:text-sm"
-              >
-                Play now
-              </button>
-              <button
-                type="button"
-                onClick={() => closeModalAndMaybeSpin(true)}
-                className="rounded-lg border border-white/25 px-3 py-2 text-[11px] text-gray-200 hover:bg-white/10 active:scale-95 transition"
-              >
-                Spin again
-              </button>
-            </div>
+      {/* Slot Image */}
+      {selectedSlot.image && (
+        <div className="flex justify-center mb-4">
+          <div className="relative w-40 h-40 rounded-3xl overflow-hidden border border-white/12 shadow-[0_0_32px_rgba(0,0,0,0.9)]">
+            <img
+              src={selectedSlot.image}
+              alt={selectedSlot.name}
+              className="h-full w-full object-cover"
+              draggable="false"
+            />
           </div>
         </div>
       )}
-    </>
-  );
-}
+
+      {/* Slot Name – centered */}
+      <h2 className="text-lg md:text-xl font-semibold text-white text-center mb-5 px-2">
+        {selectedSlot.name}
+      </h2>
+
+      {/* Play now button – full width + centered */}
+      <button
+        type="button"
+        onClick={() => {
+          handlePlay();
+          setShowModal(false);
+        }}
+        className="btn-primary w-full text-sm py-3 mb-3 justify-center"
+      >
+        Play now
+      </button>
+
+      {/* Spin again – centered under Play now */}
+      <div className="flex justify-center">
+        <button
+          type="button"
+          onClick={() => closeModalAndMaybeSpin(true)}
+          className="rounded-lg border border-white/25 px-4 py-2 text-[12px] text-gray-200 hover:bg-white/10 active:scale-95 transition"
+        >
+          Spin again
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
