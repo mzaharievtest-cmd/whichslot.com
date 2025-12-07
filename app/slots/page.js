@@ -37,10 +37,6 @@ export default function SlotsPage() {
     <div className="max-w-6xl mx-auto px-4 py-12 space-y-8">
       {/* Header */}
       <header className="space-y-3">
-        <p className="text-[11px] uppercase tracking-[0.24em] text-gray-400">
-          WhichSlot · Slots
-        </p>
-
         <h1 className="text-3xl md:text-4xl font-bold text-white">
           All slots in the wheel
         </h1>
