@@ -5,17 +5,16 @@ import { useState, useRef, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
 
 /**
- * Small, isolated component that handles the fast image shuffle.
- * Only this re-renders ~every 70ms, not the whole wheel.
+ * Center preview – only this component re-renders rapidly during spin.
  */
 function SlotPreview({ isSpinning, selectedSlot }) {
   const [displayedSlot, setDisplayedSlot] = useState(selectedSlot || null);
   const intervalRef = useRef(null);
 
-  // Preload images
+  // Preload images once
   useEffect(() => {
     if (typeof window === "undefined") return;
-    SLOTS.forEach(slot => {
+    SLOTS.forEach((slot) => {
       if (!slot.image) return;
       const img = new window.Image();
       img.src = slot.image;
@@ -34,40 +33,38 @@ function SlotPreview({ isSpinning, selectedSlot }) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      if (selectedSlot) {
-        setDisplayedSlot(selectedSlot);
-      }
+      if (selectedSlot) setDisplayedSlot(selectedSlot);
     }
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     };
   }, [isSpinning, selectedSlot]);
 
-  // TEXT RULES
-  let label = "Spin to reveal"; // default state
-  let sub = "";                // no subtext unless slot is chosen
+  // TEXT RULES:
+  // - default: "Spin to reveal"
+  // - while spinning: show current slot name + provider
+  // - after spin: selected slot name + provider
+  let label = "Spin to reveal";
+  let sub = "";
 
-  if (isSpinning) {
-    label = "Shuffling slots…";
-  } else if (displayedSlot && selectedSlot) {
+  if (displayedSlot) {
     label = displayedSlot.name;
     sub = displayedSlot.provider || "";
   }
 
   return (
-    <div className="absolute inset-[50px] sm:inset-[54px] md:inset-[64px] 
-      rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
-
+    <div className="absolute inset-[50px] sm:inset-[54px] md:inset-[64px] rounded-full bg-black/95 flex flex-col items-center justify-center text-center px-4">
       <p className="text-[10px] uppercase tracking-[0.32em] text-gray-500 mb-2">
         WhichSlot
       </p>
 
-      {/* Slot image OR placeholder dot */}
+      {/* Slot image OR placeholder */}
       {displayedSlot?.image ? (
-        <div className="relative mb-2 h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28
-          rounded-full overflow-hidden border border-white/15 
-          shadow-[0_0_22px_rgba(0,0,0,0.9)]">
+        <div className="relative mb-2 h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 rounded-full overflow-hidden border border-white/15 shadow-[0_0_22px_rgba(0,0,0,0.9)]">
           <img
             src={displayedSlot.image}
             alt={displayedSlot.name}
@@ -76,10 +73,8 @@ function SlotPreview({ isSpinning, selectedSlot }) {
           />
         </div>
       ) : (
-        <div className="mb-2 h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 
-          rounded-full border border-white/10 flex items-center justify-center 
-          text-[10px] text-gray-500">
-          ●
+        <div className="mb-2 h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 rounded-full border border-white/10 flex items-center justify-center text-[10px] text-gray-500">
+          Spin
         </div>
       )}
 
@@ -88,9 +83,11 @@ function SlotPreview({ isSpinning, selectedSlot }) {
         {label}
       </p>
 
-      {/* Provider only after selection */}
+      {/* Provider only if we have a slot */}
       {sub && (
-        <p className="mt-1 text-[10px] text-gray-400">{sub}</p>
+        <p className="mt-1 text-[10px] text-gray-400">
+          {sub}
+        </p>
       )}
     </div>
   );
@@ -141,7 +138,7 @@ export default function Wheel({ onSlotSelected }) {
     const nextAngle = angle + baseTurns + randomOffset;
     setAngle(nextAngle);
 
-    // ~3s to match sound
+    // ~3s for the spin
     setTimeout(() => {
       setIsSpinning(false);
       setSelectedSlot(nextSlot);
@@ -240,7 +237,7 @@ export default function Wheel({ onSlotSelected }) {
           {/* center glow disc */}
           <div className="absolute inset-[42px] sm:inset-[46px] md:inset-[56px] rounded-full bg-[radial-gradient(circle_at_30%_0%,rgba(148,163,253,0.6),transparent_55%),radial-gradient(circle_at_70%_100%,rgba(236,72,153,0.5),transparent_55%)] opacity-80 blur-[1px]" />
 
-          {/* center preview (fast, isolated) */}
+          {/* center preview */}
           <SlotPreview isSpinning={isSpinning} selectedSlot={selectedSlot} />
         </div>
 
@@ -261,6 +258,7 @@ export default function Wheel({ onSlotSelected }) {
       {selectedSlot && showModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="relative w-full max-w-md scale-100 rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
+            {/* close */}
             <button
               type="button"
               onClick={() => setShowModal(false)}
@@ -269,22 +267,40 @@ export default function Wheel({ onSlotSelected }) {
               ✕
             </button>
 
-            <p className="text-[11px] uppercase tracking-[0.28em] text-emerald-300 mb-2 flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.9)]" />
-              Slot selected
-            </p>
+            {/* Slot image */}
+            {selectedSlot.image && (
+              <div className="mb-4 flex justify-center">
+                <div className="relative h-28 w-28 rounded-2xl overflow-hidden border border-white/15 shadow-[0_0_26px_rgba(0,0,0,0.9)]">
+                  <img
+                    src={selectedSlot.image}
+                    alt={selectedSlot.name}
+                    className="h-full w-full object-cover"
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            )}
 
-            <h2 className="text-xl font-bold text-white leading-tight mb-1">
+            {/* Title */}
+            <h2 className="text-xl font-bold text-white leading-tight mb-1 text-center">
               {selectedSlot.name}
             </h2>
+
             {selectedSlot.provider && (
-              <p className="text-xs text-gray-300 mb-3">
-                by {selectedSlot.provider}
+              <p className="text-xs text-gray-300 mb-3 text-center">
+                {selectedSlot.provider}
               </p>
             )}
 
+            {/* Copy */}
+            <p className="text-[11px] text-gray-300 mb-4 text-center">
+              Ready to try this game? Open it at a supported casino, or spin
+              again if you&apos;d like another suggestion.
+            </p>
+
+            {/* Tags */}
             {selectedSlot.tags && selectedSlot.tags.length > 0 && (
-              <div className="mb-4 flex flex-wrap gap-1.5">
+              <div className="mb-4 flex flex-wrap justify-center gap-1.5">
                 {selectedSlot.tags.slice(0, 5).map((tag) => (
                   <span
                     key={tag}
@@ -296,11 +312,7 @@ export default function Wheel({ onSlotSelected }) {
               </div>
             )}
 
-            <p className="text-[11px] text-gray-300 mb-4">
-              Ready to try this game? Open it at a supported casino, or spin
-              again if you&apos;d like another suggestion.
-            </p>
-
+            {/* Actions */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -308,9 +320,9 @@ export default function Wheel({ onSlotSelected }) {
                   handlePlay();
                   setShowModal(false);
                 }}
-                className="flex-1 rounded-lg bg-gradient-to-r from-emerald-500 to-cyan-400 px-3 py-2 text-xs font-semibold text-white shadow-[0_0_26px_rgba(16,185,129,0.95)] hover:brightness-110 active:scale-95 transition"
+                className="btn-primary flex-1 justify-center text-xs md:text-sm"
               >
-                Play now at BitStarz
+                Play now
               </button>
               <button
                 type="button"
