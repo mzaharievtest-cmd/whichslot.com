@@ -6,14 +6,19 @@ import casinos from "../data/casinos.json";
 const cleanOffer = (offer) =>
   offer ? offer.replace(/\s*\(.*?\)\s*/g, "").trim() : "";
 
-// Refined neutral, premium product copy
+// PRESET AFFILIATE LINKS
+const AFF_BitStarz = "https://bzstarz1.com/boe5tub8a";
+const AFF_BCGame = "https://bc.game/i-34qxctc8x-n/";
+
+// Enrich casino data
 const enhancedCasinos = casinos.map((casino) => {
+  // BITSTARZ → override tagline + cleaned offer
   if (casino.name === "BitStarz") {
     return {
       ...casino,
+      affiliateUrl: AFF_BitStarz,
       tagline:
         "A well-established online casino with a clean design and a wide selection of slots and table games.",
-      // force clean offer, even if JSON still has parentheses
       welcomeOffer: cleanOffer(
         casino.welcomeOffer || "100% up to €100 or 1 BTC + 180 Free Spins"
       ),
@@ -30,9 +35,11 @@ const enhancedCasinos = casinos.map((casino) => {
     };
   }
 
+  // BC.GAME → override tagline + affiliate + offer cleaning
   if (casino.name === "BC.Game") {
     return {
       ...casino,
+      affiliateUrl: AFF_BCGame,
       tagline:
         "A modern casino platform featuring a broad game library and integrated promotional features.",
       welcomeOffer: cleanOffer(
@@ -41,8 +48,8 @@ const enhancedCasinos = casinos.map((casino) => {
       highlights: [
         "Extensive catalogue of slots and live-casino titles.",
         "Multiple payment methods depending on regional availability.",
-        "Fast onboarding—new players can start exploring within minutes.",
-        "Regular bonuses and platform events displayed inside the lobby.",
+        "Fast onboarding — players can get started within minutes.",
+        "Frequent bonuses and platform events accessible inside the lobby.",
       ],
       notes: [
         "Bonus rules and game access vary by country.",
@@ -51,7 +58,7 @@ const enhancedCasinos = casinos.map((casino) => {
     };
   }
 
-  // Default for any other casinos – just clean whatever is in JSON
+  // DEFAULT — clean the offer
   return {
     ...casino,
     welcomeOffer: cleanOffer(casino.welcomeOffer || ""),
@@ -60,8 +67,11 @@ const enhancedCasinos = casinos.map((casino) => {
 
 export default function CasinosPage() {
   const handlePlay = (casino) => {
-    const url = casino.affiliateUrl || casino.websiteUrl;
-    if (!url) return;
+    // ORDER OF PRIORITY:
+    // 1) casino.affiliateUrl (like BC.Game, BitStarz)
+    // 2) fallback affiliate (BitStarz)
+    const url = casino.affiliateUrl || AFF_BitStarz;
+
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
@@ -104,18 +114,16 @@ export default function CasinosPage() {
             </div>
 
             <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-              {/* LEFT SECTION */}
+              {/* LEFT: info */}
               <div className="flex-1 space-y-4">
-                <div className="space-y-1">
-                  <h2 className="text-xl md:text-2xl font-semibold text-white">
-                    {casino.name}
-                  </h2>
-                  {casino.tagline && (
-                    <p className="text-sm text-gray-300">{casino.tagline}</p>
-                  )}
-                </div>
+                <h2 className="text-xl md:text-2xl font-semibold text-white">
+                  {casino.name}
+                </h2>
 
-                {/* Welcome bonus */}
+                {casino.tagline && (
+                  <p className="text-sm text-gray-300">{casino.tagline}</p>
+                )}
+
                 {casino.welcomeOffer && (
                   <div className="rounded-2xl bg-emerald-500/10 border border-emerald-400/40 px-3 py-2.5 text-xs md:text-sm text-emerald-100 backdrop-blur-sm">
                     <span className="font-semibold text-emerald-300">
@@ -125,68 +133,40 @@ export default function CasinosPage() {
                   </div>
                 )}
 
-                {/* Details chips */}
-                <div className="flex flex-wrap gap-2 text-[11px] text-gray-300">
-                  {casino.rating && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-black/40 px-2 py-1 border border-white/10 backdrop-blur-sm">
-                      ⭐ <strong>{casino.rating}</strong>
-                      <span className="text-gray-400">/ 5</span>
-                    </span>
-                  )}
-
-                  {casino.licence && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-black/40 px-2 py-1 border border-white/10 backdrop-blur-sm">
-                      🛡 <strong>Licence:</strong> {casino.licence}
-                    </span>
-                  )}
-                </div>
-
-                {/* Highlights */}
-                {casino.highlights && casino.highlights.length > 0 && (
-                  <div className="space-y-1.5">
-                    <p className="text-xs font-semibold text-gray-200">
-                      Key points about {casino.name}
-                    </p>
-                    <ul className="space-y-1.5 text-xs text-gray-300">
-                      {casino.highlights.map((item, idx) => (
-                        <li key={idx} className="flex gap-2">
-                          <span className="mt-[3px] text-[10px] text-emerald-400">
-                            •
-                          </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                {casino.highlights && (
+                  <ul className="space-y-1.5 text-xs text-gray-300">
+                    {casino.highlights.map((h, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="mt-[3px] text-[10px] text-emerald-400">
+                          •
+                        </span>
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
                 )}
 
-                {/* Notes */}
-                {casino.notes && casino.notes.length > 0 && (
-                  <div className="mt-3 text-[11px] text-gray-500">
-                    {casino.notes.map((note, idx) => (
-                      <p key={idx} className={idx > 0 ? "mt-1" : ""}>
-                        {note}
-                      </p>
+                {casino.notes && (
+                  <div className="mt-3 text-[11px] text-gray-500 space-y-1">
+                    {casino.notes.map((n, i) => (
+                      <p key={i}>{n}</p>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* RIGHT SECTION */}
-              <div className="flex min-w-[200px] flex-col items-center gap-1">
-                <div className="flex flex-col items-center">
-                  <button
-                    onClick={() => handlePlay(casino)}
-                    className="btn-primary w-full md:w-auto justify-center"
-                  >
-                    Play now
-                  </button>
+              {/* RIGHT: CTA */}
+              <div className="flex min-w-[200px] flex-col items-center">
+                <button
+                  onClick={() => handlePlay(casino)}
+                  className="btn-primary w-full md:w-auto justify-center"
+                >
+                  Play now
+                </button>
 
-                  {/* Always centered under button */}
-                  <p className="text-[10px] text-gray-500 mt-1 text-center">
-                    18+ · Terms apply
-                  </p>
-                </div>
+                <p className="text-[10px] text-gray-500 mt-1 text-center">
+                  18+ · Terms apply
+                </p>
               </div>
             </div>
           </article>
