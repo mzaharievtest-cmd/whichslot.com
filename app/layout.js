@@ -87,7 +87,11 @@ export default function RootLayout({ children }) {
       </Script>
 
       {/* Basic JSON-LD for the website */}
-      <Script id="ld-website" type="application/ld+json" strategy="afterInteractive">
+      <Script
+        id="ld-website"
+        type="application/ld+json"
+        strategy="afterInteractive"
+      >
         {JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
@@ -101,9 +105,12 @@ export default function RootLayout({ children }) {
         })}
       </Script>
 
-      <body className={jakarta.className}>
+      {/* ⬇️ overflow-x-hidden added on body + main to prevent horizontal scroll */}
+      <body className={`${jakarta.className} overflow-x-hidden`}>
         <Navbar />
-        <main className="min-h-screen bg-[#050816]">{children}</main>
+        <main className="min-h-screen bg-[#050816] overflow-x-hidden">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
