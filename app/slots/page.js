@@ -39,12 +39,15 @@ export default function SlotsPage() {
       {/* Header */}
       <header className="space-y-3">
         <h1 className="text-3xl md:text-4xl font-bold text-white">
-          All slots in the wheel
+          All slots in the WhichSlot wheel
         </h1>
 
         <p className="text-sm md:text-base text-gray-300 leading-relaxed">
-          Explore every slot included in the wheel. Search instantly by name to
-          find your favorite games.
+          Browse the complete list of slots that can appear on the WhichSlot
+          random wheel. Use search to quickly filter by{" "}
+          <span className="font-semibold text-white">slot name</span> or{" "}
+          <span className="font-semibold text-white">provider</span> and jump
+          straight into your next game.
         </p>
       </header>
 
