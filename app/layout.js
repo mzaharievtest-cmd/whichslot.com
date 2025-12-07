@@ -7,9 +7,49 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import Script from "next/script";
 
 export const metadata = {
-  title: "WhichSlot – Spin. Discover. Play.",
-  description: "Spin the slot wheel and discover your next favorite casino game.",
-
+  metadataBase: new URL("https://whichslot.com"),
+  title: {
+    default: "WhichSlot – Random Slot Wheel & Casino Finder",
+    template: "%s · WhichSlot",
+  },
+  description:
+    "Spin the WhichSlot wheel to get a random online slot from 800+ games, browse all slots in one place, and find casinos where you can play.",
+  keywords: [
+    "online slots",
+    "slot picker",
+    "random slot wheel",
+    "casino slots",
+    "slot games list",
+    "BitStarz slots",
+    "BC.Game slots",
+    "WhichSlot",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://whichslot.com",
+    title: "WhichSlot – Random Slot Wheel & Casino Finder",
+    description:
+      "Spin the wheel, discover a random online slot from 800+ games, and jump straight to casinos where you can play.",
+    siteName: "WhichSlot",
+    images: [
+      {
+        url: "/og-image.png", // create this image in /public if you haven’t yet
+        width: 1200,
+        height: 630,
+        alt: "WhichSlot – Random slot wheel with colorful neon ring",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WhichSlot – Random Slot Wheel & Casino Finder",
+    description:
+      "Not sure which slot to play? Spin the WhichSlot wheel to get a random pick from 800+ games.",
+    images: ["/og-image.png"],
+  },
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -18,7 +58,6 @@ export const metadata = {
     ],
     apple: "/apple-touch-icon.png",
   },
-
   manifest: "/site.webmanifest",
 };
 
@@ -30,7 +69,7 @@ const jakarta = Plus_Jakarta_Sans({
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      {/* ✅ Google Analytics */}
+      {/* Google Analytics */}
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-TRCDECQXG2"
         strategy="afterInteractive"
@@ -45,6 +84,21 @@ export default function RootLayout({ children }) {
             page_path: window.location.pathname,
           });
         `}
+      </Script>
+
+      {/* Basic JSON-LD for the website */}
+      <Script id="ld-website" type="application/ld+json" strategy="afterInteractive">
+        {JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "WhichSlot",
+          url: "https://whichslot.com",
+          potentialAction: {
+            "@type": "SearchAction",
+            target: "https://whichslot.com/slots?search={search_term_string}",
+            "query-input": "required name=search_term_string",
+          },
+        })}
       </Script>
 
       <body className={jakarta.className}>
