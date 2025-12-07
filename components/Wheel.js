@@ -86,9 +86,7 @@ function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
       )}
 
       {sub && (
-        <p className="mt-1 text-[10px] text-gray-400">
-          {sub}
-        </p>
+        <p className="mt-1 text-[10px] text-gray-400">{sub}</p>
       )}
     </div>
   );
@@ -103,18 +101,42 @@ export default function Wheel({ onSlotSelected }) {
   // Per-spin preview pool for fast shuffling
   const [previewPool, setPreviewPool] = useState([]);
 
+  // 🔊 Preloaded audio refs (this is what fixes the mobile delay)
+  const spinSoundRef = useRef(null);
+  const winSoundRef = useRef(null);
+
+  // Create & preload audio ONCE
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const spin = new Audio("/spin.mp3");
+    spin.preload = "auto";
+    spinSoundRef.current = spin;
+
+    const win = new Audio("/win.wav");
+    win.preload = "auto";
+    winSoundRef.current = win;
+  }, []);
+
   const MAX_SEGMENTS = 120;
   const TOTAL_SEGMENTS = Math.min(SLOTS.length || MAX_SEGMENTS, MAX_SEGMENTS);
 
   const playSpinSound = () => {
-    const audio = new Audio("/spin.mp3");
-    audio.volume = 0.9;
-    audio.play().catch(() => {});
+    const audio = spinSoundRef.current;
+    if (!audio) return;
+
+    // restart from beginning so repeated spins feel snappy
+    audio.currentTime = 0;
+    audio.play().catch(() => {
+      // mobile may still block before first gesture; safe to ignore
+    });
   };
 
   const playWinSound = () => {
-    const audio = new Audio("/win.wav");
-    audio.volume = 0.9;
+    const audio = winSoundRef.current;
+    if (!audio) return;
+
+    audio.currentTime = 0;
     audio.play().catch(() => {});
   };
 
