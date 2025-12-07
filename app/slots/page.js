@@ -96,19 +96,27 @@ export default function SlotsPage() {
         {filteredSlots.map((slot) => (
           <article
             key={slot.id}
-            style={
-              slot.image
-                ? {
-                    backgroundImage: `url(${slot.image})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "top center",
-                  }
-                : {}
-            }
-            className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 min-h-[300px] md:min-h-[340px] shadow-[0_18px_45px_rgba(0,0,0,0.75)] hover:-translate-y-1 hover:shadow-[0_26px_70px_rgba(0,0,0,0.9)] transition"
+            className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 min-h-[300px] md:min-h-[340px] shadow-[0_12px_32px_rgba(0,0,0,0.7)] hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.8)] transition"
           >
+            {/* Image layer (lazy-loaded for mobile performance) */}
+            {slot.image && (
+              <div className="absolute inset-0">
+                <img
+                  src={slot.image}
+                  alt={slot.name}
+                  loading="lazy"
+                  width={339}
+                  height={180}
+                  className="h-full w-full object-cover"
+                  draggable="false"
+                />
+              </div>
+            )}
+
+            {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-black/55" />
 
+            {/* Content */}
             <div className="relative z-10 h-full p-4 flex flex-col justify-between">
               <div className="space-y-3">
                 <h2 className="inline-flex max-w-[90%] items-center rounded-full bg-black/50 border border-white/25 px-4 py-1.5 text-xs md:text-sm font-semibold text-white shadow-lg backdrop-blur-sm">
