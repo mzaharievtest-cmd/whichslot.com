@@ -46,8 +46,8 @@ export default function WheelPage() {
           <span className="font-semibold text-white">800+ popular slots</span>.
           Like the game you got? Just hit{" "}
           <span className="font-semibold text-white">Play now</span>. Want
-          another? Simply <span className="font-semibold text-white">spin
-          again</span>.
+          another? Simply{" "}
+          <span className="font-semibold text-white">spin again</span>.
         </p>
 
         {/* CHIPS */}
@@ -63,7 +63,6 @@ export default function WheelPage() {
 
       {/* LOWER INFO CARDS */}
       <div className="flex flex-col md:flex-row gap-4 mt-14 px-4 max-w-3xl w-full">
-        
         <div className="card flex-1 min-h-[140px]">
           <h3 className="font-semibold text-white mb-1">Fair by design</h3>
           <p className="text-gray-300 text-sm leading-relaxed">
@@ -81,6 +80,29 @@ export default function WheelPage() {
             spin.
           </p>
         </div>
+      </div>
+
+      {/* INTERNAL SEO LINKS */}
+      <div className="mt-12 text-center space-y-2 text-sm text-gray-400 px-4">
+        <p>
+          Want to see all games included in the wheel?{" "}
+          <a
+            href="/slots"
+            className="text-purple-300 hover:text-purple-200 underline"
+          >
+            Browse all slots
+          </a>
+        </p>
+
+        <p>
+          Want to know where you can play these games?{" "}
+          <a
+            href="/casinos"
+            className="text-purple-300 hover:text-purple-200 underline"
+          >
+            View casinos
+          </a>
+        </p>
       </div>
     </main>
   );
