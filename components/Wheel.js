@@ -291,33 +291,36 @@ export default function Wheel({ onSlotSelected }) {
             >
               ✕
             </button>
-
-            {/* Slot image */}
+      
+            {/* Slot image + name pill (same logic as tile) */}
             {selectedSlot.image && (
-              <div className="mb-4 flex justify-center">
-                <div className="relative h-28 w-28 rounded-2xl overflow-hidden border border-white/15 shadow-[0_0_26px_rgba(0,0,0,0.9)]">
+              <div className="mb-5 flex justify-center">
+                <div className="relative w-40 h-40 sm:w-44 sm:h-44 rounded-3xl overflow-hidden border border-white/12 shadow-[0_0_32px_rgba(0,0,0,0.9)]">
                   <img
                     src={selectedSlot.image}
                     alt={selectedSlot.name}
                     className="h-full w-full object-cover"
                     draggable="false"
                   />
+      
+                  {/* Name pill */}
+                  <div className="absolute top-3 left-3">
+                    <div className="inline-flex max-w-[160px] items-center rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white shadow-lg backdrop-blur-sm">
+                      <span className="truncate">{selectedSlot.name}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
-
-            {/* Title */}
-            <h2 className="text-xl font-bold text-white leading-tight mb-1 text-center">
-              {selectedSlot.name}
-            </h2>
-
+      
+            {/* Optional provider under image */}
             {selectedSlot.provider && (
-              <p className="text-xs text-gray-300 mb-3 text-center">
+              <p className="text-xs text-gray-300 mb-4 text-center">
                 {selectedSlot.provider}
               </p>
             )}
-
-            {/* Tags */}
+      
+            {/* Tags (optional, looks nice so I kept it) */}
             {selectedSlot.tags && selectedSlot.tags.length > 0 && (
               <div className="mb-4 flex flex-wrap justify-center gap-1.5">
                 {selectedSlot.tags.slice(0, 5).map((tag) => (
@@ -330,8 +333,8 @@ export default function Wheel({ onSlotSelected }) {
                 ))}
               </div>
             )}
-
-            {/* Actions */}
+      
+            {/* Actions: Play now + Spin again */}
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -354,6 +357,3 @@ export default function Wheel({ onSlotSelected }) {
           </div>
         </div>
       )}
-    </>
-  );
-}
