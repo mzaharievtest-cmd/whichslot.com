@@ -292,12 +292,6 @@ export default function Wheel({ onSlotSelected }) {
               </p>
             )}
 
-            {/* Copy */}
-            <p className="text-[11px] text-gray-300 mb-4 text-center">
-              Ready to try this game? Open it at a supported casino, or spin
-              again if you&apos;d like another suggestion.
-            </p>
-
             {/* Tags */}
             {selectedSlot.tags && selectedSlot.tags.length > 0 && (
               <div className="mb-4 flex flex-wrap justify-center gap-1.5">
