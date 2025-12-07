@@ -30,24 +30,23 @@ export default function WheelPage() {
       <Wheel />
 
       {/* LOWER INFO CARDS */}
-      <div className="flex flex-col md:flex-row gap-4 mt-14 px-4 max-w-3xl w-full">
-        <div className="card flex-1">
-          <h3 className="font-semibold text-white mb-1">Fair by design</h3>
-          <p className="text-gray-300 text-sm leading-relaxed">
-            Every spin picks a random slot — no tricks, no weighting, no boosted
-            titles. Just a simple picker.
-          </p>
+        <div className="flex flex-col md:flex-row gap-4 mt-14 px-4 max-w-3xl w-full">
+          <div className="card flex-1 min-h-[140px]">
+            <h3 className="font-semibold text-white mb-1">Fair by design</h3>
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Every spin picks a random slot — no tricks, no weighting, no boosted titles.
+              Just a simple picker.
+            </p>
+          </div>
+        
+          <div className="card flex-1 min-h-[140px]">
+            <h3 className="font-semibold text-white mb-1">Play instantly</h3>
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Hit <span className="font-semibold text-white">Play now</span> to open the game
+              in a new tab while WhichSlot stays open and ready for your next spin.
+            </p>
+          </div>
         </div>
-
-        <div className="card flex-1">
-          <h3 className="font-semibold text-white mb-1">Play instantly</h3>
-          <p className="text-gray-300 text-sm leading-relaxed">
-            Hit <span className="font-semibold text-white">Play now</span> to
-            open the game in a new tab while WhichSlot stays open and ready for
-            your next spin.
-          </p>
-        </div>
-      </div>
     </main>
   );
 }
