@@ -86,7 +86,9 @@ function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
       )}
 
       {sub && (
-        <p className="mt-1 text-[10px] text-gray-400">{sub}</p>
+        <p className="mt-1 text-[10px] text-gray-400">
+          {sub}
+        </p>
       )}
     </div>
   );
@@ -101,7 +103,7 @@ export default function Wheel({ onSlotSelected }) {
   // Per-spin preview pool for fast shuffling
   const [previewPool, setPreviewPool] = useState([]);
 
-  // 🔊 Preloaded audio refs (this is what fixes the mobile delay)
+  // 🔊 Preloaded audio refs (fixes mobile delay)
   const spinSoundRef = useRef(null);
   const winSoundRef = useRef(null);
 
@@ -125,7 +127,6 @@ export default function Wheel({ onSlotSelected }) {
     const audio = spinSoundRef.current;
     if (!audio) return;
 
-    // restart from beginning so repeated spins feel snappy
     audio.currentTime = 0;
     audio.play().catch(() => {
       // mobile may still block before first gesture; safe to ignore
@@ -285,62 +286,63 @@ export default function Wheel({ onSlotSelected }) {
         </button>
       </div>
 
-     {/* RESULT MODAL */}
-{selectedSlot && showModal && (
-  <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-    <div className="relative w-full max-w-sm rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-6 py-7 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
+      {/* RESULT MODAL */}
+      {selectedSlot && showModal && (
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="relative w-full max-w-sm rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-6 py-7 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
+            {/* Close */}
+            <button
+              type="button"
+              onClick={() => setShowModal(false)}
+              className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
+            >
+              ✕
+            </button>
 
-      {/* Close */}
-      <button
-        type="button"
-        onClick={() => setShowModal(false)}
-        className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
-      >
-        ✕
-      </button>
+            {/* Slot Image */}
+            {selectedSlot.image && (
+              <div className="flex justify-center mb-4">
+                <div className="relative w-40 h-40 rounded-3xl overflow-hidden border border-white/12 shadow-[0_0_32px_rgba(0,0,0,0.9)]">
+                  <img
+                    src={selectedSlot.image}
+                    alt={selectedSlot.name}
+                    className="h-full w-full object-cover"
+                    draggable="false"
+                  />
+                </div>
+              </div>
+            )}
 
-      {/* Slot Image */}
-      {selectedSlot.image && (
-        <div className="flex justify-center mb-4">
-          <div className="relative w-40 h-40 rounded-3xl overflow-hidden border border-white/12 shadow-[0_0_32px_rgba(0,0,0,0.9)]">
-            <img
-              src={selectedSlot.image}
-              alt={selectedSlot.name}
-              className="h-full w-full object-cover"
-              draggable="false"
-            />
+            {/* Slot Name – centered */}
+            <h2 className="text-lg md:text-xl font-semibold text-white text-center mb-5 px-2">
+              {selectedSlot.name}
+            </h2>
+
+            {/* Play now button – full width + centered */}
+            <button
+              type="button"
+              onClick={() => {
+                handlePlay();
+                setShowModal(false);
+              }}
+              className="btn-primary w-full text-sm py-3 mb-3 justify-center"
+            >
+              Play now
+            </button>
+
+            {/* Spin again – centered under Play now */}
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => closeModalAndMaybeSpin(true)}
+                className="rounded-lg border border-white/25 px-4 py-2 text-[12px] text-gray-200 hover:bg-white/10 active:scale-95 transition"
+              >
+                Spin again
+              </button>
+            </div>
           </div>
         </div>
       )}
-
-      {/* Slot Name – centered */}
-      <h2 className="text-lg md:text-xl font-semibold text-white text-center mb-5 px-2">
-        {selectedSlot.name}
-      </h2>
-
-      {/* Play now button – full width + centered */}
-      <button
-        type="button"
-        onClick={() => {
-          handlePlay();
-          setShowModal(false);
-        }}
-        className="btn-primary w-full text-sm py-3 mb-3 justify-center"
-      >
-        Play now
-      </button>
-
-      {/* Spin again – centered under Play now */}
-      <div className="flex justify-center">
-        <button
-          type="button"
-          onClick={() => closeModalAndMaybeSpin(true)}
-          className="rounded-lg border border-white/25 px-4 py-2 text-[12px] text-gray-200 hover:bg-white/10 active:scale-95 transition"
-        >
-          Spin again
-        </button>
-      </div>
-
-    </div>
-  </div>
-)}
+    </>
+  );
+}
