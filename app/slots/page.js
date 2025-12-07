@@ -49,6 +49,29 @@ export default function SlotsPage() {
           <span className="font-semibold text-white">provider</span> and jump
           straight into your next game.
         </p>
+
+        {/* 🔗 INTERNAL SEO LINKS */}
+        <div className="mt-3 space-y-1 text-sm text-gray-400">
+          <p>
+            Not sure what to pick?{" "}
+            <a
+              href="/wheel"
+              className="text-purple-300 hover:text-purple-200 underline"
+            >
+              Use the random slot wheel
+            </a>
+          </p>
+
+          <p>
+            Want to know where you can play these games?{" "}
+            <a
+              href="/casinos"
+              className="text-purple-300 hover:text-purple-200 underline"
+            >
+              See available casinos
+            </a>
+          </p>
+        </div>
       </header>
 
       {/* Search + count row */}
