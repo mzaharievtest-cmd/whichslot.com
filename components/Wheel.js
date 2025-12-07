@@ -1,7 +1,7 @@
 // components/Wheel.js
 "use client";
 
-import { useState, useRef, useEffect } from "react"; 
+import { useState, useRef, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
 
 /**
@@ -11,10 +11,14 @@ function SlotPreview({ isSpinning, selectedSlot }) {
   const [displayedSlot, setDisplayedSlot] = useState(selectedSlot || null);
   const intervalRef = useRef(null);
 
-  // Preload images once
+  // Preload a limited number of images once (not all 800+)
   useEffect(() => {
     if (typeof window === "undefined") return;
-    SLOTS.forEach((slot) => {
+
+    const PRELOAD_LIMIT = 120;
+    const toPreload = SLOTS.slice(0, PRELOAD_LIMIT);
+
+    toPreload.forEach((slot) => {
       if (!slot.image) return;
       const img = new window.Image();
       img.src = slot.image;
@@ -99,7 +103,10 @@ export default function Wheel({ onSlotSelected }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  const TOTAL_SEGMENTS = SLOTS.length || 200;
+  // 800+ slots would give a silly number of tick marks,
+  // so we cap the visual segments to keep the ring clean.
+  const MAX_SEGMENTS = 120;
+  const TOTAL_SEGMENTS = Math.min(SLOTS.length || MAX_SEGMENTS, MAX_SEGMENTS);
 
   const playSpinSound = () => {
     const audio = new Audio("/spin.mp3");
@@ -130,6 +137,7 @@ export default function Wheel({ onSlotSelected }) {
 
     playSpinSound();
 
+    // still choose from ALL slots (800+), not limited
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
 
     // 2 full turns + random offset
@@ -216,7 +224,7 @@ export default function Wheel({ onSlotSelected }) {
               {/* inner black disc */}
               <div className="absolute inset-[16px] rounded-full bg-black/95" />
 
-              {/* tick marks */}
+              {/* tick marks (capped at MAX_SEGMENTS) */}
               <div className="absolute inset-[10px] rounded-full">
                 {Array.from({ length: TOTAL_SEGMENTS }).map((_, i) => {
                   const rotation = (360 / TOTAL_SEGMENTS) * i;
