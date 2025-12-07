@@ -1,7 +1,7 @@
 // components/Wheel.js
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react"; 
 import { SLOTS } from "../app/data/slots";
 
 /**
