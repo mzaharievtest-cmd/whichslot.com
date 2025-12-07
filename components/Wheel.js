@@ -4,6 +4,11 @@
 import { useState, useRef, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
 
+// Subset used for fast preview (preloaded)
+// Only visual shuffle uses this; final result still uses all SLOTS.
+const PREVIEW_POOL =
+  SLOTS.filter((s) => s.image).slice(0, 120) || SLOTS.slice(0, 120);
+
 /**
  * Center preview – only this component re-renders rapidly during spin.
  */
@@ -15,23 +20,21 @@ function SlotPreview({ isSpinning, selectedSlot }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const PRELOAD_LIMIT = 120;
-    const toPreload = SLOTS.slice(0, PRELOAD_LIMIT);
-
-    toPreload.forEach((slot) => {
+    PREVIEW_POOL.forEach((slot) => {
       if (!slot.image) return;
       const img = new window.Image();
       img.src = slot.image;
     });
   }, []);
 
-  // Shuffle animation during spin
+  // Shuffle animation during spin (uses only preloaded PREVIEW_POOL)
   useEffect(() => {
     if (isSpinning) {
       intervalRef.current = setInterval(() => {
-        const randomSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
+        const randomSlot =
+          PREVIEW_POOL[Math.floor(Math.random() * PREVIEW_POOL.length)];
         setDisplayedSlot(randomSlot);
-      }, 70);
+      }, 45); // faster shuffle (was 70ms)
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
