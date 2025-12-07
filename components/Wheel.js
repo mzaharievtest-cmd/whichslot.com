@@ -49,10 +49,10 @@ function SlotPreview({ isSpinning, selectedSlot }) {
   }, [isSpinning, selectedSlot]);
 
   // TEXT RULES:
-  // - default: "Spin to reveal"
+  // - default: no label
   // - while spinning: show current slot name + provider
   // - after spin: selected slot name + provider
-  let label = "Spin to reveal";
+  let label = "";
   let sub = "";
 
   if (displayedSlot) {
@@ -82,10 +82,12 @@ function SlotPreview({ isSpinning, selectedSlot }) {
         </div>
       )}
 
-      {/* Main label */}
-      <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
-        {label}
-      </p>
+      {/* Main label – only render if we actually have text */}
+      {label && (
+        <p className="text-xs sm:text-sm font-semibold text-white line-clamp-2">
+          {label}
+        </p>
+      )}
 
       {/* Provider only if we have a slot */}
       {sub && (
@@ -137,7 +139,7 @@ export default function Wheel({ onSlotSelected }) {
 
     playSpinSound();
 
-    // still choose from ALL slots (800+), not limited
+    // Still choose from ALL slots (800+), not limited
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
 
     // 2 full turns + random offset
