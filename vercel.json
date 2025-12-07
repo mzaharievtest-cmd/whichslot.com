@@ -1,11 +1,11 @@
 {
   "redirects": [
     {
-      "source": "/:path*",          // match any path
+      "source": "/:path*",          
       "has": [
         {
           "type": "host",
-          "value": "www.whichslot.com"   // only when host is www
+          "value": "www.whichslot.com"
         }
       ],
       "destination": "https://whichslot.com/:path*",
