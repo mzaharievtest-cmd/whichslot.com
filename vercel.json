@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "https://www.whichslot.com/:path*",
+      "destination": "https://whichslot.com/:path*",
+      "permanent": true
+    }
+  ]
+}
