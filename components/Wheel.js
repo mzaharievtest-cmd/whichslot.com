@@ -6,7 +6,7 @@ import { SLOTS } from "../app/data/slots";
 
 /**
  * Center preview – only this component re-renders rapidly during spin.
- * Now uses a per-spin previewPool passed from the parent.
+ * Uses a per-spin previewPool passed from the parent.
  */
 function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
   const [displayedSlot, setDisplayedSlot] = useState(selectedSlot || null);
@@ -31,7 +31,7 @@ function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
         const randomSlot =
           previewPool[Math.floor(Math.random() * previewPool.length)];
         setDisplayedSlot(randomSlot);
-      }, 45); // faster shuffle for a more lively feel
+      }, 45); // fast + smooth
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -49,8 +49,8 @@ function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
   }, [isSpinning, selectedSlot, previewPool]);
 
   // TEXT:
-  // - default: no label (only logo + image)
-  // - while spinning: slot name + provider from previewPool
+  // - default: only logo + image
+  // - while spinning: slot name + provider
   // - after spin: selected slot name + provider
   let label = "";
   let sub = "";
@@ -105,11 +105,10 @@ export default function Wheel({ onSlotSelected }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
-  // New: per-spin preview pool for fast shuffling
+  // Per-spin preview pool for fast shuffling
   const [previewPool, setPreviewPool] = useState([]);
 
-  // 800+ slots would give a silly number of tick marks,
-  // so we cap the visual segments to keep the ring clean.
+  // Capped tick marks so the ring stays clean
   const MAX_SEGMENTS = 120;
   const TOTAL_SEGMENTS = Math.min(SLOTS.length || MAX_SEGMENTS, MAX_SEGMENTS);
 
@@ -125,6 +124,22 @@ export default function Wheel({ onSlotSelected }) {
     audio.play().catch(() => {});
   };
 
+  const buildPreviewPool = () => {
+    const withImage = SLOTS.filter((s) => s.image);
+    const limit = Math.min(120, withImage.length);
+    const pool = [];
+    const used = new Set();
+
+    while (pool.length < limit) {
+      const idx = Math.floor(Math.random() * withImage.length);
+      if (used.has(idx)) continue;
+      used.add(idx);
+      pool.push(withImage[idx]);
+    }
+
+    return pool;
+  };
+
   const handleSpin = () => {
     if (isSpinning) return;
 
@@ -136,13 +151,8 @@ export default function Wheel({ onSlotSelected }) {
       });
     }
 
-    // Create a fresh random preview pool for THIS spin
-    const shuffled = [...SLOTS].sort(() => Math.random() - 0.5);
-    const pool = shuffled
-      .filter((s) => s.image)
-      .slice(0, 120); // 120 images max
-
-    setPreviewPool(pool);
+    // Fresh random preview pool for THIS spin
+    setPreviewPool(buildPreviewPool());
 
     setIsSpinning(true);
     setShowModal(false);
@@ -150,7 +160,7 @@ export default function Wheel({ onSlotSelected }) {
 
     playSpinSound();
 
-    // Still choose from ALL slots (800+), not limited
+    // Choose from ALL slots (800+), not limited
     const nextSlot = SLOTS[Math.floor(Math.random() * SLOTS.length)];
 
     // 2 full turns + random offset
@@ -291,7 +301,7 @@ export default function Wheel({ onSlotSelected }) {
             >
               ✕
             </button>
-      
+
             {/* Slot image + name pill (same logic as tile) */}
             {selectedSlot.image && (
               <div className="mb-5 flex justify-center">
@@ -302,7 +312,7 @@ export default function Wheel({ onSlotSelected }) {
                     className="h-full w-full object-cover"
                     draggable="false"
                   />
-      
+
                   {/* Name pill */}
                   <div className="absolute top-3 left-3">
                     <div className="inline-flex max-w-[160px] items-center rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white shadow-lg backdrop-blur-sm">
@@ -312,15 +322,15 @@ export default function Wheel({ onSlotSelected }) {
                 </div>
               </div>
             )}
-      
+
             {/* Optional provider under image */}
             {selectedSlot.provider && (
               <p className="text-xs text-gray-300 mb-4 text-center">
                 {selectedSlot.provider}
               </p>
             )}
-      
-            {/* Tags (optional, looks nice so I kept it) */}
+
+            {/* Tags (optional) */}
             {selectedSlot.tags && selectedSlot.tags.length > 0 && (
               <div className="mb-4 flex flex-wrap justify-center gap-1.5">
                 {selectedSlot.tags.slice(0, 5).map((tag) => (
@@ -333,7 +343,7 @@ export default function Wheel({ onSlotSelected }) {
                 ))}
               </div>
             )}
-      
+
             {/* Actions: Play now + Spin again */}
             <div className="flex items-center gap-2">
               <button
@@ -357,3 +367,6 @@ export default function Wheel({ onSlotSelected }) {
           </div>
         </div>
       )}
+    </>
+  );
+}
