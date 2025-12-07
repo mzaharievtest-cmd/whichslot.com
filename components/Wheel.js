@@ -4,37 +4,34 @@
 import { useState, useRef, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
 
-// Subset used for fast preview (preloaded)
-// Only visual shuffle uses this; final result still uses all SLOTS.
-const PREVIEW_POOL =
-  SLOTS.filter((s) => s.image).slice(0, 120) || SLOTS.slice(0, 120);
-
 /**
  * Center preview – only this component re-renders rapidly during spin.
+ * Now uses a per-spin previewPool passed from the parent.
  */
-function SlotPreview({ isSpinning, selectedSlot }) {
+function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
   const [displayedSlot, setDisplayedSlot] = useState(selectedSlot || null);
   const intervalRef = useRef(null);
 
-  // Preload a limited number of images once (not all 800+)
+  // Preload current previewPool images when it changes
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!previewPool || previewPool.length === 0) return;
 
-    PREVIEW_POOL.forEach((slot) => {
+    previewPool.forEach((slot) => {
       if (!slot.image) return;
       const img = new window.Image();
       img.src = slot.image;
     });
-  }, []);
+  }, [previewPool]);
 
-  // Shuffle animation during spin (uses only preloaded PREVIEW_POOL)
+  // Shuffle animation during spin (uses only previewPool)
   useEffect(() => {
-    if (isSpinning) {
+    if (isSpinning && previewPool && previewPool.length > 0) {
       intervalRef.current = setInterval(() => {
         const randomSlot =
-          PREVIEW_POOL[Math.floor(Math.random() * PREVIEW_POOL.length)];
+          previewPool[Math.floor(Math.random() * previewPool.length)];
         setDisplayedSlot(randomSlot);
-      }, 45); // faster shuffle (was 70ms)
+      }, 45); // faster shuffle for a more lively feel
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -49,11 +46,11 @@ function SlotPreview({ isSpinning, selectedSlot }) {
         intervalRef.current = null;
       }
     };
-  }, [isSpinning, selectedSlot]);
+  }, [isSpinning, selectedSlot, previewPool]);
 
-  // TEXT RULES:
-  // - default: no label
-  // - while spinning: show current slot name + provider
+  // TEXT:
+  // - default: no label (only logo + image)
+  // - while spinning: slot name + provider from previewPool
   // - after spin: selected slot name + provider
   let label = "";
   let sub = "";
@@ -108,6 +105,9 @@ export default function Wheel({ onSlotSelected }) {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
+  // New: per-spin preview pool for fast shuffling
+  const [previewPool, setPreviewPool] = useState([]);
+
   // 800+ slots would give a silly number of tick marks,
   // so we cap the visual segments to keep the ring clean.
   const MAX_SEGMENTS = 120;
@@ -135,6 +135,14 @@ export default function Wheel({ onSlotSelected }) {
         event_label: "Wheel spin triggered",
       });
     }
+
+    // Create a fresh random preview pool for THIS spin
+    const shuffled = [...SLOTS].sort(() => Math.random() - 0.5);
+    const pool = shuffled
+      .filter((s) => s.image)
+      .slice(0, 120); // 120 images max
+
+    setPreviewPool(pool);
 
     setIsSpinning(true);
     setShowModal(false);
@@ -251,7 +259,11 @@ export default function Wheel({ onSlotSelected }) {
           <div className="absolute inset-[42px] sm:inset-[46px] md:inset-[56px] rounded-full bg-[radial-gradient(circle_at_30%_0%,rgba(148,163,253,0.6),transparent_55%),radial-gradient(circle_at_70%_100%,rgba(236,72,153,0.5),transparent_55%)] opacity-80 blur-[1px]" />
 
           {/* center preview */}
-          <SlotPreview isSpinning={isSpinning} selectedSlot={selectedSlot} />
+          <SlotPreview
+            isSpinning={isSpinning}
+            selectedSlot={selectedSlot}
+            previewPool={previewPool}
+          />
         </div>
 
         {/* Spin button */}
