@@ -292,7 +292,7 @@ export default function Wheel({ onSlotSelected }) {
       {/* RESULT MODAL */}
       {selectedSlot && showModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="relative w-full max-w-md scale-100 rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
+          <div className="relative w-full max-w-sm scale-100 rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
             {/* close */}
             <button
               type="button"
