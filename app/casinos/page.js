@@ -18,19 +18,19 @@ const enhancedCasinos = casinos.map((casino) => {
       ...casino,
       affiliateUrl: AFF_BitStarz,
       tagline:
-        "A well-established online casino with a clean design and a wide selection of slots and table games.",
+        "An established online casino with a clean layout and a broad range of real-money slots and table games.",
       welcomeOffer: cleanOffer(
         casino.welcomeOffer || "100% up to €100 or 1 BTC + 180 Free Spins"
       ),
       highlights: [
         "Large selection of online slots and casino games.",
         "Supports a range of commonly used payment methods.",
-        "Quick and simple account setup.",
+        "Quick and straightforward account setup.",
         "Interface designed for smooth use on desktop and mobile.",
       ],
       notes: [
         "Bonus amounts and game availability can differ depending on your location.",
-        "All details should be verified on the BitStarz website before registering.",
+        "All details should be checked on the official BitStarz website before registering.",
       ],
     };
   }
@@ -41,7 +41,7 @@ const enhancedCasinos = casinos.map((casino) => {
       ...casino,
       affiliateUrl: AFF_BCGame,
       tagline:
-        "A modern casino platform featuring a broad game library and integrated promotional features.",
+        "A modern online casino platform with thousands of slots, live games and built-in promotional features.",
       welcomeOffer: cleanOffer(
         casino.welcomeOffer || "Up to 780% welcome bonus"
       ),
@@ -84,13 +84,14 @@ export default function CasinosPage() {
         </p>
 
         <h1 className="text-3xl md:text-4xl font-bold text-white">
-          Where you can play slots
+          Online casinos where you can play slots
         </h1>
 
         <p className="text-sm md:text-base text-gray-300 leading-relaxed">
-          A selection of online casinos where many of the slots featured on
-          WhichSlot are available. Compare welcome offers, payment options and
-          overall experience to find the platform that suits you best.
+          Browse a small selection of online casinos where many of the slots
+          featured on WhichSlot can be played for real money. Compare welcome
+          bonuses, payment options and overall experience, then choose the
+          casino that fits how you like to play slots online.
         </p>
       </header>
 
@@ -133,7 +134,7 @@ export default function CasinosPage() {
                   </div>
                 )}
 
-                {casino.highlights && (
+                {casino.highlights && casino.highlights.length > 0 && (
                   <ul className="space-y-1.5 text-xs text-gray-300">
                     {casino.highlights.map((h, i) => (
                       <li key={i} className="flex gap-2">
@@ -146,7 +147,7 @@ export default function CasinosPage() {
                   </ul>
                 )}
 
-                {casino.notes && (
+                {casino.notes && casino.notes.length > 0 && (
                   <div className="mt-3 text-[11px] text-gray-500 space-y-1">
                     {casino.notes.map((n, i) => (
                       <p key={i}>{n}</p>
@@ -175,10 +176,11 @@ export default function CasinosPage() {
 
       {/* Footer disclaimer */}
       <p className="text-[11px] text-gray-500 max-w-3xl">
-        WhichSlot.com does not operate casinos or handle real-money gaming.
-        Bonus information and game availability may differ by region and may
-        change over time. Always refer to the casino’s official website for
-        accurate and up-to-date details.
+        WhichSlot.com is not an online casino and does not handle deposits,
+        withdrawals or real-money bets. Bonus information and slot
+        availability may differ by region and can change over time. Always
+        check the casino’s own website for the latest details before you play
+        slots online.
       </p>
     </div>
   );
