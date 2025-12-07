@@ -312,11 +312,13 @@ export default function Wheel({ onSlotSelected }) {
                     className="h-full w-full object-cover"
                     draggable="false"
                   />
-
-                  {/* Name pill */}
-                  <div className="absolute top-3 left-3">
-                    <div className="inline-flex max-w-[160px] items-center rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white shadow-lg backdrop-blur-sm">
-                      <span className="truncate">{selectedSlot.name}</span>
+            
+                  {/* Centered name pill */}
+                  <div className="absolute top-3 left-1/2 -translate-x-1/2 px-3">
+                    <div className="inline-flex max-w-[90%] items-center justify-center rounded-full bg-black/70 px-3 py-1 text-xs font-semibold text-white shadow-lg backdrop-blur-sm">
+                      <span className="truncate text-center">
+                        {selectedSlot.name}
+                      </span>
                     </div>
                   </div>
                 </div>
