@@ -3354,3 +3354,20 @@ export const SLOTS = [
     "image": "/common-slots/Clumsy-Cowboys_339x180.png"
   }
 ]
+
+// 2) Function → convert names to Title Case
+function normalizeName(name) {
+  if (!name || typeof name !== "string") return name;
+
+  return name
+    .toLowerCase()
+    .split(" ")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+// 3) Final exported SLOTS with normalized names
+export const SLOTS = SLOTS_RAW.map(slot => ({
+  ...slot,
+  name: normalizeName(slot.name),
+}));
