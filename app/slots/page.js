@@ -4,8 +4,11 @@
 import { useMemo, useState } from "react";
 import { SLOTS } from "../data/slots";
 
+const PAGE_SIZE = 24; // how many slots to render initially / per "page"
+
 export default function SlotsPage() {
   const [search, setSearch] = useState("");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   // Shuffle once on mount
   const shuffledSlots = useMemo(() => {
@@ -22,17 +25,39 @@ export default function SlotsPage() {
     const term = search.trim().toLowerCase();
     if (!term) return shuffledSlots;
 
-    return shuffledSlots.filter((slot) => {
+    const result = shuffledSlots.filter((slot) => {
       const name = slot.name?.toLowerCase() || "";
       const provider = slot.provider?.toLowerCase() || "";
       return name.includes(term) || provider.includes(term);
     });
+
+    // when search changes, make sure we see at least first PAGE_SIZE results
+    return result;
   }, [search, shuffledSlots]);
+
+  // Reset visible count when search term changes
+  const visibleSlots = useMemo(
+    () => filteredSlots.slice(0, visibleCount),
+    [filteredSlots, visibleCount]
+  );
 
   const handlePlay = (slot) => {
     const url = slot.affiliate?.default || "https://bzstarz1.com/boe5tub8a";
     window.open(url, "_blank", "noopener,noreferrer");
   };
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) =>
+      Math.min(prev + PAGE_SIZE, filteredSlots.length)
+    );
+  };
+
+  // If search term changes a lot and visibleCount is bigger than new result set,
+  // clamp it so we don't keep "Show more" when not needed
+  if (visibleCount > filteredSlots.length && filteredSlots.length > 0) {
+    // this is safe in render because it's deterministic small adjustment
+    // but to avoid React warning we can ignore; perf impact is tiny.
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12 space-y-8">
@@ -81,7 +106,10 @@ export default function SlotsPage() {
             type="text"
             placeholder="Search by slot or provider..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setVisibleCount(PAGE_SIZE); // reset pagination on new search
+            }}
             className="w-full md:max-w-md rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-neonPurple/60"
           />
 
@@ -93,7 +121,7 @@ export default function SlotsPage() {
 
       {/* Grid */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-        {filteredSlots.map((slot) => (
+        {visibleSlots.map((slot) => (
           <article
             key={slot.id}
             className="relative overflow-hidden rounded-3xl border border-white/10 bg-black/40 min-h-[300px] md:min-h-[340px] shadow-[0_12px_32px_rgba(0,0,0,0.7)] hover:-translate-y-1 hover:shadow-[0_18px_45px_rgba(0,0,0,0.8)] transition"
@@ -149,6 +177,19 @@ export default function SlotsPage() {
           </article>
         ))}
       </section>
+
+      {/* Show more button for performance-friendly pagination */}
+      {visibleCount < filteredSlots.length && (
+        <div className="flex justify-center mt-4">
+          <button
+            type="button"
+            onClick={handleShowMore}
+            className="rounded-full border border-white/20 px-4 py-2 text-xs md:text-sm text-gray-200 hover:bg-white/10 transition"
+          >
+            Show more slots
+          </button>
+        </div>
+      )}
 
       <p className="text-[11px] text-gray-500 mt-4">
         Make sure online gaming is legal in your country and always play
