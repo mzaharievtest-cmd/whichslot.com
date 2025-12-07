@@ -1,4 +1,4 @@
-// app/page.js  OR  app/wheel/page.js  (whichever has the wheel hero)
+// app/page.js  OR  app/wheel/page.js
 
 import Wheel from "@/components/Wheel";
 
@@ -20,6 +20,7 @@ export default function WheelPage() {
           <span className="font-semibold text-white">spin again</span>.
         </p>
 
+        {/* CHIPS */}
         <div className="flex flex-wrap justify-center gap-2 mt-5">
           <span className="chip">800+ slots added</span>
           <span className="chip">Random every time</span>
@@ -32,20 +33,20 @@ export default function WheelPage() {
 
       {/* LOWER INFO CARDS */}
       <div className="flex flex-col md:flex-row gap-4 mt-14 px-4 max-w-3xl w-full">
-        <div className="card flex-1">
+        <div className="card flex-1 min-h-[140px]">
           <h3 className="font-semibold text-white mb-1">Fair by design</h3>
           <p className="text-gray-300 text-sm leading-relaxed">
-            Every spin picks a random slot — no tricks, no weighting, no boosted
-            titles. Just a simple picker.
+            Each spin picks from the same pool of games — no weighting, no
+            boosted titles, just one random choice every time.
           </p>
         </div>
 
-        <div className="card flex-1">
+        <div className="card flex-1 min-h-[140px]">
           <h3 className="font-semibold text-white mb-1">Play instantly</h3>
           <p className="text-gray-300 text-sm leading-relaxed">
-            Hit <span className="font-semibold text-white">Play now</span> to
-            open the game in a new tab while WhichSlot stays open and ready for
-            your next spin.
+            Click <span className="font-semibold text-white">Play now</span> to
+            open the selected slot in a new tab while WhichSlot stays open in
+            the background, ready for your next spin.
           </p>
         </div>
       </div>
