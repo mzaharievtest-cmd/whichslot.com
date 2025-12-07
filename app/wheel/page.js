@@ -1,6 +1,35 @@
-// app/page.js  OR  app/wheel/page.js
-
+// app/wheel/page.js
 import Wheel from "@/components/Wheel";
+
+export const metadata = {
+  title: "Slot Wheel – Random Slot Picker | Spin & Discover Your Next Game",
+  description:
+    "Not sure which slot to play? Spin the WhichSlot wheel to get a random pick from 800+ popular online slots. Fast, simple and no sign-up required.",
+  alternates: {
+    canonical: "/wheel",
+  },
+  openGraph: {
+    title: "WhichSlot – Spin the Wheel & Get a Random Slot",
+    description:
+      "Tap the wheel and let WhichSlot choose a game for you. Over 800 slots, fair random selection, and instant play.",
+    url: "https://whichslot.com/wheel",
+    siteName: "WhichSlot",
+    images: [
+      {
+        url: "/og-wheel.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "WhichSlot – Random Slot Wheel",
+    description:
+      "Spin the wheel and instantly get a random slot chosen from 800+ popular casino games.",
+    images: ["/og-wheel.png"],
+  },
+};
 
 export default function WheelPage() {
   return (
@@ -12,19 +41,20 @@ export default function WheelPage() {
         </h1>
 
         <p className="text-gray-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mt-3">
-          Tap the wheel or press{" "}
-          <span className="font-semibold text-white">Spin the wheel</span> to
-          get a random slot from our list of popular games. Like the pick? Hit{" "}
+          Spin the wheel and let WhichSlot pick a game for you. Every spin is
+          completely random and pulls from over{" "}
+          <span className="font-semibold text-white">800+ popular slots</span>.
+          Like the game you got? Just hit{" "}
           <span className="font-semibold text-white">Play now</span>. Want
-          something else? Just{" "}
-          <span className="font-semibold text-white">spin again</span>.
+          another? Simply <span className="font-semibold text-white">spin
+          again</span>.
         </p>
 
         {/* CHIPS */}
         <div className="flex flex-wrap justify-center gap-2 mt-5">
           <span className="chip">800+ slots added</span>
-          <span className="chip">Random every time</span>
-          <span className="chip">No sign-up needed</span>
+          <span className="chip">Truly random results</span>
+          <span className="chip">No sign-up required</span>
         </div>
       </section>
 
@@ -33,20 +63,22 @@ export default function WheelPage() {
 
       {/* LOWER INFO CARDS */}
       <div className="flex flex-col md:flex-row gap-4 mt-14 px-4 max-w-3xl w-full">
+        
         <div className="card flex-1 min-h-[140px]">
           <h3 className="font-semibold text-white mb-1">Fair by design</h3>
           <p className="text-gray-300 text-sm leading-relaxed">
-            Each spin picks from the same pool of games — no weighting, no
-            boosted titles, just one random choice every time.
+            Each spin pulls from the same full library — no boosted games, no
+            weighting, no hidden rules. Just a clean and simple random picker.
           </p>
         </div>
 
         <div className="card flex-1 min-h-[140px]">
-          <h3 className="font-semibold text-white mb-1">Play instantly</h3>
+          <h3 className="font-semibold text-white mb-1">Instant play</h3>
           <p className="text-gray-300 text-sm leading-relaxed">
-            Click <span className="font-semibold text-white">Play now</span> to
-            open the selected slot in a new tab while WhichSlot stays open in
-            the background, ready for your next spin.
+            When you like the result, click{" "}
+            <span className="font-semibold text-white">Play now</span> to open
+            the game in a new tab. WhichSlot stays open and ready for your next
+            spin.
           </p>
         </div>
       </div>
