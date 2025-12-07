@@ -93,6 +93,29 @@ export default function CasinosPage() {
           bonuses, payment options and overall experience, then choose the
           casino that fits how you like to play slots online.
         </p>
+
+        {/* 🔗 INTERNAL SEO LINKS */}
+        <div className="mt-3 space-y-1 text-sm text-gray-400">
+          <p>
+            Want to try a random game first?{" "}
+            <a
+              href="/wheel"
+              className="text-purple-300 hover:text-purple-200 underline"
+            >
+              Spin the slot wheel
+            </a>
+          </p>
+
+          <p>
+            Prefer browsing manually?{" "}
+            <a
+              href="/slots"
+              className="text-purple-300 hover:text-purple-200 underline"
+            >
+              View all slots in the wheel
+            </a>
+          </p>
+        </div>
       </header>
 
       {/* Casino list */}
