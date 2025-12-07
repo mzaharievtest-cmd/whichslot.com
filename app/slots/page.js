@@ -104,7 +104,7 @@ export default function SlotsPage() {
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <input
             type="text"
-            placeholder="Search by slot or provider..."
+            placeholder="Search by slot..."
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
