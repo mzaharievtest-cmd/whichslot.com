@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://whichslot.com/sitemap.xml
