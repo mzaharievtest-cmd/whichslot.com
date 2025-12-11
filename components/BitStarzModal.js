@@ -1,17 +1,17 @@
 // components/BitStarzModal.js
 "use client";
 
-import { useEffect, useState } from "react";
-
 const AFF_URL = "https://bzstarz1.com/boe5tub8a";
 const STORAGE_KEY = "bitstarz_modal_last_shown";
 const COOLDOWN_HOURS = 24;
 
-function shouldShowModal() {
+// helper we can use from Wheel.js
+export function shouldShowBitStarzModal() {
   if (typeof window === "undefined") return false;
+
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return true;
+    if (!raw) return true; // never shown before
 
     const last = Number(raw);
     if (!Number.isFinite(last)) return true;
@@ -24,26 +24,21 @@ function shouldShowModal() {
   }
 }
 
-export default function BitStarzModal() {
-  const [open, setOpen] = useState(false);
+function markSeen() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
+  } catch {
+    // ignore
+  }
+}
 
-  useEffect(() => {
-    if (shouldShowModal()) {
-      setOpen(true);
-    }
-  }, []);
-
-  const markSeen = () => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, String(Date.now()));
-    } catch {
-      // ignore
-    }
-  };
+export default function BitStarzModal({ open, onClose }) {
+  if (!open) return null;
 
   const handleClose = () => {
     markSeen();
-    setOpen(false);
+    onClose?.();
   };
 
   const handleClick = () => {
@@ -56,15 +51,13 @@ export default function BitStarzModal() {
 
     markSeen();
     window.open(AFF_URL, "_blank", "noopener,noreferrer");
-    setOpen(false);
+    onClose?.();
   };
-
-  if (!open) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="relative w-full max-w-sm rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,1)]">
-        {/* Top bar: 18+ + close button */}
+        {/* Top bar: 18+ + close */}
         <div className="mb-3 flex items-center justify-between">
           <p className="text-[10px] text-gray-400">18+ · Terms apply</p>
           <button
