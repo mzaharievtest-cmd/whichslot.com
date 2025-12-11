@@ -3,6 +3,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
+import BitStarzModal from "@/components/BitStarzModal";
 
 /**
  * Center preview – only this component re-renders rapidly during spin.
@@ -94,6 +95,9 @@ function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
   );
 }
 
+const BITSTARZ_KEY = "bs_last_shown_ts";
+const BITSTARZ_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24h
+
 export default function Wheel({ onSlotSelected }) {
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -102,6 +106,9 @@ export default function Wheel({ onSlotSelected }) {
 
   // Per-spin preview pool for fast shuffling
   const [previewPool, setPreviewPool] = useState([]);
+
+  // BitStarz promo modal
+  const [showBitStarzModal, setShowBitStarzModal] = useState(false);
 
   // 🔊 Preloaded audio refs (fixes mobile delay)
   const spinSoundRef = useRef(null);
@@ -139,6 +146,30 @@ export default function Wheel({ onSlotSelected }) {
 
     audio.currentTime = 0;
     audio.play().catch(() => {});
+  };
+
+  // Only show BitStarz 1× per 24h
+  const maybeShowBitStarz = () => {
+    if (typeof window === "undefined") return;
+
+    try {
+      const now = Date.now();
+      const raw = window.localStorage.getItem(BITSTARZ_KEY);
+
+      if (raw) {
+        const last = parseInt(raw, 10);
+        if (!Number.isNaN(last) && now - last < BITSTARZ_COOLDOWN_MS) {
+          // Shown less than 24h ago → do nothing
+          return;
+        }
+      }
+
+      // Update timestamp and open modal
+      window.localStorage.setItem(BITSTARZ_KEY, String(now));
+      setShowBitStarzModal(true);
+    } catch {
+      // localStorage might be blocked; fail silently
+    }
   };
 
   const handleSpin = () => {
@@ -286,14 +317,17 @@ export default function Wheel({ onSlotSelected }) {
         </button>
       </div>
 
-      {/* RESULT MODAL */}
+      {/* RESULT MODAL (slot) */}
       {selectedSlot && showModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="relative w-full max-w-sm rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-6 py-7 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
-            {/* Close */}
+            {/* Close (❌) – AFTER THIS we may show BitStarz */}
             <button
               type="button"
-              onClick={() => setShowModal(false)}
+              onClick={() => {
+                setShowModal(false);
+                maybeShowBitStarz();
+              }}
               className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
             >
               ✕
@@ -324,6 +358,7 @@ export default function Wheel({ onSlotSelected }) {
               onClick={() => {
                 handlePlay();
                 setShowModal(false);
+                // ❌ No BitStarz here – only on X
               }}
               className="btn-primary w-full text-sm py-3 mb-3 justify-center"
             >
@@ -343,6 +378,12 @@ export default function Wheel({ onSlotSelected }) {
           </div>
         </div>
       )}
+
+      {/* BitStarz promo modal – controlled, 1× per 24h */}
+      <BitStarzModal
+        isOpen={showBitStarzModal}
+        onClose={() => setShowBitStarzModal(false)}
+      />
     </>
   );
 }
