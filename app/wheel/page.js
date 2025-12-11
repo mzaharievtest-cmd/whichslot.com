@@ -1,5 +1,6 @@
 // app/wheel/page.js
 import Wheel from "@/components/Wheel";
+import BitStarzModal from "@/components/BitStarzModal";
 
 export const metadata = {
   title: "Slot Wheel – Random Slot Picker | Spin & Discover Your Next Game",
@@ -104,6 +105,9 @@ export default function WheelPage() {
           </a>
         </p>
       </div>
+
+      {/* BitStarz promo modal – shows at most 1× per 24h per browser */}
+      <BitStarzModal />
     </main>
   );
 }
