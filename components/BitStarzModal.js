@@ -47,7 +47,6 @@ export default function BitStarzModal() {
   };
 
   const handleClick = () => {
-    // GA tracking (optional)
     if (typeof window !== "undefined" && window.gtag) {
       window.gtag("event", "bitstarz_modal_click", {
         event_category: "affiliate",
@@ -65,22 +64,20 @@ export default function BitStarzModal() {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="relative w-full max-w-sm rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-5 py-6 shadow-[0_28px_100px_rgba(0,0,0,1)]">
-        {/* Close */}
-        <button
-          type="button"
-          onClick={handleClose}
-          className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
-        >
-          ✕
-        </button>
-
-        {/* 18+ label */}
-        <p className="absolute right-4 top-4 text-[10px] text-gray-400">
-          18+ · Terms apply
-        </p>
+        {/* Top bar: 18+ + close button */}
+        <div className="mb-3 flex items-center justify-between">
+          <p className="text-[10px] text-gray-400">18+ · Terms apply</p>
+          <button
+            type="button"
+            onClick={handleClose}
+            className="rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
+          >
+            ✕
+          </button>
+        </div>
 
         {/* Banner image */}
-        <div className="mb-4 mt-3 overflow-hidden rounded-2xl border border-white/12 bg-black/40">
+        <div className="mb-4 overflow-hidden rounded-2xl border border-white/12 bg-black/40">
           <img
             src="/300x250.jpg"
             alt="BitStarz – 100% up to 1 BTC + 180 free spins"
