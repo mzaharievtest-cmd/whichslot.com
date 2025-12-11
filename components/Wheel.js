@@ -3,7 +3,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import { SLOTS } from "../app/data/slots";
-import BitStarzModal from "@/components/BitStarzModal";
 
 /**
  * Center preview – only this component re-renders rapidly during spin.
@@ -87,28 +86,23 @@ function SlotPreview({ isSpinning, selectedSlot, previewPool }) {
       )}
 
       {sub && (
-        <p className="mt-1 text-[10px] text-gray-400">
-          {sub}
-        </p>
+        <p className="mt-1 text-[10px] text-gray-400">{sub}</p>
       )}
     </div>
   );
 }
 
-const BITSTARZ_KEY = "bs_last_shown_ts";
-const BITSTARZ_COOLDOWN_MS = 24 * 60 * 60 * 1000; // 24h
-
 export default function Wheel({ onSlotSelected }) {
   const [angle, setAngle] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-
-  // Per-spin preview pool for fast shuffling
-  const [previewPool, setPreviewPool] = useState([]);
+  const [showModal, setShowModal] = useState(false); // result modal
 
   // BitStarz promo modal
   const [showBitStarzModal, setShowBitStarzModal] = useState(false);
+
+  // Per-spin preview pool for fast shuffling
+  const [previewPool, setPreviewPool] = useState([]);
 
   // 🔊 Preloaded audio refs (fixes mobile delay)
   const spinSoundRef = useRef(null);
@@ -148,27 +142,32 @@ export default function Wheel({ onSlotSelected }) {
     audio.play().catch(() => {});
   };
 
-  // Only show BitStarz 1× per 24h
-  const maybeShowBitStarz = () => {
-    if (typeof window === "undefined") return;
-
+  // --- BitStarz modal helpers (1× per 24h) ---
+  const canShowBitStarzModal = () => {
+    if (typeof window === "undefined") return false;
     try {
+      const raw = window.localStorage.getItem("ws_bitstarz_last");
+      if (!raw) return true;
+      const last = parseInt(raw, 10);
+      if (Number.isNaN(last)) return true;
+
       const now = Date.now();
-      const raw = window.localStorage.getItem(BITSTARZ_KEY);
-
-      if (raw) {
-        const last = parseInt(raw, 10);
-        if (!Number.isNaN(last) && now - last < BITSTARZ_COOLDOWN_MS) {
-          // Shown less than 24h ago → do nothing
-          return;
-        }
-      }
-
-      // Update timestamp and open modal
-      window.localStorage.setItem(BITSTARZ_KEY, String(now));
-      setShowBitStarzModal(true);
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      return now - last > twentyFourHours;
     } catch {
-      // localStorage might be blocked; fail silently
+      return false;
+    }
+  };
+
+  const triggerBitStarzModal = () => {
+    if (typeof window === "undefined") return;
+    if (!canShowBitStarzModal()) return;
+
+    setShowBitStarzModal(true);
+    try {
+      window.localStorage.setItem("ws_bitstarz_last", String(Date.now()));
+    } catch {
+      // ignore
     }
   };
 
@@ -245,6 +244,21 @@ export default function Wheel({ onSlotSelected }) {
     }
   };
 
+  // When user closes the RESULT modal with X → then show BitStarz promo (if allowed)
+  const handleResultCloseWithX = () => {
+    setShowModal(false);
+    triggerBitStarzModal();
+  };
+
+  // --- BitStarz CTA handlers ---
+  const openBitStarz = () => {
+    const url = "https://bzstarz1.com/boe5tub8a";
+    if (typeof window !== "undefined") {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+    setShowBitStarzModal(false);
+  };
+
   return (
     <>
       {/* wheel + CTA */}
@@ -317,17 +331,14 @@ export default function Wheel({ onSlotSelected }) {
         </button>
       </div>
 
-      {/* RESULT MODAL (slot) */}
+      {/* RESULT MODAL */}
       {selectedSlot && showModal && (
         <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/70 backdrop-blur-sm">
           <div className="relative w-full max-w-sm rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/90 to-black/95 px-6 py-7 shadow-[0_28px_100px_rgba(0,0,0,1)] animate-modalPop">
-            {/* Close (❌) – AFTER THIS we may show BitStarz */}
+            {/* Close */}
             <button
               type="button"
-              onClick={() => {
-                setShowModal(false);
-                maybeShowBitStarz();
-              }}
+              onClick={handleResultCloseWithX}
               className="absolute right-3 top-3 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
             >
               ✕
@@ -358,7 +369,6 @@ export default function Wheel({ onSlotSelected }) {
               onClick={() => {
                 handlePlay();
                 setShowModal(false);
-                // ❌ No BitStarz here – only on X
               }}
               className="btn-primary w-full text-sm py-3 mb-3 justify-center"
             >
@@ -379,11 +389,45 @@ export default function Wheel({ onSlotSelected }) {
         </div>
       )}
 
-      {/* BitStarz promo modal – controlled, 1× per 24h */}
-      <BitStarzModal
-        isOpen={showBitStarzModal}
-        onClose={() => setShowBitStarzModal(false)}
-      />
+      {/* BITSTARZ PROMO MODAL – AFTER RESULT MODAL IS CLOSED WITH X */}
+      {showBitStarzModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <div className="relative w-full max-w-xs rounded-3xl border border-violet-400/40 bg-gradient-to-b from-violet-500/20 via-black/95 to-black px-4 py-5 shadow-[0_28px_100px_rgba(0,0,0,1)]">
+            {/* Close */}
+            <button
+              type="button"
+              onClick={() => setShowBitStarzModal(false)}
+              className="absolute right-2.5 top-2.5 rounded-full bg-white/10 px-2 py-1 text-xs text-gray-200 hover:bg-white/20"
+            >
+              ✕
+            </button>
+
+            {/* Image */}
+            <div className="mb-4 mt-4">
+              <img
+                src="/300x250.jpg"
+                alt="BitStarz welcome offer"
+                className="w-full h-auto rounded-2xl border border-white/15 shadow-[0_0_30px_rgba(0,0,0,0.9)]"
+                draggable="false"
+              />
+            </div>
+
+            {/* CTA */}
+            <button
+              type="button"
+              onClick={openBitStarz}
+              className="btn-primary w-full text-sm py-2.5 justify-center mb-2"
+            >
+              Open BitStarz
+            </button>
+
+            {/* Age notice */}
+            <p className="text-[10px] text-gray-400 text-center">
+              18+ · Terms apply. Please play responsibly.
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
